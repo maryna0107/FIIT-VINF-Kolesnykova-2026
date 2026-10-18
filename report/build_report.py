@@ -156,6 +156,20 @@ def run_tests():
     return output, count.group(1) if count else "?"
 
 
+def check_dokuwiki_markup(path):
+    """Warn about text that DokuWiki would turn into a footnote.
+
+    In DokuWiki ((text)) is a footnote, even inside ''monospace''.
+    Formulas with double parentheses must be wrapped in %%...%%.
+    """
+
+    text = path.read_text(encoding="utf-8")
+    text = re.sub(r"<code.*?</code>", "", text, flags=re.DOTALL)
+    text = re.sub(r"%%.*?%%", "", text)
+    for match in re.finditer(r".{0,30}\(\(.{0,30}", text):
+        print(f"WARNING: footnote markup '((' in {path}: {match.group(0)}")
+
+
 def main():
     url_code, url_line = lines_between(
         "crawler/crawler.py", "# Extract recipe URLs.", "dict.fromkeys"
@@ -278,6 +292,9 @@ def main():
         proposal.rstrip() + "\n\n----\n\n" + submission, encoding="utf-8"
     )
     print(f"Saved to: {COMBINED_OUTPUT_PATH}")
+
+    for path in [OUTPUT_PATH, MAIN_OUTPUT_PATH, COMBINED_OUTPUT_PATH]:
+        check_dokuwiki_markup(path)
 
 
 if __name__ == "__main__":

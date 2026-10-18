@@ -639,7 +639,7 @@ python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500 --limit 5
 
 ^ Metóda ^ Vzorec ^ Správanie ^
 | **classic** | ''log10(N / df)'' | vzácne termy majú vysokú váhu; term vo všetkých receptoch má váhu 0 (ignoruje sa), ale váha nikdy nie je záporná – aj veľmi bežné slovo skóre mierne zvyšuje |
-| **bm25** (probabilistické IDF, Robertson–Spärck Jones) | ''log10((N − df + 0.5) / (df + 0.5))'' | pri vzácnych termoch takmer rovnaké ako classic; term vo viac ako polovici receptov dostane **zápornú** váhu – recepty, ktoré bežné slovo často opakujú, klesnú nižšie. ''+0.5'' zabráni deleniu nulou. Ide o IDF z rankovacej funkcie BM25 (iba IDF časť, bez BM25 normalizácie TF a dĺžky dokumentu) |
+| **bm25** (probabilistické IDF, Robertson–Spärck Jones) | ''%%log10((N − df + 0.5) / (df + 0.5))%%'' | pri vzácnych termoch takmer rovnaké ako classic; term vo viac ako polovici receptov dostane **zápornú** váhu – recepty, ktoré bežné slovo často opakujú, klesnú nižšie. ''+0.5'' zabráni deleniu nulou. Ide o IDF z rankovacej funkcie BM25 (iba IDF časť, bez BM25 normalizácie TF a dĺžky dokumentu) |
 
 Obe metódy sú **implementované vlastným kódom v Pythone, bez externých knižníc** – index, TF, IDF aj zoradenie výsledkov. PyLucene sa v 1. časti nepoužíva; bude použité až v 2. časti na porovnanie s týmto vlastným indexom. (Lucene používa variant ''log(1 + (N − df + 0.5) / (df + 0.5))'', ktorý nikdy nie je záporný.)
 
