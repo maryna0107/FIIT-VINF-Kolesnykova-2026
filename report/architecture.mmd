@@ -1,0 +1,47 @@
+flowchart LR
+    FOOD["Food.com<br/>listing + recipe pages"]:::external
+
+    subgraph CRAWL["1. CRAWLER (crawler/)"]
+        MAIN["main.py<br/>orchestrátor"]
+        CONFIG["config.py<br/>User-Agent · timeout 10 s<br/>sleep 1 s · retry 2×"]
+        DISC["crawler.py<br/>DISCOVERY<br/>stránkovanie · regex na URL<br/>deduplikácia"]
+        DOWN["downloader.py<br/>DOWNLOAD<br/>resume · preskočenie 404"]
+        HTTP["http_client.py<br/>requests.get()"]
+    end
+
+    subgraph STORE["2. ÚLOŽISKO (súbory, žiadna DB)"]
+        URLS[("metadata/<br/>recipe_urls.tsv")]
+        META[("metadata/<br/>downloads.tsv")]
+        HTML[("data/html/<br/>&lt;id&gt;.html")]
+    end
+
+    subgraph EXT["3. EXTRAKTOR (extractor/)"]
+        REGEX["extractor.py<br/>REGEX nad schema.org JSON-LD<br/>názov · ingrediencie · čas · kategória"]
+        JSONL[("data/<br/>recipes.jsonl")]
+    end
+
+    subgraph IDX["4. INDEXER (indexer/)"]
+        INDEXER["indexer.py<br/>invertovaný index · TF"]
+        INDEX[("data/index/<br/>index.json")]
+        SEARCH["search.py<br/>TF × IDF<br/>classic · bm25"]
+    end
+
+    MAIN --> DISC
+    MAIN --> DOWN
+    CONFIG -.-> HTTP
+    DISC --> HTTP
+    DOWN --> HTTP
+    HTTP <--> FOOD
+    DISC --> URLS
+    URLS --> DOWN
+    DOWN --> META
+    DOWN --> HTML
+    HTML --> REGEX
+    REGEX --> JSONL
+    JSONL --> INDEXER
+    INDEXER --> INDEX
+    INDEX --> SEARCH
+    QUERY["dopyt používateľa"]:::external --> SEARCH
+    SEARCH --> RESULTS["zoradené recepty"]:::external
+
+    classDef external fill:#d6eaf8,stroke:#2874a6,color:#000;

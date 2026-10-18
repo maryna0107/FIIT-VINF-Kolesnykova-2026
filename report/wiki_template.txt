@@ -1,0 +1,207 @@
+====== Vyhľadávač receptov z Food.com – 1. časť projektu ======
+
+**Autor:** Maryna Kolesnykova · **Predmet:** Vyhľadávanie informácií 2026 · **Kód:** [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026|GitHub repozitár]] · {{ZIP_LINK}}
+
+===== 1. Opis projektu =====
+
+Cieľom projektu je vyhľadávač kuchárskych receptov. Recepty získavam vlastným crawlerom zo stránky [[https://www.food.com|Food.com]], z ich HTML regulárnymi výrazmi vyextrahujem štruktúrované údaje (názov, ingrediencie, kategóriu, čas prípravy, hodnotenie…) a nad nimi vytváram vlastný invertovaný index s TF a dvoma metódami výpočtu IDF.
+
+V 2. časti projektu budú recepty prepojené s Wikipédiou (ingrediencie, kuchyne, pôvod jedál) a spracované v Apache Spark. Neskôr pribudne index v PyLucene na porovnanie s vlastným indexom.
+
+**Stav 1. časti:**
+  * crawler – hotový, všetky dáta stiahnuté,
+  * regex extraktor – hotový, 5 ukážok nižšie,
+  * vlastný indexer + 2 metódy IDF – hotový, porovnanie na 5 dopytoch,
+  * BONUS: {{TEST_COUNT}} unit testov na 20 reálnych stránkach,
+  * BONUS: počet tokenov (tiktoken) v štatistike.
+
+===== 2. Zdroj dát a extrahované údaje =====
+
+**Scrapované stránky:**
+  * listing všetkých receptov podľa abecedy: [[https://www.food.com/browse/allrecipes/?page=1&letter=Z]] (kategórie ''123'' a ''A''–''Z''),
+  * stránky jednotlivých receptov, napr. [[https://www.food.com/recipe/4-hour-beef-stew-15541]].
+
+**Rozsah dát:** aby bol dataset vyvážený a obsahoval rôzne druhy receptov (nie tisíce receptov začínajúcich rovnakým písmenom), crawler z každej z 27 kategórií (''123'', ''A''–''Z'') prejde **prvú stránku listingu** (''MAX_PAGES_PER_CATEGORY = 1'' v ''crawler/config.py''), teda ~100 receptov na kategóriu. Spolu {{DISCOVERED_COUNT}} unikátnych URL; stiahnuté boli všetky ({{DOWNLOAD_SCOPE}}), čo dáva {{HTML_SIZE}} raw HTML – viac ako požadované minimum 500 MB. Pre úplný crawl všetkých stránok stačí nastaviť ''MAX_PAGES_PER_CATEGORY = None''.
+
+Predchádzajúci (nevyvážený) testovací beh nebol zmazaný – je archivovaný v ''archive/run1-2026-10-18/'' (podľa pravidla „nikdy nič nemazať“).
+
+Pred crawlovaním som skontrolovala ''robots.txt'' – cesty ''/browse/allrecipes/'' a ''/recipe/'' nie sú pre všeobecného crawlera zakázané.
+
+**Extrahované polia:** ''id'', ''url'', ''name'', ''author'', ''description'', ''category'', ''keywords'', ''ingredients'' (pôvodné riadky), ''ingredient_entities'' (normalizované názvy ingrediencií), ''instructions'', ''prep_minutes'', ''cook_minutes'', ''total_minutes'', ''servings'', ''date_published'', ''rating'', ''review_count'', ''calories''.
+
+==== 5 ukážok extrahovaných dát ====
+
+{{EXAMPLES}}
+
+===== 3. Otázky a odpovede, ktoré bude systém spracovávať =====
+
+^ # ^ Otázka (dopyt) ^ Očakávaná odpoveď ^
+| 1 | //easy chicken// | recepty s kuracím mäsom; slovo „easy“ je v takmer každom recepte, preto by malo rozhodovať hlavne „chicken“ |
+| 2 | //chocolate cake// | čokoládové torty a koláče – recepty, kde je čokoláda aj torta hlavnou témou, nie iba jednou z ingrediencií |
+| 3 | //beef stew// | recepty na dusené hovädzie mäso (stew), nie všetky recepty s hovädzím |
+| 4 | //garlic spinach// | recepty, ktoré obsahujú cesnak aj špenát |
+| 5 | //quick vegan dessert// | rýchle vegánske dezerty; recept musí byť vegánsky aj dezert |
+| 6 (2. časť) | //Italian dishes with tomato// | po prepojení s Wikipédiou: recepty, ktorých kuchyňa alebo ingrediencie patria k talianskej kuchyni |
+
+===== 4. Použité frameworky a knižnice =====
+
+^ Knižnica ^ Na čo ^ Prečo ^
+| Python 3 | celý projekt | jednoduchý jazyk so silnou podporou regexov a práce so súbormi |
+| ''requests'' | HTTP požiadavky crawlera | jednoduché a spoľahlivé API, timeout a hlavičky na jednom mieste; pre jeden web a sekvenčné sťahovanie nie je potrebný framework ako Scrapy |
+| ''re'' | extrakcia URL a všetkých údajov receptu | zadanie vyžaduje REGEX extraktor; bez XPath a bez závislosti od presnej štruktúry stránky |
+| ''csv'', ''json'' | metadáta (TSV), extrahované recepty (JSONL), index (JSON) | zadanie zakazuje databázu; textové súbory sa dajú čítať aj neskôr v Spark-u |
+| ''unittest'' | unit testy extraktora | súčasť štandardnej knižnice, netreba nič inštalovať |
+| ''tiktoken'' | počet tokenov v štatistike | BONUS úloha |
+| //plán:// PySpark, PyLucene | 2. časť – spojenie s Wikipédiou, Lucene index | distribuované spracovanie veľkých dát a porovnanie s vlastným indexom |
+
+===== 5. Architektúra crawlovacieho systému =====
+
+{{architecture.png?direct&1000|Architektúra systému}}
+
+Systém je postupný pipeline. Každý krok číta výstup predchádzajúceho kroku zo súboru, preto sa dá každý krok spustiť samostatne a zopakovať bez opätovného sťahovania:
+
+  - **Discovery** (''crawler/crawler.py'') prechádza listing stránky ''?page=N&letter=X'', regexom vyberá odkazy na recepty a ukladá unikátne URL do ''metadata/recipe_urls.tsv''. Food.com za poslednou stránkou nevracia 404, ale opakuje poslednú stránku – crawler preto kategóriu ukončí, keď stránka neprinesie žiadnu novú URL.
+  - **Download** (''crawler/downloader.py'') stiahne každú URL, úspešnú odpoveď (HTTP 200) uloží bez zmeny ako ''data/html/<id>.html'' a každý pokus zapíše do ''metadata/downloads.tsv''. Pri ďalšom spustení preskočí už stiahnuté stránky aj stránky, ktoré vrátili 404 (resume).
+  - **HTTP vrstva** (''crawler/http_client.py'') – jediné miesto s ''requests.get()'', hlavičkou, timeoutom a opakovaním pri dočasnej chybe.
+  - **Extraktor** (''extractor/'') regexmi vytiahne údaje receptu do ''data/recipes.jsonl''.
+  - **Indexer** (''indexer/'') vytvorí invertovaný index ''data/index/index.json''; vyhľadávač nad ním počíta TF × IDF.
+
+Dáta sa nikdy nemažú: zoznam URL aj metadáta sa iba dopĺňajú (append) a raw HTML sa nikdy neprepisuje inými údajmi.
+
+===== 6. Metadáta ukladané pri crawlovaní =====
+
+Súbor ''metadata/downloads.tsv'' – jeden riadok za každý pokus o stiahnutie (ukážka):
+
+{{METADATA}}
+
+  * ''status_code'' = ''-1'' znamená sieťovú chybu bez HTTP odpovede,
+  * pri chybe (404) sa HTML neukladá, ''filename'' je prázdny, ale pokus zostane zaznamenaný,
+  * ''size_bytes'' umožňuje spočítať veľkosť dát a odhaliť podozrivo malé odpovede.
+
+Súbor ''metadata/recipe_urls.tsv'' obsahuje ''url'' a ''category'' (písmeno listingu, v ktorom bola URL nájdená).
+
+===== 7. Hlavičky, timeouty a sleepy =====
+
+^ Parameter ^ Hodnota ^ Odôvodnenie ^
+| ''User-Agent'' | ''VINF-STU-Student-Crawler/1.0'' | crawler sa otvorene predstaví ako študentský bot, nevydáva sa za prehliadač; správca servera vie, kto posiela požiadavky |
+| timeout | 10 s | pomalý server má dosť času odpovedať, no jedna zaseknutá požiadavka nezablokuje celý beh |
+| sleep | 1 s po každej požiadavke | najviac ~1 požiadavka za sekundu – server nie je zahltený; pauza je aj po chybe, takže chyby nespôsobia nával požiadaviek |
+| paralelizmus | žiadny | požiadavky idú sekvenčne, nikdy nie viac naraz |
+| retry | 2× po 10 s pri 429, 5xx a sieťovej chybe | krátky výpadok nespôsobí stratu stránky; dlhšia pauza dá serveru čas zotaviť sa. 404 sa neopakuje – je to trvalá odpoveď |
+
+Celé sťahovanie {{DOWNLOAD_COUNT}} URL trvalo pri týchto nastaveniach približne {{DOWNLOAD_HOURS}} hodiny.
+
+===== 8. Kód na extrakciu URL z HTML =====
+
+Reálny kód z [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/crawler/crawler.py#L{{URL_CODE_LINE}}|crawler/crawler.py]]:
+
+<code python>
+{{URL_CODE}}
+</code>
+
+Regex nájde všetky odkazy v tvare ''/recipe/<názov>-<číslo>'', napr. ''<a href="/recipe/4-hour-beef-stew-15541">''. ''dict.fromkeys'' odstráni duplicity na jednej stránke a zachová poradie.
+
+===== 9. Kód na extrakciu entít z HTML =====
+
+Každá stránka receptu na Food.com obsahuje blok ''<script type="application/ld+json">'' s opisom receptu podľa štandardu [[https://schema.org/Recipe|schema.org/Recipe]]. Ide o verejný štandard, ktorý používajú recepty na celom webe – extraktor teda **nezávisí od vzhľadu stránky, CSS tried ani XPath**. Všetky hodnoty sa z neho vyberajú regulárnymi výrazmi.
+
+Ingrediencie sa extrahujú ako **entity**: z riadku ''"1 (250 g) package rice noodles"'' regexy odstránia množstvo, jednotku, veľkosť a poznámku a zostane entita ''rice noodles''. Tieto entity sa v 2. časti budú spájať so stránkami Wikipédie.
+
+Reálny kód z [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/extractor/extractor.py|extractor/extractor.py]] – regulárne výrazy:
+
+<code python>
+{{PATTERNS_CODE}}
+</code>
+
+Normalizácia ingrediencie na entitu:
+
+<code python>
+{{NORMALIZE_CODE}}
+</code>
+
+Extrakcia celého receptu:
+
+<code python>
+{{EXTRACT_CODE}}
+</code>
+
+**Spustenie:** ''python3 -m extractor.main'' → ''data/recipes.jsonl''
+
+===== 10. Indexer a index (TF) =====
+
+[[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/indexer.py|indexer/indexer.py]] vytvára **invertovaný index**: pre každý term (slovo) uloží zoznam receptov, v ktorých sa vyskytuje, a **TF** – koľkokrát sa v recepte vyskytuje:
+
+<code>
+"beef"  -> {"15541": 6, "37534": 2, ...}     (ilustračný príklad)
+"stew"  -> {"15541": 3, ...}
+</code>
+
+  * **Indexovaný text receptu:** názov, opis, kategória, kľúčové slová, ingrediencie a postup.
+  * **Tokenizácia** ([[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/tokenizer.py|tokenizer.py]]): malé písmená, regex ''[a-z0-9]+'', odstránenie stopslov (the, and, of…) a jednoznakových tokenov. Rovnaká funkcia sa používa pre dokumenty aj pre dopyty.
+  * **Uloženie:** index sa uloží do ''data/index/index.json'' (počet dokumentov, pre každý dokument názov, URL a dĺžku, a samotné postingy term → {id: TF}).
+  * **Koľkokrát sa vytvára:** **raz**, po extrakcii (''python3 -m indexer.indexer''). Vyhľadávač iba načíta uložený súbor. Index sa vytvára znova iba vtedy, keď sa zmenia extrahované dáta. **IDF sa do indexu neukladá** – počíta sa pri dopyte z ''df'' (dĺžka zoznamu postingov) a ''N'', vďaka čomu jeden index slúži pre obe metódy.
+
+**Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
+
+**Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" --idf bm25''
+
+===== 11. Implementované metódy výpočtu IDF =====
+
+''N'' = počet receptov v indexe, ''df'' = počet receptov, ktoré obsahujú term. Kód: [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/search.py|indexer/search.py]].
+
+^ Metóda ^ Vzorec ^ Správanie ^
+| **classic** | ''log10(N / df)'' | vzácne termy majú vysokú váhu; term vo všetkých receptoch má váhu 0 (ignoruje sa), ale váha nikdy nie je záporná – aj veľmi bežné slovo skóre mierne zvyšuje |
+| **bm25** (probabilistické IDF, Robertson–Spärck Jones) | ''log10((N − df + 0.5) / (df + 0.5))'' | pri vzácnych termoch takmer rovnaké ako classic; term vo viac ako polovici receptov dostane **zápornú** váhu – recepty, ktoré bežné slovo často opakujú, klesnú nižšie. ''+0.5'' zabráni deleniu nulou. Ide o IDF z rankovacej funkcie BM25 (iba IDF časť, bez BM25 normalizácie TF a dĺžky dokumentu) |
+
+Obe metódy sú **implementované vlastným kódom v Pythone, bez externých knižníc** – index, TF, IDF aj zoradenie výsledkov. PyLucene sa v 1. časti nepoužíva; bude použité až v 2. časti na porovnanie s týmto vlastným indexom. (Lucene používa variant ''log(1 + (N − df + 0.5) / (df + 0.5))'', ktorý nikdy nie je záporný.)
+
+<code python>
+{{IDF_CODE}}
+</code>
+
+===== 12. Porovnanie metód IDF na dopytoch =====
+
+Pre každý dopyt je uvedené ''df'' a IDF každého termu podľa oboch metód, top 5 výsledkov a zhoda top 10.
+
+{{IDF_COMPARISON}}
+
+==== Zhodnotenie ====
+
+{{IDF_SUMMARY}}
+
+===== 13. Štatistika vycrawlovaných dokumentov =====
+
+Za **relevantný** považujem dokument, ktorý obsahuje recept (blok schema.org Recipe) s aspoň jednou ingredienciou. Stránky s HTTP 404 sa neukladajú, preto nie sú započítané v stiahnutých dokumentoch.
+
+{{STATS}}
+
+Rozdiel medzi počtom tokenov v raw HTML a v extrahovanom texte ukazuje, že samotný recept tvorí iba malú časť stránky – zvyšok je navigácia, skripty, štýly a odporúčané recepty.
+
+===== 14. Unit testy (BONUS) =====
+
+[[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/tests/test_extractor.py|tests/test_extractor.py]] – {{TEST_COUNT}} testov, spustenie: ''python3 -m unittest discover tests -v''
+
+  * **20 reálnych stránok** Food.com je uložených v ''tests/fixtures/'' (testy nezávisia od siete). Pre každú sa overuje, že má ID zhodné s názvom súboru, správnu URL, názov, kategóriu, ingrediencie, entity (malými písmenami, bez čísel na začiatku), postup, kladný čas a hodnotenie 0–5.
+  * **Známe hodnoty** pre 4 recepty (napr. //4 Hour Beef stew//: 330 minút, 10 ingrediencií, 5 krokov, hodnotenie 4.0).
+  * **Pomocné regexy:** prevod ISO času (''PT5H30M'' → 330), dekódovanie ''\u0026'' a ''\"'', odstránenie HTML tagov, normalizácia ingrediencií.
+  * **Okrajové prípady:** stránka bez receptu vráti ''None''; názov recenzie sa nesmie zameniť za názov receptu.
+
+Výsledok:
+
+<code>
+{{TEST_OUTPUT}}
+</code>
+
+===== 15. Kód a spustenie =====
+
+{{ZIP_LINK}} (kód bez stiahnutých dát).
+
+<code bash>
+python3 -m crawler.main            # discovery + download
+python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
+python3 -m indexer.indexer         # index -> data/index/index.json
+python3 -m indexer.search "beef stew" --idf classic
+python3 -m indexer.compare         # porovnanie IDF metód
+python3 -m stats.stats             # štatistika
+python3 -m unittest discover tests -v
+</code>
