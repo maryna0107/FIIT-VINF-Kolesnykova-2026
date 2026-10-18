@@ -190,7 +190,7 @@ def main():
     )
 
     values = {
-        "ZIP_LINK": f"{{{{{ZIP_NAME}|ZIP s kódom}}}}",
+        "ZIP_LINK": f"{{{{:user:maryna.kolesnykova:{ZIP_NAME}|ZIP s kódom}}}}",
         "TEST_COUNT": test_count,
         "TEST_OUTPUT": test_output,
         "EXAMPLES": examples(),

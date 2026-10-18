@@ -4,9 +4,11 @@
 
 ===== 1. Opis projektu =====
 
-Cieľom projektu je vyhľadávač kuchárskych receptov. Recepty získavam vlastným crawlerom zo stránky [[https://www.food.com|Food.com]], z ich HTML regulárnymi výrazmi vyextrahujem štruktúrované údaje (názov, ingrediencie, kategóriu, čas prípravy, hodnotenie…) a nad nimi vytváram vlastný invertovaný index s TF a dvoma metódami výpočtu IDF.
+Cieľom projektu je vyhľadávací systém pre recepty, ktorý umožní kombinovať viacero kritérií – dostupné ingrediencie, čas prípravy, nutričné vlastnosti, typ jedla alebo kuchyňu – a formulovať tak zložitejšie otázky než iba vyhľadávanie podľa názvu receptu. Podrobná motivácia a návrh projektu sú na stránke [[:user:maryna.kolesnykova|Recipe Search System]].
 
-V 2. časti projektu budú recepty prepojené s Wikipédiou (ingrediencie, kuchyne, pôvod jedál) a spracované v Apache Spark. Neskôr pribudne index v PyLucene na porovnanie s vlastným indexom.
+Recepty získavam vlastným crawlerom zo stránky [[https://www.food.com|Food.com]], z ich HTML regulárnymi výrazmi vyextrahujem štruktúrované údaje (názov, ingrediencie, kategóriu, čas prípravy, kalórie, hodnotenie…) a nad nimi vytváram vlastný invertovaný index s TF a dvoma metódami výpočtu IDF.
+
+V 2. časti projektu budú recepty prepojené s Wikipédiou – napríklad všeobecný pojem //citrus// sa rozloží na citrón, limetku a pomaranč, alebo recept na lasagne sa doplní o pôvod a históriu jedla – a spracované v Apache Spark. Neskôr pribudne index v PyLucene na porovnanie s vlastným indexom.
 
 **Stav 1. časti:**
   * crawler – hotový, všetky dáta stiahnuté,
@@ -35,13 +37,12 @@ Pred crawlovaním som skontrolovala ''robots.txt'' – cesty ''/browse/allrecipe
 
 ===== 3. Otázky a odpovede, ktoré bude systém spracovávať =====
 
-^ # ^ Otázka (dopyt) ^ Očakávaná odpoveď ^
-| 1 | //easy chicken// | recepty s kuracím mäsom; slovo „easy“ je v takmer každom recepte, preto by malo rozhodovať hlavne „chicken“ |
-| 2 | //chocolate cake// | čokoládové torty a koláče – recepty, kde je čokoláda aj torta hlavnou témou, nie iba jednou z ingrediencií |
-| 3 | //beef stew// | recepty na dusené hovädzie mäso (stew), nie všetky recepty s hovädzím |
-| 4 | //garlic spinach// | recepty, ktoré obsahujú cesnak aj špenát |
-| 5 | //quick vegan dessert// | rýchle vegánske dezerty; recept musí byť vegánsky aj dezert |
-| 6 (2. časť) | //Italian dishes with tomato// | po prepojení s Wikipédiou: recepty, ktorých kuchyňa alebo ingrediencie patria k talianskej kuchyni |
+^ # ^ Otázka ^ Očakávaná odpoveď ^ Čo na to systém potrebuje / stav ^
+| 1 | Čo môžem pripraviť, ak mám doma kuracie mäso, ryžu, paradajky a cibuľu? | recepty zoradené podľa toho, koľko zo zadaných ingrediencií obsahujú, spolu s ďalšími potrebnými ingredienciami | **1. časť:** dopyt //chicken rice tomato onion// nad vlastným indexom; ingrediencie sú extrahované aj ako entity (''ingredient_entities'') |
+| 2 | Nájdi recept na večeru, ktorý sa dá pripraviť do 30 minút a má menej ako 500 kcal na porciu. | recepty spĺňajúce časový limit a nutričnú podmienku, s časom prípravy a energetickou hodnotou | **1. časť:** extrahované ''total_minutes'' a ''calories''; filtrovanie podľa nich je plánované |
+| 3 | Nájdi dezerty s citrusovým ovocím. | Wikipedia určí, ktoré ingrediencie sú citrusy (citrón, limetka, pomaranč, grapefruit), systém nájde dezerty s niektorou z nich | **2. časť:** prepojenie entít ingrediencií s kategóriami Wikipédie |
+| 4 | Nájdi recept na tradičné lasagne a povedz mi, odkiaľ toto jedlo pochádza a akú má históriu. | recept na lasagne z Food.com doplnený o pôvod, históriu a spojenie s talianskou kuchyňou | **1. časť:** vyhľadanie receptu; **2. časť:** pripojenie článkov //Lasagna// a //Italian cuisine// |
+| 5 | Odporuč mi jedlo z mexickej kuchyne a povedz mi o ňom niečo zaujímavé. | recept z mexickej kuchyne s doplnenou zaujímavosťou z Wikipédie | **1. časť:** kuchyňa je v extrahovaných ''keywords'' a ''category'' (napr. //Mexican//); **2. časť:** zaujímavosť z Wikipédie |
 
 ===== 4. Použité frameworky a knižnice =====
 
@@ -56,7 +57,7 @@ Pred crawlovaním som skontrolovala ''robots.txt'' – cesty ''/browse/allrecipe
 
 ===== 5. Architektúra crawlovacieho systému =====
 
-{{architecture.png?direct&1000|Architektúra systému}}
+{{:user:maryna.kolesnykova:architecture.png?direct&1000|Architektúra systému}}
 
 Systém je postupný pipeline. Každý krok číta výstup predchádzajúceho kroku zo súboru, preto sa dá každý krok spustiť samostatne a zopakovať bez opätovného sťahovania:
 
