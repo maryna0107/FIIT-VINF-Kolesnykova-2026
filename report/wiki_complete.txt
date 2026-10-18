@@ -361,7 +361,7 @@ Pred crawlovaním som skontrolovala ''robots.txt'' – cesty ''/browse/allrecipe
 
 ^ # ^ Otázka ^ Očakávaná odpoveď ^ Čo na to systém potrebuje / stav ^
 | 1 | Čo môžem pripraviť, ak mám doma kuracie mäso, ryžu, paradajky a cibuľu? | recepty zoradené podľa toho, koľko zo zadaných ingrediencií obsahujú, spolu s ďalšími potrebnými ingredienciami | **1. časť:** dopyt //chicken rice tomato onion// nad vlastným indexom; ingrediencie sú extrahované aj ako entity (''ingredient_entities'') |
-| 2 | Nájdi recept na večeru, ktorý sa dá pripraviť do 30 minút a má menej ako 500 kcal na porciu. | recepty spĺňajúce časový limit a nutričnú podmienku, s časom prípravy a energetickou hodnotou | **1. časť:** extrahované ''total_minutes'' a ''calories''; filtrovanie podľa nich je plánované |
+| 2 | Nájdi recept na večeru, ktorý sa dá pripraviť do 30 minút a má menej ako 500 kcal na porciu. | recepty spĺňajúce časový limit a nutričnú podmienku, s časom prípravy a energetickou hodnotou | **1. časť:** extrahované ''total_minutes'' a ''calories''; vyhľadávanie ich používa ako filter: ''python3 -m indexer.search "dinner" %%--max-minutes%% 30 %%--max-calories%% 500'' |
 | 3 | Nájdi dezerty s citrusovým ovocím. | Wikipedia určí, ktoré ingrediencie sú citrusy (citrón, limetka, pomaranč, grapefruit), systém nájde dezerty s niektorou z nich | **2. časť:** prepojenie entít ingrediencií s kategóriami Wikipédie |
 | 4 | Nájdi recept na tradičné lasagne a povedz mi, odkiaľ toto jedlo pochádza a akú má históriu. | recept na lasagne z Food.com doplnený o pôvod, históriu a spojenie s talianskou kuchyňou | **1. časť:** vyhľadanie receptu; **2. časť:** pripojenie článkov //Lasagna// a //Italian cuisine// |
 | 5 | Odporuč mi jedlo z mexickej kuchyne a povedz mi o ňom niečo zaujímavé. | recept z mexickej kuchyne s doplnenou zaujímavosťou z Wikipédie | **1. časť:** kuchyňa je v extrahovaných ''keywords'' a ''category'' (napr. //Mexican//); **2. časť:** zaujímavosť z Wikipédie |
@@ -615,12 +615,23 @@ def extract_recipe(page):
 
   * **Indexovaný text receptu:** názov, opis, kategória, kľúčové slová, ingrediencie a postup.
   * **Tokenizácia** ([[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/tokenizer.py|tokenizer.py]]): malé písmená, regex ''[a-z0-9]+'', odstránenie stopslov (the, and, of…) a jednoznakových tokenov. Rovnaká funkcia sa používa pre dokumenty aj pre dopyty.
-  * **Uloženie:** index sa uloží do ''data/index/index.json'' (počet dokumentov, pre každý dokument názov, URL a dĺžku, a samotné postingy term → {id: TF}).
+  * **Uloženie:** index sa uloží do ''data/index/index.json'' (počet dokumentov, pre každý dokument názov, URL, dĺžku, celkový čas a kalórie, a samotné postingy term → {id: TF}). Čas a kalórie neovplyvňujú skóre, slúžia iba na filtrovanie výsledkov.
   * **Koľkokrát sa vytvára:** **raz**, po extrakcii (''python3 -m indexer.indexer''). Vyhľadávač iba načíta uložený súbor. Index sa vytvára znova iba vtedy, keď sa zmenia extrahované dáta. **IDF sa do indexu neukladá** – počíta sa pri dopyte z ''df'' (dĺžka zoznamu postingov) a ''N'', vďaka čomu jeden index slúži pre obe metódy.
 
 **Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
 
-**Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" --idf bm25''
+**Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" %%--idf%% bm25''
+
+**Filtre:** ''%%--max-minutes%% N'' (celkový čas do N minút) a ''%%--max-calories%% N'' (do N kcal na porciu podľa Food.com). Recept, pri ktorom údaj chýba, sa pri použití filtra nezobrazí. Príklad pre otázku 2:
+
+<code>
+python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500 --limit 5
+ 1.  2.890  'the Freshest' Blue Cheese Salad  [15 min, 205.0 kcal]
+ 2.  1.445  Raagi Sweet Balls  [15 min, 75.9 kcal]
+ 3.  1.445  'my Thai' Chicken Soup  [30 min, 209.9 kcal]
+ 4.  1.445  Habiba (chicken & Tomatoes)  [30 min, 275.4 kcal]
+ 5.  1.445  I Did It My Way- Tossed Salad  [10 min, 183.6 kcal]
+</code>
 
 ===== 11. Implementované metódy výpočtu IDF =====
 
@@ -643,11 +654,13 @@ def idf_bm25(document_count, df):
 
 
 
-def search(index, query, method="classic", limit=10):
+def search(index, query, method="classic", limit=10,
+           max_minutes=None, max_calories=None):
     """Return [(score, doc_id), ...] sorted from the best match."""
 
     idf_function = IDF_METHODS[method]
     document_count = index["document_count"]
+    documents = index["documents"]
     scores = {}
 
     for term in set(tokenize(query)):
@@ -657,6 +670,8 @@ def search(index, query, method="classic", limit=10):
 
         idf = idf_function(document_count, len(postings))
         for doc_id, tf in postings.items():
+            if not passes_filters(documents[doc_id], max_minutes, max_calories):
+                continue
             scores[doc_id] = scores.get(doc_id, 0.0) + tf * idf
 
     ranked = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
@@ -876,6 +891,7 @@ python3 -m crawler.main            # discovery + download
 python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
 python3 -m indexer.indexer         # index -> data/index/index.json
 python3 -m indexer.search "beef stew" --idf classic
+python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
 python3 -m indexer.compare         # porovnanie IDF metód
 python3 -m stats.stats             # štatistika
 python3 -m unittest discover tests -v
