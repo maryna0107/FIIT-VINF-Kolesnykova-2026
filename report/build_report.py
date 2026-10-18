@@ -28,6 +28,7 @@ SUMMARY_PATH = REPORT_DIR / "idf_summary.txt"
 OUTPUT_PATH = REPORT_DIR / "wiki_report.txt"
 MAIN_TEMPLATE_PATH = REPORT_DIR / "wiki_main_page_template.txt"
 MAIN_OUTPUT_PATH = REPORT_DIR / "wiki_main_page.txt"
+COMBINED_OUTPUT_PATH = REPORT_DIR / "wiki_complete.txt"
 PLAN_LINK_PATH = REPORT_DIR / "architecture_plan_link.txt"
 ZIP_NAME = "vinf_kolesnykova_kod.zip"
 
@@ -249,6 +250,34 @@ def main():
         main_page = main_page.replace("{{" + key + "}}", value)
     MAIN_OUTPUT_PATH.write_text(main_page, encoding="utf-8")
     print(f"Saved to: {MAIN_OUTPUT_PATH}")
+
+    # One page: the project proposal followed by the part 1 submission.
+    # Links between the two separate pages become references within the page.
+    submission_link = "[[:user:maryna.kolesnykova:odovzdanie1|"
+    proposal = "\n".join(
+        line for line in main_page.splitlines()
+        if submission_link + "Odovzdanie 1. časti –" not in line
+    )
+    proposal = proposal.replace(
+        submission_link + "odovzdaní 1. časti]]",
+        "časti //Odovzdanie 1. časti projektu// nižšie"
+    )
+    submission = report.replace(
+        "====== Vyhľadávač receptov z Food.com – 1. časť projektu ======",
+        "====== Odovzdanie 1. časti projektu (28. 10. 2026) ======"
+    ).replace(
+        " Podrobná motivácia a návrh projektu sú na stránke "
+        "[[:user:maryna.kolesnykova|Recipe Search System]].",
+        " Podrobná motivácia, zdroje dát a návrh projektu sú opísané vyššie."
+    )
+    leftover = [line for line in (proposal + submission).splitlines()
+                if "odovzdanie1" in line or "|Recipe Search System]]" in line]
+    if leftover:
+        print(f"WARNING: links between pages left: {leftover}")
+    COMBINED_OUTPUT_PATH.write_text(
+        proposal.rstrip() + "\n\n----\n\n" + submission, encoding="utf-8"
+    )
+    print(f"Saved to: {COMBINED_OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
