@@ -10,3 +10,4 @@ env/
 # Crawled and generated data (~1.4 GB) – not for git, see stats on the wiki
 /data/
 /archive/
+*.zip

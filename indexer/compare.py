@@ -15,12 +15,15 @@ from indexer.tokenizer import tokenize
 OUTPUT_PATH = Path("metadata/idf_comparison.md")
 TOP = 5
 
+# The first two queries contain only rarer terms (both methods should agree),
+# the others mix in very common terms (df > N/2), where the methods differ.
 QUERIES = [
-    "easy chicken",
     "chocolate cake",
-    "beef stew",
     "garlic spinach",
-    "quick vegan dessert",
+    "easy chicken dinner",
+    "quick easy dinner",
+    "easy dessert",
+    "salt pepper chicken",
 ]
 
 

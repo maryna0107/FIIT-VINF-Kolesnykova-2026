@@ -71,6 +71,13 @@ SIMPLE_ESCAPES = {
     "b": "", "f": "", "n": " ", "r": " ", "t": " ",
 }
 TAG_PATTERN = re.compile(r'<[^>]+>')
+
+# When the author wrote no description, Food.com fills in a template that
+# only repeats the title. It carries no information and would add the same
+# words ("make", "share", "recipe", "food", "com") to a third of the index.
+TEMPLATE_DESCRIPTION_PATTERN = re.compile(
+    r'^Make and share this .* recipe from Food\.com\.?$'
+)
 WHITESPACE_PATTERN = re.compile(r'\s+')
 
 # Ingredient lines look like "1 1/2  cups    bean sprouts, chopped".
@@ -181,6 +188,12 @@ def extract_recipe(page):
     for field, pattern in STRING_FIELD_PATTERNS.items():
         match = pattern.search(top_level)
         fields[field] = unescape_json_string(match.group(1)) if match else None
+
+    if (
+        fields["description"]
+        and TEMPLATE_DESCRIPTION_PATTERN.match(fields["description"])
+    ):
+        fields["description"] = None
 
     canonical = CANONICAL_PATTERN.search(page)
     url = canonical.group(1) if canonical else None

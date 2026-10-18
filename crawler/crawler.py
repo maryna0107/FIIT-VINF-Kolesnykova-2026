@@ -44,8 +44,7 @@ def discover_recipes():
     # Start with existing URLs so a second run cannot create duplicate rows.
     seen_recipe_links = load_existing_recipe_links()
 
-    # Append to the existing file. The previous crawl is retained because the
-    # assignment requires that collected data is never deleted.
+   
     output_exists = OUTPUT_PATH.exists() and OUTPUT_PATH.stat().st_size > 0
 
     with open(
@@ -68,8 +67,6 @@ def discover_recipes():
 
             page = 1
 
-            # Used only for detecting repeated pages
-            # inside the current category.
             seen_category_links = set()
 
             while True:

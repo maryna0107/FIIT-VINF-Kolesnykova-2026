@@ -1,0 +1,21 @@
+**1. Pri vzácnych termoch sa metódy zhodujú.** Dopyty //chocolate cake// a //garlic spinach// obsahujú iba termy, ktoré sú v menej ako tretine receptov. Obe metódy im dajú takmer rovnakú váhu (napr. ''cake'': 1.170 vs. 1.139), takže poradie výsledkov je rovnaké alebo takmer rovnaké.
+
+**2. Rozdiel vzniká pri veľmi bežných termoch.** Term ''easy'' je v 1 499 z 2 591 receptov (58 %), ''salt'' v 1 347 (52 %). Klasické IDF im dá malú **kladnú** váhu (0.238, 0.284) – každý výskyt skóre mierne zvýši. BM25 IDF im dá **zápornú** váhu (−0.138, −0.035), pretože sú vo viac ako polovici receptov – každý výskyt skóre zníži.
+
+**3. Konkrétny príklad – //easy dessert//:**
+
+^ Recept ^ TF easy ^ TF dessert ^ classic ^ bm25 ^
+| J-E-L-L-O Fruit and Cookie Dream | 3 | 3 | 3·0.238 + 3·0.662 = **2.70** (1. miesto) | 3·(−0.138) + 3·0.555 = 1.25 (mimo top 5) |
+| C.M.P. Dessert | 0 | 4 | 4·0.662 = 2.65 (2. miesto) | 4·0.555 = **2.22** (1. miesto) |
+
+Klasické IDF uprednostní recept, ktorý o sebe píše, že je „easy“. BM25 slovo ''easy'' považuje za šum a rozhodne slovo ''dessert''.
+
+**4. //salt pepper chicken//:** klasické IDF dá na 1. miesto //Chicken Pot Pie// (salt 4×, pepper 4×, chicken 16×), BM25 //J-Slo's Sesame Chicken// (salt 0×, chicken 18×). Soľ je takmer v každom recepte, preto ju BM25 ignoruje a rozhoduje ''chicken''. Pri //quick easy dinner// je rozdiel najväčší – zhoda top 10 je iba 6/10; recept //B's Tatercakes// s ''easy'' 4× pri BM25 vypadne z top 5.
+
+**5. Ktorá metóda je lepšia?** Žiadna nie je lepšia vždy:
+  * **BM25 IDF** je lepšie, keď je bežné slovo v dopyte iba „výplň“ – napr. ''salt'' v //salt pepper chicken// používateľovi nepomáha, chce kuracie mäso.
+  * **Klasické IDF** je lepšie, keď používateľ bežné slovo naozaj myslí vážne – pri //easy dessert// chce jednoduchý dezert, a BM25 práve recepty označené ako jednoduché posúva nižšie.
+
+Objektívne porovnanie pomocou precision a recall na označenej množine dopytov je plánované v 2. časti projektu.
+
+**6. Spoločné obmedzenie oboch metód:** TF je surový počet výskytov, preto vyhrávajú dlhé recepty, kde sa slovo veľakrát opakuje (napr. ''chicken'' 16–18× v receptoch s ~350 termami). Riešením by bolo logaritmické TF alebo normalizácia dĺžkou dokumentu (ako v plnom BM25).

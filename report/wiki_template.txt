@@ -11,7 +11,7 @@ V 2. časti projektu budú recepty prepojené s Wikipédiou (ingrediencie, kuchy
 **Stav 1. časti:**
   * crawler – hotový, všetky dáta stiahnuté,
   * regex extraktor – hotový, 5 ukážok nižšie,
-  * vlastný indexer + 2 metódy IDF – hotový, porovnanie na 5 dopytoch,
+  * vlastný indexer + 2 metódy IDF – hotový, porovnanie na 6 dopytoch,
   * BONUS: {{TEST_COUNT}} unit testov na 20 reálnych stránkach,
   * BONUS: počet tokenov (tiktoken) v štatistike.
 

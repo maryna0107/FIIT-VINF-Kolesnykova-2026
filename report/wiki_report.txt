@@ -1,0 +1,642 @@
+====== Vyhľadávač receptov z Food.com – 1. časť projektu ======
+
+**Autor:** Maryna Kolesnykova · **Predmet:** Vyhľadávanie informácií 2026 · **Kód:** [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026|GitHub repozitár]] · {{vinf_kolesnykova_kod.zip|ZIP s kódom}}
+
+===== 1. Opis projektu =====
+
+Cieľom projektu je vyhľadávač kuchárskych receptov. Recepty získavam vlastným crawlerom zo stránky [[https://www.food.com|Food.com]], z ich HTML regulárnymi výrazmi vyextrahujem štruktúrované údaje (názov, ingrediencie, kategóriu, čas prípravy, hodnotenie…) a nad nimi vytváram vlastný invertovaný index s TF a dvoma metódami výpočtu IDF.
+
+V 2. časti projektu budú recepty prepojené s Wikipédiou (ingrediencie, kuchyne, pôvod jedál) a spracované v Apache Spark. Neskôr pribudne index v PyLucene na porovnanie s vlastným indexom.
+
+**Stav 1. časti:**
+  * crawler – hotový, všetky dáta stiahnuté,
+  * regex extraktor – hotový, 5 ukážok nižšie,
+  * vlastný indexer + 2 metódy IDF – hotový, porovnanie na 6 dopytoch,
+  * BONUS: 21 unit testov na 20 reálnych stránkach,
+  * BONUS: počet tokenov (tiktoken) v štatistike.
+
+===== 2. Zdroj dát a extrahované údaje =====
+
+**Scrapované stránky:**
+  * listing všetkých receptov podľa abecedy: [[https://www.food.com/browse/allrecipes/?page=1&letter=Z]] (kategórie ''123'' a ''A''–''Z''),
+  * stránky jednotlivých receptov, napr. [[https://www.food.com/recipe/4-hour-beef-stew-15541]].
+
+**Rozsah dát:** aby bol dataset vyvážený a obsahoval rôzne druhy receptov (nie tisíce receptov začínajúcich rovnakým písmenom), crawler z každej z 27 kategórií (''123'', ''A''–''Z'') prejde **prvú stránku listingu** (''MAX_PAGES_PER_CATEGORY = 1'' v ''crawler/config.py''), teda ~100 receptov na kategóriu. Spolu 2700 unikátnych URL; stiahnuté boli všetky (27 kategórií po 100), čo dáva 837 MB raw HTML – viac ako požadované minimum 500 MB. Pre úplný crawl všetkých stránok stačí nastaviť ''MAX_PAGES_PER_CATEGORY = None''.
+
+Predchádzajúci (nevyvážený) testovací beh nebol zmazaný – je archivovaný v ''archive/run1-2026-10-18/'' (podľa pravidla „nikdy nič nemazať“).
+
+Pred crawlovaním som skontrolovala ''robots.txt'' – cesty ''/browse/allrecipes/'' a ''/recipe/'' nie sú pre všeobecného crawlera zakázané.
+
+**Extrahované polia:** ''id'', ''url'', ''name'', ''author'', ''description'', ''category'', ''keywords'', ''ingredients'' (pôvodné riadky), ''ingredient_entities'' (normalizované názvy ingrediencií), ''instructions'', ''prep_minutes'', ''cook_minutes'', ''total_minutes'', ''servings'', ''date_published'', ''rating'', ''review_count'', ''calories''.
+
+==== 5 ukážok extrahovaných dát ====
+
+**Ukážka 1: "1956" Stuffed Onions**
+
+^ pole ^ extrahovaná hodnota ^
+| ''id'' | 112835 |
+| ''url'' | https://www.food.com/recipe/1956-stuffed-onions-112835 |
+| ''name'' | "1956" Stuffed Onions |
+| ''author'' | bbdll18 |
+| ''category'' | Lunch/Snacks |
+| ''keywords'' | Pork, Onions, Beans, Vegetable, Meat, Egg Free, Free Of..., Winter, Savory, < 60 Mins, Oven, Beginner Cook, Easy |
+| ''ingredient_entities'' | onions, boiling water, salt, sausage, navy beans, pepper, dry mustard, breadcrumbs, celery tops, brown sugar |
+| ''ingredients (1. riadok)'' | 6 large onions (i like to use the yellow) |
+| ''instructions'' | 8 krokov, 1.: Cook onions in the boiling, salted water for 20 minutes; Drain and cool. |
+| ''prep / cook / total'' | 30 / 30 / 60 min |
+| ''servings'' | 6 serving(s) |
+| ''rating / review_count'' | 4.0 / 1 |
+| ''calories'' | 250.8 |
+
+**Ukážka 2: C.b.l.t. Pasta!**
+
+^ pole ^ extrahovaná hodnota ^
+| ''id'' | 120293 |
+| ''url'' | https://www.food.com/recipe/c-b-l-t-pasta-120293 |
+| ''name'' | C.b.l.t. Pasta! |
+| ''author'' | Keen Amateur Ian |
+| ''category'' | Lunch/Snacks |
+| ''keywords'' | Chicken Breast, Penne, Chicken, Poultry, Meat, Beginner Cook, < 30 Mins, Easy |
+| ''ingredient_entities'' | lean chicken fillets, penne pasta, light mayonnaise, lean bacon, tomatoes, spring onion, iceberg lettuce |
+| ''ingredients (1. riadok)'' | 2 lean chicken fillets (cooked or uncooked, you preference) or 2 chicken pieces (cooked or uncooked, you preference) |
+| ''instructions'' | 12 krokov, 1.: If using uncooked chicken fillets cook as you prefer until nice and white. Please make sure the meat is cooked all the way through. |
+| ''prep / cook / total'' | 15 / 10 / 25 min |
+| ''servings'' | 1 serving(s) |
+| ''rating / review_count'' | 5.0 / 2 |
+| ''calories'' | 536.6 |
+
+**Ukážka 3: M&M Cookies**
+
+^ pole ^ extrahovaná hodnota ^
+| ''id'' | 101230 |
+| ''url'' | https://www.food.com/recipe/m-m-cookies-101230 |
+| ''name'' | M&M Cookies |
+| ''author'' | mermaidmagic |
+| ''category'' | Drop Cookies |
+| ''keywords'' | Cookie & Brownie, Dessert, Kid Friendly, < 30 Mins |
+| ''ingredient_entities'' | shortening, brown sugar, granulated sugar, eggs, vanilla extract, flour, baking soda, salt, m&m's plain chocolate candy |
+| ''ingredients (1. riadok)'' | 1 cup shortening |
+| ''instructions'' | 7 krokov, 1.: Cream shortening, sugar, eggs and vanilla extract thoroughly. |
+| ''prep / cook / total'' | 5 / 12 / 17 min |
+| ''servings'' | 2 trays |
+| ''rating / review_count'' | 3.5 / 3 |
+| ''calories'' | 2878.2 |
+
+**Ukážka 4: "Smells Like Sunday" Chicken Fricassee With Meatballs**
+
+^ pole ^ extrahovaná hodnota ^
+| ''id'' | 103948 |
+| ''url'' | https://www.food.com/recipe/smells-like-sunday-chicken-fricassee-with-meatballs-103948 |
+| ''name'' | "Smells Like Sunday" Chicken Fricassee With Meatballs |
+| ''author'' | MarieRynr |
+| ''category'' | Chicken Thigh & Leg |
+| ''keywords'' | Chicken, Poultry, Meat, < 4 Hours |
+| ''ingredient_entities'' | boneless skinless chicken thighs, all-purpose flour, salt, black pepper, oregano, thyme, garlic powder, vegetable oil, onion, chicken stock, dry white wine, breadcrumbs, milk, lean ground beef, poultry seasoning |
+| ''ingredients (1. riadok)'' | 1 1/2 lbs boneless skinless chicken thighs |
+| ''instructions'' | 20 krokov, 1.: First of all make the meatballs by combining all the meatball ingredients in a bowl, mixing well. |
+| ''prep / cook / total'' | 45 / 45 / 90 min |
+| ''servings'' | 4 serving(s) |
+| ''rating / review_count'' | 4.5 / 3 |
+| ''calories'' | 692.2 |
+
+**Ukážka 5: V-8 Tomato Bread**
+
+^ pole ^ extrahovaná hodnota ^
+| ''id'' | 110594 |
+| ''url'' | https://www.food.com/recipe/v-8-tomato-bread-110594 |
+| ''name'' | V-8 Tomato Bread |
+| ''author'' | Miss V |
+| ''category'' | Yeast Breads |
+| ''keywords'' | Breads, Vegan, Low Cholesterol, Healthy, Brunch, Bread Machine, Small Appliance, < 4 Hours |
+| ''ingredient_entities'' | v8 vegetable juice, olive oil, garlic cloves, bread flour, brown sugar, salt, pepper, oregano, basil, rosemary, yeast, sun-dried tomato |
+| ''ingredients (1. riadok)'' | 1 (11 1/2 ounce) can V8 vegetable juice |
+| ''instructions'' | 4 krokov, 1.: In the bread machine pan, place all ingredients (except the dried tomatoes) in the order suggested by the manufacturer. |
+| ''prep / cook / total'' | 15 / 180 / 195 min |
+| ''servings'' | 1 loaf, 8 serving(s) |
+| ''rating / review_count'' | 5.0 / 3 |
+| ''calories'' | 208.1 |
+
+===== 3. Otázky a odpovede, ktoré bude systém spracovávať =====
+
+^ # ^ Otázka (dopyt) ^ Očakávaná odpoveď ^
+| 1 | //easy chicken// | recepty s kuracím mäsom; slovo „easy“ je v takmer každom recepte, preto by malo rozhodovať hlavne „chicken“ |
+| 2 | //chocolate cake// | čokoládové torty a koláče – recepty, kde je čokoláda aj torta hlavnou témou, nie iba jednou z ingrediencií |
+| 3 | //beef stew// | recepty na dusené hovädzie mäso (stew), nie všetky recepty s hovädzím |
+| 4 | //garlic spinach// | recepty, ktoré obsahujú cesnak aj špenát |
+| 5 | //quick vegan dessert// | rýchle vegánske dezerty; recept musí byť vegánsky aj dezert |
+| 6 (2. časť) | //Italian dishes with tomato// | po prepojení s Wikipédiou: recepty, ktorých kuchyňa alebo ingrediencie patria k talianskej kuchyni |
+
+===== 4. Použité frameworky a knižnice =====
+
+^ Knižnica ^ Na čo ^ Prečo ^
+| Python 3 | celý projekt | jednoduchý jazyk so silnou podporou regexov a práce so súbormi |
+| ''requests'' | HTTP požiadavky crawlera | jednoduché a spoľahlivé API, timeout a hlavičky na jednom mieste; pre jeden web a sekvenčné sťahovanie nie je potrebný framework ako Scrapy |
+| ''re'' | extrakcia URL a všetkých údajov receptu | zadanie vyžaduje REGEX extraktor; bez XPath a bez závislosti od presnej štruktúry stránky |
+| ''csv'', ''json'' | metadáta (TSV), extrahované recepty (JSONL), index (JSON) | zadanie zakazuje databázu; textové súbory sa dajú čítať aj neskôr v Spark-u |
+| ''unittest'' | unit testy extraktora | súčasť štandardnej knižnice, netreba nič inštalovať |
+| ''tiktoken'' | počet tokenov v štatistike | BONUS úloha |
+| //plán:// PySpark, PyLucene | 2. časť – spojenie s Wikipédiou, Lucene index | distribuované spracovanie veľkých dát a porovnanie s vlastným indexom |
+
+===== 5. Architektúra crawlovacieho systému =====
+
+{{architecture.png?direct&1000|Architektúra systému}}
+
+Systém je postupný pipeline. Každý krok číta výstup predchádzajúceho kroku zo súboru, preto sa dá každý krok spustiť samostatne a zopakovať bez opätovného sťahovania:
+
+  - **Discovery** (''crawler/crawler.py'') prechádza listing stránky ''?page=N&letter=X'', regexom vyberá odkazy na recepty a ukladá unikátne URL do ''metadata/recipe_urls.tsv''. Food.com za poslednou stránkou nevracia 404, ale opakuje poslednú stránku – crawler preto kategóriu ukončí, keď stránka neprinesie žiadnu novú URL.
+  - **Download** (''crawler/downloader.py'') stiahne každú URL, úspešnú odpoveď (HTTP 200) uloží bez zmeny ako ''data/html/<id>.html'' a každý pokus zapíše do ''metadata/downloads.tsv''. Pri ďalšom spustení preskočí už stiahnuté stránky aj stránky, ktoré vrátili 404 (resume).
+  - **HTTP vrstva** (''crawler/http_client.py'') – jediné miesto s ''requests.get()'', hlavičkou, timeoutom a opakovaním pri dočasnej chybe.
+  - **Extraktor** (''extractor/'') regexmi vytiahne údaje receptu do ''data/recipes.jsonl''.
+  - **Indexer** (''indexer/'') vytvorí invertovaný index ''data/index/index.json''; vyhľadávač nad ním počíta TF × IDF.
+
+Dáta sa nikdy nemažú: zoznam URL aj metadáta sa iba dopĺňajú (append) a raw HTML sa nikdy neprepisuje inými údajmi.
+
+===== 6. Metadáta ukladané pri crawlovaní =====
+
+Súbor ''metadata/downloads.tsv'' – jeden riadok za každý pokus o stiahnutie (ukážka):
+
+^ recipe_id ^ url ^ filename ^ status_code ^ size_bytes ^
+| 15541 | https://www.food.com/recipe/4-hour-beef-stew-15541 | data/html/15541.html | 200 | 321090 |
+| 112835 | https://www.food.com/recipe/1956-stuffed-onions-112835 | data/html/112835.html | 200 | 311906 |
+| 344629 | https://www.food.com/recipe/1-baked-chicken-with-marinara-sauce-344629 | data/html/344629.html | 200 | 292056 |
+| 70099 | https://www.food.com/recipe/1-asian-noodle-salad-70099 | data/html/70099.html | 200 | 434391 |
+| 333060 | https://www.food.com/recipe/1-best-vegan-style-granola-in-the-world-333060 | data/html/333060.html | 200 | 243273 |
+| 499851 | https://www.food.com/recipe/1-caramel-slice-499851 |   | 404 | 70524 |
+| 499856 | https://www.food.com/recipe/1-cheats-chocolate-eclairs-499856 |   | 404 | 70524 |
+
+  * ''status_code'' = ''-1'' znamená sieťovú chybu bez HTTP odpovede,
+  * pri chybe (404) sa HTML neukladá, ''filename'' je prázdny, ale pokus zostane zaznamenaný,
+  * ''size_bytes'' umožňuje spočítať veľkosť dát a odhaliť podozrivo malé odpovede.
+
+Súbor ''metadata/recipe_urls.tsv'' obsahuje ''url'' a ''category'' (písmeno listingu, v ktorom bola URL nájdená).
+
+===== 7. Hlavičky, timeouty a sleepy =====
+
+^ Parameter ^ Hodnota ^ Odôvodnenie ^
+| ''User-Agent'' | ''VINF-STU-Student-Crawler/1.0'' | crawler sa otvorene predstaví ako študentský bot, nevydáva sa za prehliadač; správca servera vie, kto posiela požiadavky |
+| timeout | 10 s | pomalý server má dosť času odpovedať, no jedna zaseknutá požiadavka nezablokuje celý beh |
+| sleep | 1 s po každej požiadavke | najviac ~1 požiadavka za sekundu – server nie je zahltený; pauza je aj po chybe, takže chyby nespôsobia nával požiadaviek |
+| paralelizmus | žiadny | požiadavky idú sekvenčne, nikdy nie viac naraz |
+| retry | 2× po 10 s pri 429, 5xx a sieťovej chybe | krátky výpadok nespôsobí stratu stránky; dlhšia pauza dá serveru čas zotaviť sa. 404 sa neopakuje – je to trvalá odpoveď |
+
+Celé sťahovanie 2700 URL trvalo pri týchto nastaveniach približne 1.3 hodiny.
+
+===== 8. Kód na extrakciu URL z HTML =====
+
+Reálny kód z [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/crawler/crawler.py#L101|crawler/crawler.py]]:
+
+<code python>
+# Extract recipe URLs.
+recipe_links = re.findall(
+    r'href=["\'](/recipe/[^"\']+-\d+)["\']',
+    response.text
+)
+
+# Remove duplicates on the same page
+# while preserving their order.
+unique_page_links = list(
+    dict.fromkeys(recipe_links)
+    )
+</code>
+
+Regex nájde všetky odkazy v tvare ''/recipe/<názov>-<číslo>'', napr. ''<a href="/recipe/4-hour-beef-stew-15541">''. ''dict.fromkeys'' odstráni duplicity na jednej stránke a zachová poradie.
+
+===== 9. Kód na extrakciu entít z HTML =====
+
+Každá stránka receptu na Food.com obsahuje blok ''<script type="application/ld+json">'' s opisom receptu podľa štandardu [[https://schema.org/Recipe|schema.org/Recipe]]. Ide o verejný štandard, ktorý používajú recepty na celom webe – extraktor teda **nezávisí od vzhľadu stránky, CSS tried ani XPath**. Všetky hodnoty sa z neho vyberajú regulárnymi výrazmi.
+
+Ingrediencie sa extrahujú ako **entity**: z riadku ''"1 (250 g) package rice noodles"'' regexy odstránia množstvo, jednotku, veľkosť a poznámku a zostane entita ''rice noodles''. Tieto entity sa v 2. časti budú spájať so stránkami Wikipédie.
+
+Reálny kód z [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/extractor/extractor.py|extractor/extractor.py]] – regulárne výrazy:
+
+<code python>
+# One JSON string literal, including escaped quotes such as \"
+JSON_STRING = r'"((?:[^"\\]|\\.)*)"'
+
+LD_JSON_PATTERN = re.compile(
+    r'<script type="application/ld\+json">(.*?)</script>',
+    re.DOTALL
+)
+RECIPE_TYPE_PATTERN = re.compile(r'"@type"\s*:\s*"Recipe"')
+CANONICAL_PATTERN = re.compile(r'<link rel="canonical" href="([^"]+)"')
+RECIPE_ID_PATTERN = re.compile(r'-(\d+)/?$')
+
+# The Recipe object lists its own fields before the nested "review" and
+# "publisher" objects, so the first match of a top-level key is the
+# recipe's value, not the value of a review or the publisher.
+NESTED_START_PATTERN = re.compile(r',"(?:review|publisher)"\s*:')
+
+STRING_FIELD_PATTERNS = {
+    field: re.compile(rf'"{field}"\s*:\s*{JSON_STRING}')
+    for field in [
+        "name",
+        "author",
+        "description",
+        "recipeCategory",
+        "keywords",
+        "prepTime",
+        "cookTime",
+        "totalTime",
+        "recipeYield",
+        "datePublished",
+    ]
+}
+
+INGREDIENTS_PATTERN = re.compile(
+    rf'"recipeIngredient"\s*:\s*\[((?:\s*{JSON_STRING}\s*,?)*)\]'
+)
+STEP_PATTERN = re.compile(
+    rf'"@type"\s*:\s*"HowToStep"\s*,\s*"text"\s*:\s*{JSON_STRING}'
+)
+RATING_PATTERN = re.compile(
+    r'"aggregateRating"\s*:\s*\{[^}]*?"ratingValue"\s*:\s*"?([\d.]+)"?'
+    r'[^}]*?"reviewCount"\s*:\s*"?(\d+)"?'
+)
+CALORIES_PATTERN = re.compile(r'"calories"\s*:\s*"?([\d.]+)"?')
+STRING_LITERAL_PATTERN = re.compile(JSON_STRING)
+</code>
+
+Normalizácia ingrediencie na entitu:
+
+<code python>
+def normalize_ingredient(line):
+    """Extract the ingredient entity from one ingredient line.
+
+    "2 -3   lbs    stew meat"        -> "stew meat"
+    "1   large    onion, cut up "    -> "onion"
+    "1 (250   g) package   rice noodles" -> "rice noodles"
+    """
+
+    text = WHITESPACE_PATTERN.sub(" ", line).strip()
+    text = AMOUNT_PATTERN.sub("", text)
+    text = UNIT_PATTERN.sub("", text)
+    text = AMOUNT_PATTERN.sub("", text)
+    text = SIZE_PATTERN.sub("", text)
+    text = NOTE_PATTERN.sub("", text)
+    return text.strip(" .-").lower()
+</code>
+
+Extrakcia celého receptu:
+
+<code python>
+def extract_recipe(page):
+    """Extract one recipe from raw Food.com HTML.
+
+    Returns a dictionary, or None when the page contains no recipe
+    (for example an error page). Missing fields are None or empty lists.
+    """
+
+    recipe_json = find_recipe_json(page)
+    if recipe_json is None:
+        return None
+
+    # Only the recipe's own top-level fields, without nested reviews.
+    nested_start = NESTED_START_PATTERN.search(recipe_json)
+    top_level = (
+        recipe_json[:nested_start.start()] if nested_start else recipe_json
+    )
+
+    fields = {}
+    for field, pattern in STRING_FIELD_PATTERNS.items():
+        match = pattern.search(top_level)
+        fields[field] = unescape_json_string(match.group(1)) if match else None
+
+    if (
+        fields["description"]
+        and TEMPLATE_DESCRIPTION_PATTERN.match(fields["description"])
+    ):
+        fields["description"] = None
+
+    canonical = CANONICAL_PATTERN.search(page)
+    url = canonical.group(1) if canonical else None
+    id_match = RECIPE_ID_PATTERN.search(url) if url else None
+
+    ingredients = []
+    ingredients_match = INGREDIENTS_PATTERN.search(top_level)
+    if ingredients_match:
+        ingredients = [
+            unescape_json_string(item)
+            for item in STRING_LITERAL_PATTERN.findall(
+                ingredients_match.group(1)
+            )
+        ]
+
+    instructions = [
+        unescape_json_string(step) for step in STEP_PATTERN.findall(top_level)
+    ]
+
+    rating = RATING_PATTERN.search(top_level)
+    calories = CALORIES_PATTERN.search(top_level)
+
+    keywords = [
+        keyword.strip()
+        for keyword in (fields["keywords"] or "").split(",")
+        if keyword.strip()
+    ]
+
+    ingredient_entities = []
+    for line in ingredients:
+        entity = normalize_ingredient(line)
+        if entity and entity not in ingredient_entities:
+            ingredient_entities.append(entity)
+
+    return {
+        "id": id_match.group(1) if id_match else None,
+        "url": url,
+        "name": fields["name"],
+        "author": fields["author"],
+        "description": fields["description"],
+        "category": fields["recipeCategory"],
+        "keywords": keywords,
+        "ingredients": ingredients,
+        "ingredient_entities": ingredient_entities,
+        "instructions": instructions,
+        "prep_minutes": parse_duration_minutes(fields["prepTime"]),
+        "cook_minutes": parse_duration_minutes(fields["cookTime"]),
+        "total_minutes": parse_duration_minutes(fields["totalTime"]),
+        "servings": fields["recipeYield"],
+        "date_published": fields["datePublished"],
+        "rating": float(rating.group(1)) if rating else None,
+        "review_count": int(rating.group(2)) if rating else 0,
+        "calories": float(calories.group(1)) if calories else None,
+    }
+</code>
+
+**Spustenie:** ''python3 -m extractor.main'' → ''data/recipes.jsonl''
+
+===== 10. Indexer a index (TF) =====
+
+[[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/indexer.py|indexer/indexer.py]] vytvára **invertovaný index**: pre každý term (slovo) uloží zoznam receptov, v ktorých sa vyskytuje, a **TF** – koľkokrát sa v recepte vyskytuje:
+
+<code>
+"beef"  -> {"15541": 6, "37534": 2, ...}     (ilustračný príklad)
+"stew"  -> {"15541": 3, ...}
+</code>
+
+  * **Indexovaný text receptu:** názov, opis, kategória, kľúčové slová, ingrediencie a postup.
+  * **Tokenizácia** ([[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/tokenizer.py|tokenizer.py]]): malé písmená, regex ''[a-z0-9]+'', odstránenie stopslov (the, and, of…) a jednoznakových tokenov. Rovnaká funkcia sa používa pre dokumenty aj pre dopyty.
+  * **Uloženie:** index sa uloží do ''data/index/index.json'' (počet dokumentov, pre každý dokument názov, URL a dĺžku, a samotné postingy term → {id: TF}).
+  * **Koľkokrát sa vytvára:** **raz**, po extrakcii (''python3 -m indexer.indexer''). Vyhľadávač iba načíta uložený súbor. Index sa vytvára znova iba vtedy, keď sa zmenia extrahované dáta. **IDF sa do indexu neukladá** – počíta sa pri dopyte z ''df'' (dĺžka zoznamu postingov) a ''N'', vďaka čomu jeden index slúži pre obe metódy.
+
+**Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
+
+**Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" --idf bm25''
+
+===== 11. Implementované metódy výpočtu IDF =====
+
+''N'' = počet receptov v indexe, ''df'' = počet receptov, ktoré obsahujú term. Kód: [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/indexer/search.py|indexer/search.py]].
+
+^ Metóda ^ Vzorec ^ Správanie ^
+| **classic** | ''log10(N / df)'' | vzácne termy majú vysokú váhu; term vo všetkých receptoch má váhu 0 (ignoruje sa), ale váha nikdy nie je záporná – aj veľmi bežné slovo skóre mierne zvyšuje |
+| **bm25** (probabilistické IDF, Robertson–Spärck Jones) | ''log10((N − df + 0.5) / (df + 0.5))'' | pri vzácnych termoch takmer rovnaké ako classic; term vo viac ako polovici receptov dostane **zápornú** váhu – recepty, ktoré bežné slovo často opakujú, klesnú nižšie. ''+0.5'' zabráni deleniu nulou. Ide o IDF z rankovacej funkcie BM25 (iba IDF časť, bez BM25 normalizácie TF a dĺžky dokumentu) |
+
+Obe metódy sú **implementované vlastným kódom v Pythone, bez externých knižníc** – index, TF, IDF aj zoradenie výsledkov. PyLucene sa v 1. časti nepoužíva; bude použité až v 2. časti na porovnanie s týmto vlastným indexom. (Lucene používa variant ''log(1 + (N − df + 0.5) / (df + 0.5))'', ktorý nikdy nie je záporný.)
+
+<code python>
+def idf_classic(document_count, df):
+    return math.log10(document_count / df)
+
+
+
+def idf_bm25(document_count, df):
+    return math.log10((document_count - df + 0.5) / (df + 0.5))
+
+
+
+def search(index, query, method="classic", limit=10):
+    """Return [(score, doc_id), ...] sorted from the best match."""
+
+    idf_function = IDF_METHODS[method]
+    document_count = index["document_count"]
+    scores = {}
+
+    for term in set(tokenize(query)):
+        postings = index["postings"].get(term)
+        if not postings:
+            continue
+
+        idf = idf_function(document_count, len(postings))
+        for doc_id, tf in postings.items():
+            scores[doc_id] = scores.get(doc_id, 0.0) + tf * idf
+
+    ranked = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
+    return [(score, doc_id) for doc_id, score in ranked[:limit]]
+</code>
+
+===== 12. Porovnanie metód IDF na dopytoch =====
+
+Pre každý dopyt je uvedené ''df'' a IDF každého termu podľa oboch metód, top 5 výsledkov a zhoda top 10.
+
+Index: 2591 receptov, 12158 unikátnych termov.
+
+==== Dopyt: ''chocolate cake'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| chocolate | 294 | 0.945 | 0.892 |
+| cake | 175 | 1.170 | 1.139 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | *the Real* Black Tie Mousse Cake by Olive Garden | 27.73 | *the Real* Black Tie Mousse Cake by Olive Garden | 26.65 |
+| 2 | V's Chocolate Coma Cake (Triple Layer) | 25.79 | V's Chocolate Coma Cake (Triple Layer) | 24.96 |
+| 3 | C T's Ice Cream Cake -- Much Like D Q | 25.52 | C T's Ice Cream Cake -- Much Like D Q | 24.81 |
+| 4 | La Bete Noire Chocolate Flourless Cake | 21.38 | La Bete Noire Chocolate Flourless Cake | 20.56 |
+| 5 | "We Thought It was a Layer Cake Sandwich" | 17.56 | "We Thought It was a Layer Cake Sandwich" | 17.08 |
+
+Zhoda top 10 výsledkov: 10/10
+
+==== Dopyt: ''garlic spinach'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| garlic | 804 | 0.508 | 0.347 |
+| spinach | 76 | 1.533 | 1.517 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | I Love Palak Paneer (Spinach and Cheese Curry) | 15.32 | I Love Palak Paneer (Spinach and Cheese Curry) | 14.69 |
+| 2 | Quail and Egg on Creamed Spinach | 12.76 | "How I got my family to eat spinach" Spinach Casserole | 12.14 |
+| 3 | "How I got my family to eat spinach" Spinach Casserole | 12.26 | Quail and Egg on Creamed Spinach | 12.01 |
+| 4 | I Did It My Way Creamed Spinach | 11.74 | I Did It My Way Creamed Spinach | 11.31 |
+| 5 | P F Chang's Oolong Marinated Sea Bass | 11.23 | P F Chang's Oolong Marinated Sea Bass | 10.49 |
+
+Zhoda top 10 výsledkov: 8/10
+
+==== Dopyt: ''easy chicken dinner'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| easy | 1499 | 0.238 | -0.138 |
+| chicken | 433 | 0.777 | 0.697 |
+| dinner | 93 | 1.445 | 1.427 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | J-Slo's Sesame Chicken | 13.99 | J-Slo's Sesame Chicken | 12.55 |
+| 2 | O'charley's Chicken Harvest Soup | 12.43 | "Smells Like Sunday" Chicken Fricassee With Meatballs | 11.19 |
+| 3 | Ugly Naked Chicken | 12.43 | O'charley's Chicken Harvest Soup | 11.15 |
+| 4 | G.a.b.'s Chicken Puff Pie (Aka Chicken Pot Pie) | 12.43 | Ugly Naked Chicken | 11.15 |
+| 5 | "Smells Like Sunday" Chicken Fricassee With Meatballs | 12.32 | G.a.b.'s Chicken Puff Pie (Aka Chicken Pot Pie) | 11.15 |
+
+Zhoda top 10 výsledkov: 9/10
+
+==== Dopyt: ''quick easy dinner'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| quick | 165 | 1.196 | 1.166 |
+| easy | 1499 | 0.238 | -0.138 |
+| dinner | 93 | 1.445 | 1.427 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | Nacho Bake | 7.46 | Nacho Bake | 7.00 |
+| 2 | Quarterback Calzones | 4.32 | OAMC Chicken Fried Rice | 4.02 |
+| 3 | OAMC Chicken Fried Rice | 4.09 | Quarterback Calzones | 3.88 |
+| 4 | W.w's Mocha Muffins | 3.83 | W.w's Mocha Muffins | 3.36 |
+| 5 | B's Tatercakes #SP5 | 3.59 | I Can't Be Left Alone With It, Artichoke Pie | 2.85 |
+
+Zhoda top 10 výsledkov: 6/10
+
+==== Dopyt: ''easy dessert'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| easy | 1499 | 0.238 | -0.138 |
+| dessert | 564 | 0.662 | 0.555 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | J-E-L-L-O Fruit and Cookie Dream | 2.70 | C.M.P. Dessert | 2.22 |
+| 2 | C.M.P. Dessert | 2.65 | --Light-- Berry Loaf | 1.67 |
+| 3 | V's Short-Cut Chocolate Eclairs | 2.46 | V's Robert Redford Dessert | 1.67 |
+| 4 | Zabaglione | 2.22 | Dacquoise | 1.67 |
+| 5 | D-Liteful Salad or Dessert | 2.22 | Zabaglione | 1.53 |
+
+Zhoda top 10 výsledkov: 9/10
+
+==== Dopyt: ''salt pepper chicken'' ====
+
+^ term ^ df ^ classic IDF ^ bm25 IDF ^
+| salt | 1347 | 0.284 | -0.035 |
+| pepper | 998 | 0.414 | 0.203 |
+| chicken | 433 | 0.777 | 0.697 |
+
+^ # ^ classic ^ score ^ bm25 ^ score ^
+| 1 | G.a.b.'s Chicken Puff Pie (Aka Chicken Pot Pie) | 15.23 | J-Slo's Sesame Chicken | 12.95 |
+| 2 | J-Slo's Sesame Chicken | 14.81 | G.a.b.'s Chicken Puff Pie (Aka Chicken Pot Pie) | 11.83 |
+| 3 | Xochipilli's Chicken Under a Brick | 14.78 | O'charley's Chicken Harvest Soup | 11.56 |
+| 4 | Ugly Naked Chicken | 13.83 | Ugly Naked Chicken | 11.49 |
+| 5 | O'charley's Chicken Harvest Soup | 13.26 | Xochipilli's Chicken Under a Brick | 10.81 |
+
+Zhoda top 10 výsledkov: 9/10
+
+==== Zhodnotenie ====
+
+**1. Pri vzácnych termoch sa metódy zhodujú.** Dopyty //chocolate cake// a //garlic spinach// obsahujú iba termy, ktoré sú v menej ako tretine receptov. Obe metódy im dajú takmer rovnakú váhu (napr. ''cake'': 1.170 vs. 1.139), takže poradie výsledkov je rovnaké alebo takmer rovnaké.
+
+**2. Rozdiel vzniká pri veľmi bežných termoch.** Term ''easy'' je v 1 499 z 2 591 receptov (58 %), ''salt'' v 1 347 (52 %). Klasické IDF im dá malú **kladnú** váhu (0.238, 0.284) – každý výskyt skóre mierne zvýši. BM25 IDF im dá **zápornú** váhu (−0.138, −0.035), pretože sú vo viac ako polovici receptov – každý výskyt skóre zníži.
+
+**3. Konkrétny príklad – //easy dessert//:**
+
+^ Recept ^ TF easy ^ TF dessert ^ classic ^ bm25 ^
+| J-E-L-L-O Fruit and Cookie Dream | 3 | 3 | 3·0.238 + 3·0.662 = **2.70** (1. miesto) | 3·(−0.138) + 3·0.555 = 1.25 (mimo top 5) |
+| C.M.P. Dessert | 0 | 4 | 4·0.662 = 2.65 (2. miesto) | 4·0.555 = **2.22** (1. miesto) |
+
+Klasické IDF uprednostní recept, ktorý o sebe píše, že je „easy“. BM25 slovo ''easy'' považuje za šum a rozhodne slovo ''dessert''.
+
+**4. //salt pepper chicken//:** klasické IDF dá na 1. miesto //Chicken Pot Pie// (salt 4×, pepper 4×, chicken 16×), BM25 //J-Slo's Sesame Chicken// (salt 0×, chicken 18×). Soľ je takmer v každom recepte, preto ju BM25 ignoruje a rozhoduje ''chicken''. Pri //quick easy dinner// je rozdiel najväčší – zhoda top 10 je iba 6/10; recept //B's Tatercakes// s ''easy'' 4× pri BM25 vypadne z top 5.
+
+**5. Ktorá metóda je lepšia?** Žiadna nie je lepšia vždy:
+  * **BM25 IDF** je lepšie, keď je bežné slovo v dopyte iba „výplň“ – napr. ''salt'' v //salt pepper chicken// používateľovi nepomáha, chce kuracie mäso.
+  * **Klasické IDF** je lepšie, keď používateľ bežné slovo naozaj myslí vážne – pri //easy dessert// chce jednoduchý dezert, a BM25 práve recepty označené ako jednoduché posúva nižšie.
+
+Objektívne porovnanie pomocou precision a recall na označenej množine dopytov je plánované v 2. časti projektu.
+
+**6. Spoločné obmedzenie oboch metód:** TF je surový počet výskytov, preto vyhrávajú dlhé recepty, kde sa slovo veľakrát opakuje (napr. ''chicken'' 16–18× v receptoch s ~350 termami). Riešením by bolo logaritmické TF alebo normalizácia dĺžkou dokumentu (ako v plnom BM25).
+
+===== 13. Štatistika vycrawlovaných dokumentov =====
+
+Za **relevantný** považujem dokument, ktorý obsahuje recept (blok schema.org Recipe) s aspoň jednou ingredienciou. Stránky s HTTP 404 sa neukladajú, preto nie sú započítané v stiahnutých dokumentoch.
+
+==== Crawling ====
+
+^ Metrika ^ Hodnota ^
+| Objavené URL receptov | 2700 |
+| – z každej z 27 kategórií (''123'', ''A'', ''B'', ''C'', ''D'', ''E'', ''F'', ''G'', ''H'', ''I'', ''J'', ''K'', ''L'', ''M'', ''N'', ''O'', ''P'', ''Q'', ''R'', ''S'', ''T'', ''U'', ''V'', ''W'', ''X'', ''Y'', ''Z'') | 100 |
+| Vyskúšané URL (download) | 2700 |
+| – HTTP 200 | 2592 |
+| – HTTP 404 | 108 |
+
+==== Stiahnuté dokumenty ====
+
+^ Metrika ^ Hodnota ^
+| Počet HTML dokumentov | 2592 |
+| Veľkosť na disku | 837.5 MB |
+| Priemerná veľkosť dokumentu | 331 KB |
+| Najmenší / najväčší dokument | 222 KB / 657 KB |
+| Duplicitné dokumenty (rovnaký recept pod inou URL) alebo bez receptu | 1 |
+| Relevantné dokumenty (unikátny recept s ingredienciami) | 2591 (100.0 %) |
+
+==== Extrahované dáta ====
+
+^ Metrika ^ Hodnota ^
+| Extrahované recepty | 2591 |
+| Ingrediencie (riadky) | 24473 |
+| Unikátne ingrediencie (entity) | 4048 |
+| Unikátne kategórie | 175 |
+| Veľkosť extrahovaného textu | 2.8 MB |
+
+==== Tokeny (tiktoken, ''o200k_base'') ====
+
+^ Metrika ^ Hodnota ^
+| Tokeny v raw HTML | 360 189 240 |
+| Tokeny v extrahovanom texte | 696 808 |
+| Priemer tokenov na recept (extrahovaný text) | 269 |
+
+Rozdiel medzi počtom tokenov v raw HTML a v extrahovanom texte ukazuje, že samotný recept tvorí iba malú časť stránky – zvyšok je navigácia, skripty, štýly a odporúčané recepty.
+
+===== 14. Unit testy (BONUS) =====
+
+[[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/tests/test_extractor.py|tests/test_extractor.py]] – 21 testov, spustenie: ''python3 -m unittest discover tests -v''
+
+  * **20 reálnych stránok** Food.com je uložených v ''tests/fixtures/'' (testy nezávisia od siete). Pre každú sa overuje, že má ID zhodné s názvom súboru, správnu URL, názov, kategóriu, ingrediencie, entity (malými písmenami, bez čísel na začiatku), postup, kladný čas a hodnotenie 0–5.
+  * **Známe hodnoty** pre 4 recepty (napr. //4 Hour Beef stew//: 330 minút, 10 ingrediencií, 5 krokov, hodnotenie 4.0).
+  * **Pomocné regexy:** prevod ISO času (''PT5H30M'' → 330), dekódovanie ''\u0026'' a ''\"'', odstránenie HTML tagov, normalizácia ingrediencií.
+  * **Okrajové prípady:** stránka bez receptu vráti ''None''; názov recenzie sa nesmie zameniť za názov receptu.
+
+Výsledok:
+
+<code>
+test_every_page (test_extractor.AllFixturePagesTests.test_every_page) ... ok
+test_there_are_20_pages (test_extractor.AllFixturePagesTests.test_there_are_20_pages) ... ok
+test_duration_hours_and_minutes (test_extractor.HelperTests.test_duration_hours_and_minutes) ... ok
+test_duration_invalid (test_extractor.HelperTests.test_duration_invalid) ... ok
+test_duration_minutes_only (test_extractor.HelperTests.test_duration_minutes_only) ... ok
+test_duration_with_days (test_extractor.HelperTests.test_duration_with_days) ... ok
+test_ingredient_amount_and_unit (test_extractor.HelperTests.test_ingredient_amount_and_unit) ... ok
+test_ingredient_box_and_of (test_extractor.HelperTests.test_ingredient_box_and_of) ... ok
+test_ingredient_fraction (test_extractor.HelperTests.test_ingredient_fraction) ... ok
+test_ingredient_parenthesized_amount (test_extractor.HelperTests.test_ingredient_parenthesized_amount) ... ok
+test_ingredient_size_and_note (test_extractor.HelperTests.test_ingredient_size_and_note) ... ok
+test_ingredient_to_taste (test_extractor.HelperTests.test_ingredient_to_taste) ... ok
+test_unescape_removes_html_tags (test_extractor.HelperTests.test_unescape_removes_html_tags) ... ok
+test_unescape_unicode_and_quotes (test_extractor.HelperTests.test_unescape_unicode_and_quotes) ... ok
+test_asian_noodle_salad (test_extractor.KnownValueTests.test_asian_noodle_salad) ... ok
+test_beef_stew (test_extractor.KnownValueTests.test_beef_stew) ... ok
+test_quotes_in_name (test_extractor.KnownValueTests.test_quotes_in_name) ... ok
+test_steamed_fish (test_extractor.KnownValueTests.test_steamed_fish) ... ok
+test_page_without_recipe (test_extractor.SyntheticPageTests.test_page_without_recipe) ... ok
+test_review_name_is_not_recipe_name (test_extractor.SyntheticPageTests.test_review_name_is_not_recipe_name) ... ok
+test_template_description_is_removed (test_extractor.SyntheticPageTests.test_template_description_is_removed) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.009s
+
+OK
+</code>
+
+===== 15. Kód a spustenie =====
+
+{{vinf_kolesnykova_kod.zip|ZIP s kódom}} (kód bez stiahnutých dát).
+
+<code bash>
+python3 -m crawler.main            # discovery + download
+python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
+python3 -m indexer.indexer         # index -> data/index/index.json
+python3 -m indexer.search "beef stew" --idf classic
+python3 -m indexer.compare         # porovnanie IDF metód
+python3 -m stats.stats             # štatistika
+python3 -m unittest discover tests -v
+</code>

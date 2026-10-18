@@ -70,10 +70,18 @@ def main():
         "|---|---:|",
         f"| Objavené URL receptov | {len(discovered)} |",
     ]
-    lines += [
-        f"| – z kategórie `{category}` | {count} |"
-        for category, count in sorted(categories.items())
-    ]
+    if len(set(categories.values())) == 1:
+        # Balanced crawl: one summary row instead of 27 identical rows.
+        lines.append(
+            f"| – z každej z {len(categories)} kategórií "
+            f"(`{'`, `'.join(sorted(categories))}`) | "
+            f"{next(iter(categories.values()))} |"
+        )
+    else:
+        lines += [
+            f"| – z kategórie `{category}` | {count} |"
+            for category, count in sorted(categories.items())
+        ]
     lines += [
         f"| Vyskúšané URL (download) | {len(last_status)} |",
     ]
@@ -93,7 +101,9 @@ def main():
         f"{total_size / max(len(sizes), 1) / 1024:.0f} KB |",
         f"| Najmenší / najväčší dokument | {min(sizes, default=0) / 1024:.0f} KB"
         f" / {max(sizes, default=0) / 1024:.0f} KB |",
-        f"| Relevantné dokumenty (obsahujú recept s ingredienciami) | "
+        f"| Duplicitné dokumenty (rovnaký recept pod inou URL) "
+        f"alebo bez receptu | {len(html_files) - len(recipes)} |",
+        f"| Relevantné dokumenty (unikátny recept s ingredienciami) | "
         f"{len(relevant)} ({100 * len(relevant) / max(len(html_files), 1):.1f} %) |",
         "",
         "## Extrahované dáta",
