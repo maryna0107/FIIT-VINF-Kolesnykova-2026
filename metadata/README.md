@@ -183,11 +183,11 @@ flowchart LR
 
       subgraph OFFLINE["OFFLINE: DATA PREPARATION"]
             MAIN["main.py<br/>Pipeline Orchestrator"]:::implemented
-            CONFIG["config.py<br/>Shared Paths · Headers · Timeout · Delay"]:::implemented
+            CONFIG["config.py<br/>Headers · Timeout · Delay · Retry · Limits"]:::implemented
             DISCOVERY["crawler.py<br/>Listing Discovery · Pagination · Deduplication"]:::implemented
             DOWNLOAD["downloader.py<br/>Recipe Downloads · Resume"]:::implemented
             HTTP["http_client.py<br/>Shared requests.get() Boundary"]:::implemented
-            STORAGE_HELPERS["storage.py<br/>HTML Saving · Completed URL Loading"]:::implemented
+            STORAGE_HELPERS["storage.py<br/>HTML Saving · Resume (200 / 404)"]:::implemented
       end
 
       subgraph STORAGE["1. RAW DATA STORAGE"]
@@ -197,7 +197,8 @@ flowchart LR
       end
 
       subgraph EXTRACTION["2. DATA EXTRACTION"]
-            RECIPE["Recipe Parser<br/>Title · Ingredients · Cuisine · Time"]:::planned
+            RECIPE["Recipe Extractor (REGEX)<br/>schema.org JSON-LD · Ingredients · Time · Category"]:::implemented
+            RJSONL[("Extracted Recipes<br/>recipes.jsonl")]:::implemented
             WIKIPARSER["Wikipedia Parser<br/>Entities · Aliases · Categories"]:::planned
       end
 
@@ -209,14 +210,14 @@ flowchart LR
       end
 
       subgraph INDEXING["4. SEARCH INDEXING"]
-            CUSTOM["Custom Inverted Index<br/>TF + Two IDF Methods"]:::planned
+            CUSTOM["Custom Inverted Index<br/>TF · classic + BM25 IDF"]:::implemented
             LUCENE["PyLucene<br/>Full-Text Search Index"]:::planned
       end
 
       subgraph SEARCH["ONLINE: 5. INFORMATION RETRIEVAL"]
-            QUERY["User Query"]:::planned
-            ENGINE["Query Processing & Ranking<br/>Selected Index"]:::planned
-            RESULTS["Ranked Recipe Results"]:::planned
+            QUERY["User Query"]:::implemented
+            ENGINE["Query Processing & Ranking<br/>TF × IDF"]:::implemented
+            RESULTS["Ranked Recipe Results"]:::implemented
       end
 
       FOOD --> MAIN
@@ -235,7 +236,9 @@ flowchart LR
       DOWNLOAD --> META
       HTML --> RECIPE
       WIKI --> WIKIPARSER
-      RECIPE --> SPARK
+      RECIPE --> RJSONL
+      RJSONL --> SPARK
+      RJSONL --> CUSTOM
       WIKIPARSER --> SPARK
       SPARK --> MATCH
       MATCH --> JOIN
