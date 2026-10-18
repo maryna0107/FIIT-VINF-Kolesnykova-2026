@@ -4,3 +4,9 @@ __pycache__/
 .venv/
 venv/
 env/
+/metadata/html_structure_notes.md
+/logs/
+
+# Crawled and generated data (~1.4 GB) – not for git, see stats on the wiki
+/data/
+/archive/

@@ -5,6 +5,7 @@ import time
 from crawler.config import (
     BASE_URL,
     CATEGORIES,
+    MAX_PAGES_PER_CATEGORY,
     RECIPE_URLS_PATH,
     REQUEST_DELAY,
 )
@@ -165,6 +166,19 @@ def discover_recipes():
                     "Total unique recipes discovered:",
                     len(seen_recipe_links)
                 )
+
+                if (
+                    MAX_PAGES_PER_CATEGORY is not None
+                    and page >= MAX_PAGES_PER_CATEGORY
+                ):
+                    print(
+                        f"Category {category}: page limit "
+                        f"{MAX_PAGES_PER_CATEGORY} reached."
+                    )
+                    # The next request goes to another category, so the
+                    # politeness delay is still needed here.
+                    time.sleep(REQUEST_DELAY)
+                    break
 
                 page += 1
                 # Delay only after a processed page: there is no next request

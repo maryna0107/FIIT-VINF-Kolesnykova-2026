@@ -2,14 +2,14 @@ import csv
 import time
 
 from crawler.config import (
-    DOWNLOAD_LIMIT,
+    DOWNLOAD_PER_CATEGORY,
     DOWNLOAD_METADATA_PATH,
     HTML_DIRECTORY,
     RECIPE_URLS_PATH,
     REQUEST_DELAY,
 )
 from crawler.http_client import RequestException, get
-from crawler.storage import load_completed_urls, save_html
+from crawler.storage import load_completed_urls, load_missing_urls, save_html
 
 INPUT_PATH = RECIPE_URLS_PATH
 METADATA_PATH = DOWNLOAD_METADATA_PATH
@@ -52,10 +52,20 @@ def download_recipes():
 
         recipes = list(reader)
 
-    if DOWNLOAD_LIMIT is not None:
-        recipes = recipes[:DOWNLOAD_LIMIT]
+    if DOWNLOAD_PER_CATEGORY is not None:
+        # Keep the first N URLs of every category, in file order, so the
+        # dataset contains recipes from the whole alphabet.
+        per_category = {}
+        selected = []
+        for recipe in recipes:
+            category = recipe["category"]
+            if per_category.get(category, 0) < DOWNLOAD_PER_CATEGORY:
+                per_category[category] = per_category.get(category, 0) + 1
+                selected.append(recipe)
+        recipes = selected
 
     completed_urls = load_completed_urls(METADATA_PATH)
+    missing_urls = load_missing_urls(METADATA_PATH)
 
     # Create metadata file header only if
     # the file does not already exist.
@@ -111,6 +121,10 @@ def download_recipes():
                     f"Already downloaded, skipping: "
                     f"{filename}"
                 )
+                continue
+
+            if url in missing_urls:
+                print(f"Previously 404, skipping: {url}")
                 continue
 
             print(

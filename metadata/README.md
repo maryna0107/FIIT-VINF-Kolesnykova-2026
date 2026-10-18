@@ -53,7 +53,7 @@ Prototyp crawlera je momentálne implementovaný pomocou knižnice `requests` a 
 
 ### 3. Čo presne zapisujeme do súborov, prečo a prečo je to najlepšie?
 
-**Čo:** Discovery prepíše `metadata/recipe_urls.tsv` a zapisuje stĺpce `url` a `category`. Downloader pridáva do `metadata/downloads.tsv` stĺpce `recipe_id`, `url`, `filename`, `status_code` a `size_bytes`. Iba odpoveď `200` sa uloží ako presné response bytes do `data/html/<recipe_id>.html`; chyby HTML súbor nevytvárajú. Sieťová chyba má status `-1`.
+**Čo:** Discovery dopĺňa (append) `metadata/recipe_urls.tsv` a zapisuje stĺpce `url` a `category`. Downloader pridáva do `metadata/downloads.tsv` stĺpce `recipe_id`, `url`, `filename`, `status_code` a `size_bytes`. Iba odpoveď `200` sa uloží ako presné response bytes do `data/html/<recipe_id>.html`; chyby HTML súbor nevytvárajú. Sieťová chyba má status `-1`.
 
 **Prečo:** URL sú samostatný vstup pre download fázu. Metadata umožňujú zistiť, čo sa stalo pri každom pokuse. Raw HTML sa ukladá oddelene, aby sa dalo opakovane parsovať bez ďalšieho zaťaženia Food.com a bez straty pôvodných bytes.
 
@@ -88,7 +88,7 @@ Použité hodnoty:
 
 Timeout určuje, ako dlho crawler čaká na nadviazanie spojenia alebo na odpoveď servera. Pauza je zámerné čakanie po spracovaní požiadavky, ktoré znižuje zaťaženie servera a zabraňuje príliš rýchlemu odosielaniu požiadaviek.
 
-Ak dôjde k výpadku siete, požiadavka môže zlyhať okamžite alebo po uplynutí timeoutu. Crawler požiadavky automaticky neopakuje. Pri discovery fáze sa aktuálna kategória preskočí, pri download fáze sa sieťová chyba zapíše do metadata so statusom `-1` a pokračuje sa ďalšou URL.
+Ak dôjde k výpadku siete, požiadavka môže zlyhať okamžite alebo po uplynutí timeoutu. Pri statusoch 429, 5xx a sieťovej chybe crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Stránky s 404 sa pri ďalšom spustení preskočia. Pri discovery fáze sa aktuálna kategória preskočí, pri download fáze sa sieťová chyba zapíše do metadata so statusom `-1` a pokračuje sa ďalšou URL.
 
 ### Súčasný stav crawlera a ukážka dát
 
@@ -119,7 +119,9 @@ Použité knižnice:
 - `csv` – čítanie a zápis TSV súborov
 - `pathlib` – práca so súbormi a adresármi
 - `time` – interval medzi HTTP požiadavkami
-- `string` – generovanie kategórií A–Z
+- `json` – extrahované recepty a index
+- `unittest` – testy extraktora
+- `tiktoken` – počet tokenov v štatistike
 
 ---
 
@@ -403,7 +405,7 @@ Návrh z použitého článku je prispôsobený tomuto projektu nasledovne:
 6. **Parser:** aktuálne regex extrahuje URL; neskôr sa doplní extrakcia receptových polí a entít.
 7. **Storage:** raw HTML je oddelené od TSV metadát, aby sa veľký obsah neposielal cez riadiacu frontu a aby sa dal opakovane spracovať.
 8. **Fault tolerance:** priebežný `flush`, persistentné metadata a preskakovanie úspešne dokončených URL chránia už získané výsledky.
-9. **Politeness:** `User-Agent`, timeout a jednosekundová pauza obmedzujú zaťaženie Food.com. Pred plným crawlom sa overuje `robots.txt`.
+9. **Politeness:** `User-Agent`, timeout a jednosekundová pauza obmedzujú zaťaženie Food.com. `robots.txt` bol overený pred crawlom.
 10. **Scaling:** súčasná verzia škáluje zvisle a sekvenčne. Pri veľkom objeme sa dá discovery/download rozdeliť na pracovné dávky, ale hlavné distribuované spracovanie je plánované pre PySpark.
 
 #### Hlbšie technické rozhodnutia
@@ -411,7 +413,7 @@ Návrh z použitého článku je prispôsobený tomuto projektu nasledovne:
 **Frontier a deduplikácia.** Pri všeobecnom web crawlery by frontier obsahovala veľké množstvo URL a vyžadovala by distribuovanú frontu. Tento projekt má známy doménový rozsah a stránkovanie podľa písmen, preto je jednoduché stránkové počítadlo vhodné. Dve množiny riešia rozdielne problémy: jedna ukončuje kategóriu pri opakovanej stránke a druhá chráni celý dataset pred duplicitami.
 
 
-**Slušnosť a robots.txt.** Crawler nepoužíva paralelné požiadavky a čaká jednu sekundu. `User-Agent` identifikuje klienta. Pravidlá `robots.txt` treba overiť pred plným crawlom a prípadný `Crawl-delay` rešpektovať. Pri jednom hostiteľovi nie je potrebná distribuovaná per-domain rate-limit služba.
+**Slušnosť a robots.txt.** Crawler nepoužíva paralelné požiadavky a čaká jednu sekundu. `User-Agent` identifikuje klienta. Pravidlá `robots.txt` boli overené pred crawlom; cesty crawlera nie sú zakázané. Pri jednom hostiteľovi nie je potrebná distribuovaná per-domain rate-limit služba.
 
 **Deduplikácia obsahu.** URL deduplikácia je implementovaná. Neskôr je možné pridať SHA-256 hash uloženého HTML, aby sa odhalili rôzne URL s rovnakým obsahom. Pre aktuálny rozsah to nie je podmienka.
 
@@ -696,13 +698,13 @@ Jednotlivé fázy je možné spustiť aj samostatne.
 Discovery:
 
 ```bash
-python3 crawler/crawler.py
+python3 -m crawler.crawler
 ```
 
 Download:
 
 ```bash
-python3 crawler/downloader.py
+python3 -m crawler.downloader
 ```
 
 ---
@@ -711,15 +713,15 @@ python3 crawler/downloader.py
 
 ### 6.1 Testovacia konfigurácia
 
-Aktuálne sa používa obmedzená konfigurácia.
+Pôvodná testovacia konfigurácia bola:
 
-V `crawler.py`:
+V `crawler/config.py`:
 
 ```python
 CATEGORIES = ["123", "Z"]
 ```
 
-V `downloader.py`:
+V `crawler/config.py`:
 
 ```python
 DOWNLOAD_LIMIT = 30
@@ -808,7 +810,7 @@ Ide o orientačný odhad založený na aktuálnej testovacej vzorke.
 Implementované je:
 
 - automatické prechádzanie listing stránok,
-- kategórie `123` a `A–Z`,
+- kategórie `123` a `Z` (ďalšie písmená sa pridajú v `config.py`),
 - automatická paginácia,
 - detekcia opakovanej poslednej stránky,
 - extrakcia URL receptov,
@@ -836,3 +838,18 @@ Plánované časti systému sú rozdelené do ďalších etáp projektu:
 - vlastný invertovaný index s TF a dvoma metódami IDF,
 - samostatný PyLucene index a porovnanie výsledkov s vlastným indexom,
 - používateľské interface, ktorého konkrétna forma bude určená po konzultácii.
+
+## 8. Extraktor, indexer a report (1. odovzdanie)
+
+Podrobný opis je v reporte na wiki (`report/wiki_report.txt`, generovaný skriptom `report/build_report.py`).
+
+```bash
+python3 -m crawler.downloader      # stiahnutie všetkých URL (DOWNLOAD_LIMIT = None)
+python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
+python3 -m indexer.indexer         # invertovaný index (TF) -> data/index/index.json
+python3 -m indexer.search "beef stew" --idf bm25
+python3 -m indexer.compare         # porovnanie IDF -> metadata/idf_comparison.md
+python3 -m stats.stats             # štatistika -> metadata/stats.md
+python3 -m unittest discover tests -v
+python3 -m report.build_report     # report pre wiki
+```
