@@ -48,6 +48,9 @@ def build_index(recipes):
             "name": recipe.get("name"),
             "url": recipe.get("url"),
             "length": sum(term_counts.values()),
+            # Kept for filtering search results (not for scoring).
+            "total_minutes": recipe.get("total_minutes"),
+            "calories": recipe.get("calories"),
         }
 
         for term, tf in term_counts.items():
