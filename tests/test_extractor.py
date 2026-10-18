@@ -104,6 +104,17 @@ class SyntheticPageTests(unittest.TestCase):
         self.assertIsNone(recipe["author"])
         self.assertEqual(recipe["ingredient_entities"], ["flour"])
 
+    def test_template_description_is_removed(self):
+        page = (
+            '<link rel="canonical" href="https://www.food.com/recipe/x-2"/>'
+            '<script type="application/ld+json">'
+            '{"@type":"Recipe","name":"E.z. Asian Chicken",'
+            '"description":"Make and share this E.z. Asian Chicken recipe '
+            'from Food.com.","recipeIngredient":["1 lb chicken"]}'
+            "</script>"
+        )
+        self.assertIsNone(extract_recipe(page)["description"])
+
 
 class KnownValueTests(unittest.TestCase):
 
