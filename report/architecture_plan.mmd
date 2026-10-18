@@ -1,0 +1,76 @@
+flowchart LR
+      FOOD["Food.com"]:::external
+      WIKI["Wikipedia Dump"]:::external
+
+      subgraph OFFLINE["OFFLINE: DATA PREPARATION"]
+            MAIN["main.py<br/>Pipeline Orchestrator"]:::implemented
+            CONFIG["config.py<br/>Headers · Timeout · Delay · Retry · Limits"]:::implemented
+            DISCOVERY["crawler.py<br/>Listing Discovery · Pagination · Deduplication"]:::implemented
+            DOWNLOAD["downloader.py<br/>Recipe Downloads · Resume"]:::implemented
+            HTTP["http_client.py<br/>Shared requests.get() Boundary"]:::implemented
+            STORAGE_HELPERS["storage.py<br/>HTML Saving · Resume (200 / 404)"]:::implemented
+      end
+
+      subgraph STORAGE["1. RAW DATA STORAGE"]
+            URLS[("Recipe URLs<br/>recipe_urls.tsv")]:::implemented
+            HTML[("Raw HTML<br/>data/html/")]:::implemented
+            META[("Download Metadata<br/>downloads.tsv")]:::implemented
+      end
+
+      subgraph EXTRACTION["2. DATA EXTRACTION"]
+            RECIPE["Recipe Extractor (REGEX)<br/>schema.org JSON-LD · Ingredients · Time · Category"]:::implemented
+            RJSONL[("Extracted Recipes<br/>recipes.jsonl")]:::implemented
+            WIKIPARSER["Wikipedia Parser<br/>Entities · Aliases · Categories"]:::planned
+      end
+
+      subgraph PROCESSING["3. DISTRIBUTED PROCESSING & ENRICHMENT - PySpark"]
+            SPARK["Data Cleaning & Normalization<br/>Recipes + Wikipedia Entities"]:::planned
+            MATCH["Entity Matching<br/>Names · Aliases · Ingredients · Cuisine"]:::planned
+            JOIN["Dataset Join<br/>Recipe + Wikipedia Attributes"]:::planned
+            DATASET[("Enriched Recipe Dataset")]:::planned
+      end
+
+      subgraph INDEXING["4. SEARCH INDEXING"]
+            CUSTOM["Custom Inverted Index<br/>TF · classic + BM25 IDF"]:::implemented
+            LUCENE["PyLucene<br/>Full-Text Search Index"]:::planned
+      end
+
+      subgraph SEARCH["ONLINE: 5. INFORMATION RETRIEVAL"]
+            QUERY["User Query"]:::implemented
+            ENGINE["Query Processing & Ranking<br/>TF × IDF"]:::implemented
+            RESULTS["Ranked Recipe Results"]:::implemented
+      end
+
+      FOOD --> MAIN
+      MAIN --> DISCOVERY
+      MAIN --> DOWNLOAD
+      CONFIG --> DISCOVERY
+      CONFIG --> DOWNLOAD
+      CONFIG --> HTTP
+      DISCOVERY --> HTTP
+      DOWNLOAD --> HTTP
+      HTTP --> FOOD
+      DISCOVERY --> URLS
+      URLS --> DOWNLOAD
+      DOWNLOAD --> STORAGE_HELPERS
+      STORAGE_HELPERS --> HTML
+      DOWNLOAD --> META
+      HTML --> RECIPE
+      WIKI --> WIKIPARSER
+      RECIPE --> RJSONL
+      RJSONL --> SPARK
+      RJSONL --> CUSTOM
+      WIKIPARSER --> SPARK
+      SPARK --> MATCH
+      MATCH --> JOIN
+      JOIN --> DATASET
+      DATASET --> CUSTOM
+      DATASET --> LUCENE
+      QUERY --> ENGINE
+      CUSTOM --> ENGINE
+      LUCENE --> ENGINE
+      ENGINE --> RESULTS
+
+      classDef implemented fill:#d5f5e3,stroke:#239b56,color:#000,stroke-width:2px;
+      classDef planned fill:#fdebd0,stroke:#d68910,color:#000,stroke-width:2px;
+      classDef external fill:#d6eaf8,stroke:#2874a6,color:#000,stroke-width:2px;

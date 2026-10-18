@@ -623,7 +623,7 @@ test_review_name_is_not_recipe_name (test_extractor.SyntheticPageTests.test_revi
 test_template_description_is_removed (test_extractor.SyntheticPageTests.test_template_description_is_removed) ... ok
 
 ----------------------------------------------------------------------
-Ran 21 tests in 0.016s
+Ran 21 tests in 0.014s
 
 OK
 </code>

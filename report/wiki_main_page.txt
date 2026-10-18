@@ -1,0 +1,237 @@
+====== Maryna Kolesnykova (maryna.kolesnykova) - Private Space ======
+
+**Odovzdanie 1. časti projektu (28. 10. 2026):** [[:user:maryna.kolesnykova:odovzdanie1|Odovzdanie 1. časti – crawler, regex extraktor, vlastný index a 2 metódy IDF]]
+
+====== Recipe Search System ======
+
+Projekt je zameraný na vytvorenie vyhľadávacieho a odporúčacieho systému pre recepty, ktorý umožní používateľovi vyhľadávať jedlá podľa rôznych požiadaviek a kontextu. Systém bude podporovať kombinovanie viacerých kritérií, napríklad dostupných ingrediencií, času prípravy, nutričných vlastností, typu jedla alebo kuchyne, a umožní tak formulovať komplexnejšie otázky než jednoduché vyhľadávanie podľa názvu receptu.
+
+Vyhľadávanie bude založené na kolekcii receptov z Food.com, ktorá bude obohatená o externé znalosti z Wikipédie.
+
+===== Motivácia =====
+
+Bežné vyhľadávanie receptov je často založené na názve jedla, konkrétnej ingrediencii alebo vopred definovaných filtroch. Používateľ však môže mať komplexnejšiu požiadavku, ktorá kombinuje viacero podmienok alebo pracuje s informáciami, ktoré samotný recept explicitne neobsahuje.
+
+Cieľom projektu je umožniť flexibilnejšie vyhľadávanie, pri ktorom je možné kombinovať informácie priamo z receptov s externými znalosťami. Používateľ tak môže napríklad hľadať recepty vhodné pre určitú situáciu, porovnávať recepty podľa viacerých vlastností alebo vyhľadávať pomocou širších pojmov a kategórií namiesto presných názvov ingrediencií.
+
+===== Zdroj dát na scrapovanie =====
+
+==== 1. Food.com ====
+
+https://www.food.com/
+
+Príklad entity:
+https://www.food.com/recipe/classic-lasagna-56153
+
+Ako hlavný zdroj dát je použitá stránka Food.com, ktorá obsahuje rozsiahlu kolekciu receptov.
+
+Z jednotlivých stránok receptov sú extrahované najmä nasledujúce údaje: názov receptu, ingrediencie, množstvo ingrediencií, počet ingrediencií, čas prípravy, počet porcií, postup prípravy, nutričné informácie, hodnotenia a URL receptu.
+
+==== 2. Wikipedia ====
+
+https://en.wikipedia.org/
+
+Wikipedia bude použitá ako externý zdroj znalostí, ktoré sa priamo v receptoch z Food.com nemusia nachádzať.
+
+Zaujímavé budú najmä informácie o: ingredienciách a ich širších kategóriách, typoch potravín, svetových a regionálnych kuchyniach, typických ingredienciách jednotlivých kuchýň, pôvode a histórii jedál a kuchýň, tradičnom alebo kultúrnom kontexte jedál, zaujímavých faktoch o konkrétnych jedlách a kuchyniach a vzťahoch medzi konkrétnymi ingredienciami a všeobecnejšími pojmami.
+
+Príklady relevantných Wikipedia stránok:
+
+[[https://en.wikipedia.org/wiki/Italian_cuisine]]\\
+[[https://en.wikipedia.org/wiki/Mexican_cuisine]]\\
+[[https://en.wikipedia.org/wiki/Mediterranean_cuisine]]\\
+[[https://en.wikipedia.org/wiki/Dairy_product]]\\
+[[https://en.wikipedia.org/wiki/Citrus]]
+
+===== Prepojenie dát =====
+
+Dáta z Food.com budú prepájané s dátami z Wikipédie najmä prostredníctvom názvov jedál, kuchýň a normalizovaných názvov ingrediencií. Normalizované názvy ingrediencií (entity, napr. ''1/4 cup feta'' → ''feta'') už extraktor z 1. časti vytvára.
+
+Prepojenie bude možné využiť dvoma spôsobmi. Prvým je rozšírenie možností vyhľadávania. Wikipedia môže napríklad poskytnúť vzťah medzi všeobecnou kategóriou a konkrétnymi ingredienciami:
+
+<code>
+Citrus
+  -> Lemon
+  -> Lime
+  -> Orange
+  -> Grapefruit
+</code>
+
+Používateľ tak môže vyhľadávať pomocou všeobecného pojmu //citrus// bez potreby vymenovať všetky konkrétne citrusové plody.
+
+Druhým spôsobom bude obohatenie samotného výsledku vyhľadávania. Ak sa recept podarí prepojiť s konkrétnym jedlom alebo kuchyňou na Wikipédii, systém môže spolu s receptom poskytnúť aj dodatočné informácie, napríklad krajinu alebo región pôvodu, stručnú históriu jedla, jeho tradičné varianty, kultúrny kontext alebo zaujímavé fakty.
+
+Napríklad recept na lasagne z Food.com môže byť prepojený s článkom //Lasagna// a //Italian cuisine// na Wikipédii. Používateľ tak okrem samotného receptu môže dostať aj informácie o pôvode a histórii jedla.
+
+===== Príklady otázok, queries a očakávaných odpovedí =====
+
+==== 1. Recept podľa dostupných ingrediencií ====
+
+Otázka:\\
+Čo môžem pripraviť, ak mám doma kuracie mäso, ryžu, paradajky a cibuľu?
+
+Očakávaná odpoveď:\\
+Systém vyhľadá a zoradí recepty podľa toho, koľko zo zadaných ingrediencií obsahujú, a zobrazí prípadné ďalšie ingrediencie potrebné na ich prípravu.
+
+==== 2. Kombinácia času a nutričných vlastností ====
+
+Otázka:\\
+Nájdi recept na večeru, ktorý sa dá pripraviť do 30 minút a má menej ako 500 kcal na porciu.
+
+Očakávaná odpoveď:\\
+Systém vyhľadá recepty spĺňajúce časový limit a nutričnú podmienku a zobrazí ich spolu s časom prípravy a energetickou hodnotou.
+
+==== 3. Vyhľadávanie pomocou širšej kategórie ====
+
+Otázka:\\
+Nájdi dezerty s citrusovým ovocím.
+
+Očakávaná odpoveď:\\
+Systém pomocou Wikipédie identifikuje konkrétne ingrediencie patriace medzi citrusy, napríklad citrón, limetku, pomaranč alebo grapefruit, a následne vyhľadá recepty obsahujúce niektorú z týchto ingrediencií.
+
+==== 4. Recept s históriou a pôvodom jedla ====
+
+Otázka:\\
+Nájdi recept na tradičné lasagne a povedz mi, odkiaľ toto jedlo pochádza a akú má históriu.
+
+Očakávaná odpoveď:\\
+Systém vyhľadá relevantný recept na lasagne z Food.com a prepojí ho s informáciami z Wikipédie. Okrem receptu zobrazí informácie o jeho pôvode, histórii a spojení s talianskou kuchyňou.
+
+==== 5. Objavovanie jedál podľa kuchyne a zaujímavostí ====
+
+Otázka:\\
+Odporuč mi jedlo z mexickej kuchyne a povedz mi o ňom niečo zaujímavé.
+
+Očakávaná odpoveď:\\
+Systém vyhľadá recept súvisiaci s mexickou kuchyňou a pomocou Wikipédie doplní informácie o danom jedle alebo kuchyni, napríklad jeho pôvod, tradičné použitie, kultúrny význam alebo inú zaujímavosť.
+
+===== Návrh riešenia =====
+
+==== 1. Použité technológie a frameworky ====
+
+Projekt je implementovaný v jazyku Python 3 s využitím nasledujúcich technológií:
+
+^ Technológia ^ Využitie ^ Stav ^
+| requests | HTTP komunikácia a sťahovanie HTML dokumentov z Food.com. | implementované |
+| re (regulárne výrazy) | Extrakcia URL receptov a všetkých údajov z HTML. | implementované |
+| Vlastný Python index | Invertovaný index s TF a dvoma metódami IDF (classic, BM25). | implementované |
+| tiktoken | Počet tokenov v štatistike dát. | implementované |
+| Apache Spark (PySpark) | Distribuované spracovanie, čistenie a prepájanie receptov s údajmi z Wikipédie. | plánované (2. časť) |
+| Apache Lucene (PyLucene) | Fulltextové indexovanie a vyhľadávanie v obohatených dokumentoch. | plánované (2. časť) |
+
+Crawler využíva ''requests'' a pracuje s jednou doménou, známou štruktúrou URL a sekvenčnými požiadavkami, preto nie je potrebný crawlovací framework. PySpark a PyLucene budú využité v ďalších etapách projektu.
+
+==== 2. Návrh architektúry systému ====
+
+Systém je navrhnutý ako postupná dátová pipeline, ktorá oddeľuje získavanie dát, ich spracovanie, obohacovanie a indexovanie.
+
+Architektúra pozostáva z piatich hlavných častí:
+
+  * **Data Acquisition** – získavanie URL receptov, sťahovanie HTML dokumentov a evidencia metadát.
+  * **Data Extraction** – regex extrakcia údajov z receptov a samostatné spracovanie Wikipedia dumpu.
+  * **Distributed Processing & Enrichment** – čistenie, normalizácia a prepájanie údajov pomocou PySpark.
+  * **Search Indexing** – vlastný TF/IDF index a následne index pomocou PyLucene.
+  * **Information Retrieval** – spracovanie používateľských dopytov a vyhľadávanie relevantných receptov.
+
+=== Diagram architektúry ===
+
+Diagram architektúry je dostupný aj na: [[https://mermaid.live/edit#pako:eNqVV3tz0zgQ_yqaMMO0cyQNpaUld8OMsZXG4NjBdig35IZRbSUR9SMny7Q5hu9-K8nKo0kbyF_W7uq3713lRyspU9rqodY0K--SOeECeeGkQOrXDwLny6TVL8u0k5T5pPVPr9ej94LygmRG6Nr94ILQNbtlC5oygpw6XzwUNcJVfTPjZDFHQb_vuT6Gi81XDzlWbKFRiEdWaMVu4AOGuaZ_Q8v14UJOWNFZLP-64SdvR6AzYwVFAU_mtBKciJJr5SxfZDSnhaDpNowd-H33CoCSspiymYEaUJJSXqFJ3e3eXKCY5bSshTk6NCNLcwip4KuDx3ImqgM6HTeyg084_Fuq5eQuo9zo9VglWDFDDquS8jtdA4_IjBVEsLJYG5HWi4wlinhIY3Dte4El85eWd0VWSu-MzpAmEDjkNIxq7VhV5_QA8iCOR4A6F2LxNckYSBjYCOqHpojTf2vIRdWZUXF0jN6VdZESvjwAG8VBaF3hrwPsjXAYgYYKcklmdJWgeOihiHyXwdqyFx2ddrvoBJ11z44fVUKLdE8ZNkpB2csOCq1rXYQNdacAx6EXfTmatJrwwbFSlnF1_lrzrOqI6vukdXwggENPwZA79a0wUiLIyVzk2cmh60McW_K6yR4aUkHkdY1jcvq0JfvDgT_HoWXL5oOInHZ0NNbEnYCE2HZHMnpNRPA9dGACaUNHIb7Cn4-VSRW0Zk46JZ-h91Hgtz3H5M8tZlAwsoS2-s5820TQWXmwckKJqiLa6Ica1AZtpqfqfKvKIjsUXTnOYAJFONwaaiPCK8oVHC4EE4yuLLYyRqr1sTEaBLTZi4wUxaHAj8LAxlHk-nIuverIeRGH7rtxjJ0NHnqOsB-69mCI_Ri10WgZLQi_3UlLBA58ACAHigLZGSWF7JnnyC95TjL2n5ofG4OgQn-gtavGv73mm0kc2wNQoESXaEhEMgcVCtIn-aOx2ZNvu2YVDPAnlL0P1NiXzlRUoPcl27R9y3RLCM5uavGk8bKoIxyreik4g-I05YIaHU2N_FLmXN_Bn3XezjoowlZoD1bEnczYY5gtQ5C1a5huOQQEJr6sV7dI6b1yK-6b0CQZqSqWgIfvhqfnyHX6BxrBG9tY7dTR0qsTWlAF2K-zrB3DLkYRJbAmta7fKE7tlFzVvt7U5x3wsB-EQ7WnYQpAreJPlrfj7sexXnlj6B30saYHWxn7V_pVoITRiJcJhRio6g1JcWuKrAlSevELUQlxNPZiuVAkwjrZcnlkT2zurWDIpxBqt9-qR4ghym9FXK33XU6zhg1DPz72X9rkPX5Nrl9DXkHschqAHYb8VkTp0X4cueYMR37vtWhLwYPdbWQekBtbht5eDLnW1kbCqpdEvWA2n5qKvB7ShqUF9R21DlYMddJWyrG4h66bclOJxt69pA5NGcAEXGcbDoosZ5Whym8dOj1wVl7r4x7Vmxzdy4ajGknRdYes6kLd38PQ1_cw9KkJrmqMdZGrgePQKdroBjRlWdZ7lp5Pz-mrF_DCLm9p79npqzc3569fJGVW8t6zbrfbcNp3LBXz3uni_s8d0GbWNIDTlN6k3RVg-vryzcvu7wGavxfGxNeUTC_XJl5enJFDJrZeoFZOYSuyVP4J-jFpCXirwDbqIXg30ymBCTFp_ZRipBZltCwSYAleU6DUC3h1UYcRGJN5Q_75P5mO7XI|Otvoriť diagram architektúry]]
+
+{{ :user:maryna.kolesnykova:architecture_plan.png?direct&1100 |Diagram architektúry systému}}
+
+Legenda: zelená – implementované komponenty; oranžová – plánované komponenty; modrá – externé zdroje dát.
+
+Architektúra oddeľuje Food.com a Wikipédiu ako dva nezávislé zdroje. Ich údaje sa prepájajú až po extrakcii a normalizácii, čím sa získava dataset receptov obohatený o informácie o ingredienciách, kuchyniach a pôvode jedál.
+
+==== 3. Konfigurácia HTTP požiadaviek ====
+
+Crawler používa nasledujúce nastavenia:
+
+^ Parameter ^ Hodnota ^
+| User-Agent | ''VINF-STU-Student-Crawler/1.0'' |
+| Timeout | 10 sekúnd |
+| Sleep | 1 sekunda |
+| Paralelné požiadavky | Nie |
+| Automatické opakovanie požiadaviek | Áno – najviac 2× po 10 sekundách pri 429, 5xx a sieťovej chybe |
+
+=== User-Agent ===
+
+Hlavička ''User-Agent'' identifikuje požiadavky ako pochádzajúce zo študentského crawlera. Nepoužíva sa identita bežného webového prehliadača.
+
+=== Timeout – 10 sekúnd ===
+
+Hodnota 10 sekúnd bola zvolená ako kompromis medzi spoľahlivosťou a rýchlosťou spracovania. Poskytuje dostatočný priestor aj pre pomalšie odpovede servera, obmedzuje čas strávený čakaním pri problémoch so sieťou a pri väčšom počte požiadaviek zabraňuje zbytočnému predlžovaniu celého crawlovania.
+
+Kratší timeout (napr. 2–3 sekundy) by mohol spôsobovať zlyhania aj pri dočasne pomalých odpovediach. Výrazne dlhší timeout (napr. 30 sekúnd) by pri sekvenčnom spracovaní zbytočne predlžoval čakanie na neúspešné požiadavky.
+
+=== Sleep – 1 sekunda ===
+
+Medzi HTTP požiadavkami je nastavená pauza 1 sekunda.
+
+Táto hodnota bola zvolená ako kompromis medzi rýchlosťou získavania dát a ohľaduplnosťou voči serveru.
+
+Keďže crawler pracuje sekvenčne a neposiela paralelné požiadavky, jednosekundová pauza je primerané nastavenie. Pauza nasleduje po každom pokuse, aj po neúspešnom, takže chyby nespôsobia nával požiadaviek. V prípade potreby ju možno zvýšiť podľa odozvy servera alebo jeho pravidiel.
+
+=== Robots.txt a spracovanie chýb ===
+
+Pred implementáciou boli skontrolované pravidlá ''robots.txt''. Používané cesty ''/browse/allrecipes/'' a ''/recipe/'' neboli uvedené medzi zakázanými cestami.
+
+Pri HTTP chybe sa dokument neukladá, ale zaznamená sa jeho status. Sieťové chyby bez HTTP odpovede sa evidujú hodnotou ''-1''. Pri dočasných chybách (429 Too Many Requests, 5xx, výpadok siete) crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Odpoveď 404 sa neopakuje, pretože je trvalá – pri ďalšom spustení sa takéto URL preskočia.
+
+==== 4. Implementácia crawlera a ukážka dát ====
+
+Implementácia pozostáva z dvoch fáz:
+
+**Discovery:** prechádza listing stránky Food.com pre všetkých 27 kategórií (''123'' a ''A''–''Z''), regexom získava URL receptov a odstraňuje duplicity. Aby bol dataset vyvážený, z každej kategórie sa číta prvá stránka listingu (100 receptov).
+
+**Download:** načíta objavené URL, stiahne raw HTML dokumenty a zaznamenáva metadáta o každej požiadavke. Pri opakovanom spustení preskočí už stiahnuté stránky aj stránky, ktoré vrátili 404 (resume).
+
+=== Ukladanie dát ===
+
+^ Výstup ^ Účel ^
+| ''metadata/recipe_urls.tsv'' | Zoznam unikátnych URL receptov a ich kategórií. |
+| ''metadata/downloads.tsv'' | Evidencia ID, URL, HTTP statusu, názvu súboru a veľkosti odpovede. |
+| ''data/html/'' | Raw HTML dokumenty pomenované podľa ID receptu. |
+| ''data/recipes.jsonl'' | Extrahované údaje receptov (jeden recept na riadok). |
+| ''data/index/index.json'' | Vlastný invertovaný index (TF). |
+
+Oddelené ukladanie URL, metadát a HTML umožňuje opätovné spracovanie dokumentov bez ďalšieho sťahovania.
+
+**Deduplikácia:** počas discovery sa používajú množiny ''seen_category_links'' a ''seen_recipe_links''. Pri sťahovaní sa kontroluje úspešný záznam v metadátach spolu s existenciou HTML súboru, čím sa predchádza opakovanému sťahovaniu. Extraktor navyše odhaľuje duplicitný obsah – rôzne URL, ktoré presmerujú na ten istý recept – podľa canonical URL v stránke.
+
+=== Výsledky crawlovania ===
+
+^ Ukazovateľ ^ Výsledok ^
+| Objavené unikátne URL | 2700 (100 z každej z 27 kategórií) |
+| Úspešne stiahnuté HTML | 2592 |
+| HTTP 404 | 108 |
+| Veľkosť stiahnutých dát | 837.5 MB |
+| Extrahované unikátne recepty | 2591 |
+
+Prvý testovací beh (kategórie ''123'' a ''Z'', 30 URL, 7,6 MB) nebol zmazaný – je archivovaný (''archive/run1-2026-10-18/''). Podrobné štatistiky sú v [[:user:maryna.kolesnykova:odovzdanie1|odovzdaní 1. časti]].
+
+== Štruktúra HTML dokumentov a možnosti extrakcie dát ==
+
+Na analýzu štruktúry HTML boli použité štyri stiahnuté recepty:
+
+[[https://www.food.com/recipe/4-hour-beef-stew-15541|4-Hour Beef Stew]] – ''15541.html''\\
+[[https://www.food.com/recipe/1956-stuffed-onions-112835|1956 Stuffed Onions]] – ''112835.html''\\
+[[https://www.food.com/recipe/1-asian-noodle-salad-70099|Asian Noodle Salad]] – ''70099.html''\\
+[[https://www.food.com/recipe/1-best-vegan-style-granola-in-the-world-333060|Vegan Style Granola]] – ''333060.html''
+
+Analýza ukázala, že dokumenty majú podobnú štruktúru a obsahujú údaje v HTML elementoch, metadátach aj vložených skriptoch.
+
+Identifikované zdroje údajov:
+
+^ Časť HTML ^ Dostupné údaje ^ Využitie v projekte ^
+| %%<script type="application/ld+json">%% (schema.org Recipe) | Názov, autor, popis, kategória, kľúčové slová, ingrediencie, postup, časy, porcie, hodnotenie, nutričné hodnoty | **Hlavný zdroj údajov pre extrakciu** – verejný štandard, nezávislý od vzhľadu stránky |
+| %%<link rel="canonical">%% | Pôvodná URL receptu | Identifikácia receptu (ID) a odhalenie duplicít |
+| %%<head>%% – metadata | Popis, kľúčové slová, typ receptu, ID, čas prípravy | Doplnkový zdroj |
+| %%<h1>%% | Názov receptu | Doplnkový zdroj |
+| HTML obsah receptu | Ingrediencie, postup prípravy a ďalšie informácie | Nepoužíva sa – rovnaké údaje sú v schema.org bloku |
+
+=== Implementovaná extrakcia údajov ===
+
+Extraktor regulárnymi výrazmi vyberá údaje zo schema.org bloku: názov, popis, kategóriu, kľúčové slová, ingrediencie, postup, časy prípravy, počet porcií, hodnotenie a kalórie. Z ingrediencií vytvára normalizované entity (odstránenie množstva, jednotky a poznámky), ktoré sa v 2. časti prepoja s Wikipédiou. Extraktor nie je závislý od dynamicky generovaných CSS tried, XPath ani od pevného rozloženia stránky. Podrobný opis s ukážkami kódu je v [[:user:maryna.kolesnykova:odovzdanie1|odovzdaní 1. časti]].
+
+Zdrojový kód: [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026|GitHub – FIIT-VINF-Kolesnykova-2026]]

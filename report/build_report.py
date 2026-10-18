@@ -26,6 +26,9 @@ REPORT_DIR = Path("report")
 TEMPLATE_PATH = REPORT_DIR / "wiki_template.txt"
 SUMMARY_PATH = REPORT_DIR / "idf_summary.txt"
 OUTPUT_PATH = REPORT_DIR / "wiki_report.txt"
+MAIN_TEMPLATE_PATH = REPORT_DIR / "wiki_main_page_template.txt"
+MAIN_OUTPUT_PATH = REPORT_DIR / "wiki_main_page.txt"
+PLAN_LINK_PATH = REPORT_DIR / "architecture_plan_link.txt"
 ZIP_NAME = "vinf_kolesnykova_kod.zip"
 
 # One example recipe from each of these listing categories, so the examples
@@ -225,6 +228,27 @@ def main():
 
     OUTPUT_PATH.write_text(report, encoding="utf-8")
     print(f"Saved to: {OUTPUT_PATH}")
+
+    # The project's main wiki page shares the crawl numbers.
+    statuses = Counter()
+    with open("metadata/downloads.tsv", encoding="utf-8") as metadata_file:
+        for row in csv.DictReader(metadata_file, delimiter="\t"):
+            statuses[row["status_code"]] = statuses[row["status_code"]] + 1
+    with open("data/recipes.jsonl", encoding="utf-8") as recipes_file:
+        recipe_count = sum(1 for line in recipes_file if line.strip())
+    main_values = {
+        "PLAN_LINK": PLAN_LINK_PATH.read_text(encoding="utf-8").strip(),
+        "DISCOVERED": str(len(url_categories)),
+        "OK": str(statuses["200"]),
+        "NOT_FOUND": str(statuses["404"]),
+        "SIZE": f"{html_size / (1024 * 1024):.1f} MB",
+        "RECIPES": str(recipe_count),
+    }
+    main_page = MAIN_TEMPLATE_PATH.read_text(encoding="utf-8")
+    for key, value in main_values.items():
+        main_page = main_page.replace("{{" + key + "}}", value)
+    MAIN_OUTPUT_PATH.write_text(main_page, encoding="utf-8")
+    print(f"Saved to: {MAIN_OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
