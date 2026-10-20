@@ -860,3 +860,48 @@ python3 -m stats.stats             # štatistika -> metadata/stats.md
 python3 -m unittest discover tests -v
 python3 -m report.build_report     # report pre wiki
 ```
+
+## 9. Interaktívne vyhľadávanie
+
+Program načíta index a recepty iba raz pri štarte a beží, kým ho neukončíš.
+
+```bash
+python3 -m indexer.interactive
+```
+
+| Vstup | Čo urobí |
+|---|---|
+| ľubovoľný text, napr. `easy dessert` | vyhľadá recepty a vypíše očíslovaný zoznam top 10 (názov, čas, kalórie, skóre) |
+| číslo, napr. `1` | vypíše celý uložený recept s týmto číslom z posledného zoznamu (ingrediencie, kroky, čas, kalórie, hodnotenie, URL…) |
+| `/classic` | prepne na klasické IDF (predvolené) |
+| `/bm25` | prepne na BM25 IDF |
+| `q` (alebo `quit`, `exit`, Ctrl+C) | ukončí program |
+
+Aktuálna metóda IDF je vždy vo výzve, napr. `[IDF: bm25] >`. Zoznam platí, kým nezadáš nový dopyt, takže môžeš postupne otvárať viac receptov.
+
+Ukážka:
+
+```text
+[IDF: classic] > easy dessert
+ 1. J-E-L-L-O Fruit and Cookie Dream  [20 min, 189.2 kcal, score 2.70]
+ 2. C.M.P. Dessert  [40 min, 684.4 kcal, score 2.65]
+ ...
+
+[IDF: classic] > /bm25
+
+[IDF: bm25] > easy dessert
+ 1. C.M.P. Dessert  [40 min, 684.4 kcal, score 2.22]
+ ...
+
+[IDF: bm25] > 1
+
+C.M.P. Dessert  (ID 34639)
+  Category:     Dessert
+  Time:         prep 20 min, cook 20 min, total 40 min
+  Calories:     684.4 kcal per serving
+  Ingredients (11):
+    - 1 1/2 cups flour
+    ...
+
+[IDF: bm25] > q
+```
