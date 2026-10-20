@@ -144,7 +144,7 @@ Extrakcia celého receptu:
 
 **Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
 
-**Interaktívne vyhľadávanie:** ''python3 -m indexer.interactive'' načíta index raz a beží, kým používateľ nenapíše ''q''. Napíše sa dopyt → zobrazí sa očíslovaný zoznam receptov (čas, kalórie, skóre) → napíše sa číslo → vypíše sa celý uložený recept (ingrediencie, kroky, čas, kalórie, hodnotenie, URL). Príkazy ''/classic'' a ''/bm25'' prepínajú metódu IDF, ''/minutes N'' a ''/kcal N'' nastavujú filtre, ''/clear'' ich zruší.
+**Interaktívne vyhľadávanie:** ''python3 -m indexer.interactive'' načíta index raz a beží, kým používateľ nenapíše ''q''. Napíše sa dopyt → zobrazí sa očíslovaný zoznam receptov (čas, kalórie, skóre) → napíše sa číslo → vypíše sa celý uložený recept (ingrediencie, kroky, čas, kalórie, hodnotenie, URL). Príkazy ''/classic'' a ''/bm25'' prepínajú metódu IDF.
 
 **Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" %%--idf%% bm25''
 
