@@ -853,6 +853,7 @@ python3 -m indexer.indexer         # invertovaný index (TF) -> data/index/index
 python3 -m indexer.search "beef stew" --idf bm25
 python3 -m indexer.search "salt pork garlic" --details   # výsledky s uloženými údajmi
 python3 -m indexer.show 209913                           # celý uložený recept podľa ID
+python3 -m indexer.interactive                           # interaktívne vyhľadávanie, koniec: q
 python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
 python3 -m indexer.compare         # porovnanie IDF -> metadata/idf_comparison.md
 python3 -m stats.stats             # štatistika -> metadata/stats.md

@@ -380,6 +380,8 @@ def extract_recipe(page):
 
 **Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
 
+**Interaktívne vyhľadávanie:** ''python3 -m indexer.interactive'' načíta index raz a beží, kým používateľ nenapíše ''q''. Napíše sa dopyt → zobrazí sa očíslovaný zoznam receptov (čas, kalórie, skóre) → napíše sa číslo → vypíše sa celý uložený recept (ingrediencie, kroky, čas, kalórie, hodnotenie, URL). Príkazy ''/classic'' a ''/bm25'' prepínajú metódu IDF, ''/minutes N'' a ''/kcal N'' nastavujú filtre, ''/clear'' ich zruší.
+
 **Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" %%--idf%% bm25''
 
 **Filtre:** ''%%--max-minutes%% N'' (celkový čas do N minút) a ''%%--max-calories%% N'' (do N kcal na porciu podľa Food.com). Recept, pri ktorom údaj chýba, sa pri použití filtra nezobrazí. Príklad pre otázku 2:
@@ -658,7 +660,7 @@ test_html_tags_are_removed (test_extractor.UnescapePatternTests.test_html_tags_a
 test_unicode_and_quotes (test_extractor.UnescapePatternTests.test_unicode_and_quotes) ... ok
 
 ----------------------------------------------------------------------
-Ran 30 tests in 0.031s
+Ran 30 tests in 0.030s
 
 OK
 </code>
@@ -675,6 +677,7 @@ python3 -m indexer.search "beef stew" --idf classic
 python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
 python3 -m indexer.search "salt pork garlic" --details   # výsledky s uloženými údajmi
 python3 -m indexer.show 209913                           # celý uložený recept podľa ID
+python3 -m indexer.interactive                           # interaktívne vyhľadávanie (beží, kým nenapíšeš q)
 python3 -m indexer.compare         # porovnanie IDF metód
 python3 -m stats.stats             # štatistika
 python3 -m unittest discover tests -v

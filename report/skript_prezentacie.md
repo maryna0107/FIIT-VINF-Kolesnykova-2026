@@ -10,8 +10,7 @@ Trvanie: ~10 minút. Text v úvodzovkách hovoríš, **[UKÁŽ: …]** je pokyn,
 2. Raz si spusti, nech vieš, čo uvidíš:
    ```bash
    python3 -m unittest discover tests -v
-   python3 -m indexer.search "easy dessert" --idf classic --limit 5
-   python3 -m indexer.search "easy dessert" --idf bm25 --limit 5
+   python3 -m indexer.interactive      (napíš: easy dessert, /bm25, easy dessert, 1, q)
    python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500 --limit 5
    ```
 3. Otvor si v prehliadači svoju wiki stránku.
@@ -108,10 +107,12 @@ Obe metódy aj celý index sú môj vlastný kód v Pythone, žiadnu knižnicu n
 
 Najlepší príklad je **easy dessert**.“
 
-**[UKÁŽ naživo:]**
-```bash
-python3 -m indexer.search "easy dessert" --idf classic --limit 5
-python3 -m indexer.search "easy dessert" --idf bm25 --limit 5
+**[UKÁŽ naživo:]** spusti `python3 -m indexer.interactive` a píš:
+```text
+easy dessert        ← zoznam s klasickým IDF
+/bm25               ← prepni metódu
+easy dessert        ← zoznam s BM25 – iné poradie
+1                   ← celý recept na 1. mieste
 ```
 
 „Klasické IDF dá na prvé miesto *J-E-L-L-O Fruit and Cookie Dream* – recept, ktorý o sebe trikrát píše, že je *easy*. BM25 slovo *easy* potrestá, ten recept vypadne z top 5 a vyhrá *C.M.P. Dessert*, kde je *dessert* štyrikrát.
