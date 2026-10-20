@@ -144,7 +144,66 @@ Extrakcia celého receptu:
 
 **Skóre** receptu pre dopyt: súčet ''TF(term, recept) × IDF(term)'' cez všetky termy dopytu.
 
-**Interaktívne vyhľadávanie:** ''python3 -m indexer.interactive'' načíta index raz a beží, kým používateľ nenapíše ''q''. Napíše sa dopyt → zobrazí sa očíslovaný zoznam receptov (čas, kalórie, skóre) → napíše sa číslo → vypíše sa celý uložený recept (ingrediencie, kroky, čas, kalórie, hodnotenie, URL). Príkazy ''/classic'' a ''/bm25'' prepínajú metódu IDF.
+==== Interaktívne vyhľadávanie ====
+
+Vyhľadávanie sa dá používať aj interaktívne – program načíta index a recepty iba raz pri štarte a potom beží, kým ho používateľ neukončí. Každé ďalšie vyhľadávanie je preto okamžité.
+
+**Spustenie:**
+
+<code bash>
+python3 -m indexer.interactive
+</code>
+
+**Ovládanie:**
+
+^ Vstup ^ Čo urobí ^
+| ľubovoľný text, napr. ''easy dessert'' | vyhľadá recepty a vypíše očíslovaný zoznam top 10 (názov, celkový čas, kalórie, skóre) |
+| číslo, napr. ''1'' | vypíše celý uložený recept s týmto číslom z posledného zoznamu – kategóriu, kľúčové slová, časy, porcie, kalórie, hodnotenie, entity, autora, popis, všetky ingrediencie, všetky kroky a URL |
+| ''/classic'' | prepne na klasické IDF (predvolené) |
+| ''/bm25'' | prepne na BM25 IDF |
+| ''q'' (alebo ''quit'', ''exit'', Ctrl+C) | ukončí program |
+
+Aktuálne zvolená metóda IDF je vždy zobrazená vo výzve, napr. ''[IDF: bm25] >''. Zoznam zostáva platný, kým sa nezadá nový dopyt, takže je možné postupne zobraziť viac receptov z toho istého zoznamu.
+
+**Ukážka** – rovnaký dopyt s oboma metódami a zobrazenie receptu:
+
+<code>
+[IDF: classic] > easy dessert
+ 1. J-E-L-L-O Fruit and Cookie Dream  [20 min, 189.2 kcal, score 2.70]
+ 2. C.M.P. Dessert  [40 min, 684.4 kcal, score 2.65]
+ 3. V's Short-Cut Chocolate Eclairs  [30 min, 210.8 kcal, score 2.46]
+ ...
+
+[IDF: classic] > /bm25
+
+[IDF: bm25] > easy dessert
+ 1. C.M.P. Dessert  [40 min, 684.4 kcal, score 2.22]
+ 2. --Light-- Berry Loaf  [65 min, 174.8 kcal, score 1.67]
+ 3. V's Robert Redford Dessert  [40 min, 284.5 kcal, score 1.67]
+ ...
+
+[IDF: bm25] > 1
+
+C.M.P. Dessert  (ID 34639)
+  URL:          https://www.food.com/recipe/c-m-p-dessert-34639
+  Category:     Dessert
+  Keywords:     Kid Friendly, < 60 Mins
+  Time:         prep 20 min, cook 20 min, total 40 min
+  Servings:     12 serving(s)
+  Calories:     684.4 kcal per serving
+  Rating:       4.5 (4 reviews)
+  Entities:     flour, margarine, unsalted peanuts, peanut butter, cream cheese, ...
+  Ingredients (11):
+    - 1 1/2 cups flour
+    - 3/4 cup margarine
+    ...
+  Steps (...):
+    1. ...
+
+[IDF: bm25] > q
+</code>
+
+==== Vyhľadávanie jedným príkazom ====
 
 **Spustenie vyhľadávania:** ''python3 -m indexer.search "easy chicken" %%--idf%% bm25''
 
