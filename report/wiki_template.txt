@@ -14,7 +14,7 @@ V 2. časti projektu budú recepty prepojené s Wikipédiou – napríklad všeo
   * crawler – hotový, všetky dáta stiahnuté,
   * regex extraktor – hotový, 5 ukážok nižšie,
   * vlastný indexer + 2 metódy IDF – hotový, porovnanie na 6 dopytoch,
-  * BONUS: {{TEST_COUNT}} unit testov na 20 reálnych stránkach,
+  * BONUS: {{TEST_COUNT}} unit testov regexov na 20 listing a 20 recipe stránkach,
   * BONUS: počet tokenov (tiktoken) v štatistike.
 
 ===== 2. Zdroj dát a extrahované údaje =====
@@ -88,7 +88,7 @@ Súbor ''metadata/recipe_urls.tsv'' obsahuje ''url'' a ''category'' (písmeno li
 | timeout | 10 s | pomalý server má dosť času odpovedať, no jedna zaseknutá požiadavka nezablokuje celý beh |
 | sleep | 1 s po každej požiadavke | najviac ~1 požiadavka za sekundu – server nie je zahltený; pauza je aj po chybe, takže chyby nespôsobia nával požiadaviek |
 | paralelizmus | žiadny | požiadavky idú sekvenčne, nikdy nie viac naraz |
-| retry | 2× po 10 s pri 429, 5xx a sieťovej chybe | krátky výpadok nespôsobí stratu stránky; dlhšia pauza dá serveru čas zotaviť sa. 404 sa neopakuje – je to trvalá odpoveď |
+| retry | 2× po 10 s pri chybe servera (5xx) a sieťovej chybe | krátky výpadok nespôsobí stratu stránky; dlhšia pauza dá serveru čas zotaviť sa. 404 sa neopakuje – je to trvalá odpoveď |
 
 Celé sťahovanie {{DOWNLOAD_COUNT}} URL trvalo pri týchto nastaveniach približne {{DOWNLOAD_HOURS}} hodiny.
 
@@ -193,10 +193,22 @@ Rozdiel medzi počtom tokenov v raw HTML a v extrahovanom texte ukazuje, že sam
 
 [[https://github.com/maryna0107/FIIT-VINF-Kolesnykova-2026/blob/main/tests/test_extractor.py|tests/test_extractor.py]] – {{TEST_COUNT}} testov, spustenie: ''python3 -m unittest discover tests -v''
 
-  * **20 reálnych stránok** Food.com je uložených v ''tests/fixtures/'' (testy nezávisia od siete). Pre každú sa overuje, že má ID zhodné s názvom súboru, správnu URL, názov, kategóriu, ingrediencie, entity (malými písmenami, bez čísel na začiatku), postup, kladný čas a hodnotenie 0–5.
-  * **Známe hodnoty** pre 4 recepty (napr. //4 Hour Beef stew//: 330 minút, 10 ingrediencií, 5 krokov, hodnotenie 4.0).
-  * **Pomocné regexy:** prevod ISO času (''PT5H30M'' → 330), dekódovanie ''\u0026'' a ''\"'', odstránenie HTML tagov, normalizácia ingrediencií.
-  * **Okrajové prípady:** stránka bez receptu vráti ''None''; názov recenzie sa nesmie zameniť za názov receptu.
+Testy testujú **iba regulárne výrazy**. Každá testovacia trieda patrí k jednému regexu (alebo k skupine regexov, ktoré spolu tvoria jeden krok) a každý regex sa spúšťa na **20 reálnych stránkach** Food.com uložených pri testoch – testy preto nepotrebujú sieť:
+  * ''tests/fixtures/listing/'' – 20 listing stránok (kategórie ''123'', ''A''–''R''),
+  * ''tests/fixtures/recipes/'' – 20 stránok receptov.
+
+^ Testovaný regex ^ Súbor ^ Čo sa overuje ^
+| ''RECIPE_LINK_PATTERN'' | ''crawler/crawler.py'' | na každej z 20 listing stránok nájde presne 100 odkazov v tvare ''/recipe/<názov>-<číslo>''; iné odkazy (''/about'', ''/recipe/'' bez ID) ignoruje |
+| ''LD_JSON_PATTERN'', ''RECIPE_TYPE_PATTERN'' | ''extractor/extractor.py'' | každá z 20 stránok receptov má blok schema.org Recipe; chybová stránka žiadny |
+| ''CANONICAL_PATTERN'', ''RECIPE_ID_PATTERN'' | ''extractor/extractor.py'' | ID z canonical URL sa zhoduje s názvom súboru na všetkých 20 stránkach |
+| ''STRING_FIELD_PATTERNS'', ''NESTED_START_PATTERN'' | ''extractor/extractor.py'' | názov, kategória a čas sú na všetkých 20 stránkach; známe hodnoty (//4 Hour Beef stew//, autor //Zaney1//); úvodzovky v názve; meno z recenzie sa nezamení za názov receptu |
+| ''INGREDIENTS_PATTERN'', ''STRING_LITERAL_PATTERN'' | ''extractor/extractor.py'' | každá stránka má ingrediencie; //4 Hour Beef stew// má 10 ingrediencií, prvá je ''2 -3 lbs stew meat'' |
+| ''STEP_PATTERN'' | ''extractor/extractor.py'' | každá stránka má kroky; //4 Hour Beef stew// má 5 krokov |
+| ''RATING_PATTERN'', ''CALORIES_PATTERN'' | ''extractor/extractor.py'' | kalórie > 0 na všetkých stránkach, hodnotenie 0–5; známe hodnoty 4.0 / 4 recenzie / 240.1 kcal |
+| ''DURATION_PATTERN'' | ''extractor/extractor.py'' | ''PT5H30M'' → 330, ''P1DT2H'' → 1560; celkový čas je kladný na všetkých 20 stránkach |
+| ''UNICODE_ESCAPE'', ''SIMPLE_ESCAPE'', ''TAG_PATTERN'' | ''extractor/extractor.py'' | ''\u0026'' → ''&'', ''\"'' → ''"'', odstránenie HTML značiek |
+| ''TEMPLATE_DESCRIPTION_PATTERN'' | ''extractor/extractor.py'' | rozpozná šablónu „Make and share this… recipe from Food.com.“, skutočný popis nechá |
+| ''AMOUNT/UNIT/SIZE/NOTE_PATTERN'' | ''extractor/extractor.py'' | známe príklady (''1 (250 g) package rice noodles'' → ''rice noodles''); každá ingrediencia na všetkých 20 stránkach dá entitu malými písmenami, bez čísla a jednotky na začiatku |
 
 Výsledok:
 
@@ -214,6 +226,8 @@ python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
 python3 -m indexer.indexer         # index -> data/index/index.json
 python3 -m indexer.search "beef stew" --idf classic
 python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
+python3 -m indexer.search "salt pork garlic" --details   # výsledky s uloženými údajmi
+python3 -m indexer.show 209913                           # celý uložený recept podľa ID
 python3 -m indexer.compare         # porovnanie IDF metód
 python3 -m stats.stats             # štatistika
 python3 -m unittest discover tests -v

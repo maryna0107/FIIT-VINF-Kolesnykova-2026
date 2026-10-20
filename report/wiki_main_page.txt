@@ -152,7 +152,7 @@ Crawler používa nasledujúce nastavenia:
 | Timeout | 10 sekúnd |
 | Sleep | 1 sekunda |
 | Paralelné požiadavky | Nie |
-| Automatické opakovanie požiadaviek | Áno – najviac 2× po 10 sekundách pri 429, 5xx a sieťovej chybe |
+| Automatické opakovanie požiadaviek | Áno – najviac 2× po 10 sekundách pri chybe servera (5xx) a sieťovej chybe |
 
 === User-Agent ===
 
@@ -176,7 +176,7 @@ Keďže crawler pracuje sekvenčne a neposiela paralelné požiadavky, jednoseku
 
 Pred implementáciou boli skontrolované pravidlá ''robots.txt''. Používané cesty ''/browse/allrecipes/'' a ''/recipe/'' neboli uvedené medzi zakázanými cestami.
 
-Pri HTTP chybe sa dokument neukladá, ale zaznamená sa jeho status. Sieťové chyby bez HTTP odpovede sa evidujú hodnotou ''-1''. Pri dočasných chybách (429 Too Many Requests, 5xx, výpadok siete) crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Odpoveď 404 sa neopakuje, pretože je trvalá – pri ďalšom spustení sa takéto URL preskočia.
+Pri HTTP chybe sa dokument neukladá, ale zaznamená sa jeho status. Sieťové chyby bez HTTP odpovede sa evidujú hodnotou ''-1''. Pri dočasných chybách (chyba servera 5xx, výpadok siete) crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Odpoveď 404 sa neopakuje, pretože je trvalá – pri ďalšom spustení sa takéto URL preskočia.
 
 ==== 4. Implementácia crawlera a ukážka dát ====
 

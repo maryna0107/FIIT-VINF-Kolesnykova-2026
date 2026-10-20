@@ -9,7 +9,7 @@ from crawler.config import HEADERS, MAX_RETRIES, REQUEST_TIMEOUT, RETRY_DELAY
 RequestException = requests.RequestException
 
 # Statuses that usually mean a temporary problem on the server side.
-RETRY_STATUSES = {429, 500, 502, 503, 504}
+RETRY_STATUSES = {500, 502, 503, 504}
 
 
 def get(url):

@@ -42,7 +42,7 @@ def build_index(recipes):
 
     for recipe in recipes:
         doc_id = recipe["id"]
-        term_counts = Counter(tokenize(recipe_text(recipe)))
+        term_counts = Counter(tokenize(recipe_text(recipe))) # Count the term frequencies in this recipe.
 
         documents[doc_id] = {
             "name": recipe.get("name"),
@@ -69,9 +69,39 @@ def load_recipes(path=RECIPES_PATH):
 
 
 def save_index(index, path=INDEX_PATH):
+    """Save the index as readable JSON: one recipe or one term per line.
+
+    {
+      "document_count": 2591,
+      "documents": {
+        "100327": {"name": "Naan", "url": "...", "length": 204, ...},
+        ...
+      },
+      "postings": {
+        "feta": {"108622": 1, "166744": 3, ...},
+        ...
+      }
+    }
+
+    Terms are sorted alphabetically so a word is easy to find.
+    """
+
+    def entries(items):
+        return ",\n".join(
+            f"    {json.dumps(key, ensure_ascii=False)}: "
+            f"{json.dumps(value, ensure_ascii=False)}"
+            for key, value in items
+        )
+
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as index_file:
-        json.dump(index, index_file, ensure_ascii=False)
+        index_file.write("{\n")
+        index_file.write(f'  "document_count": {index["document_count"]},\n')
+        index_file.write('  "documents": {\n')
+        index_file.write(entries(index["documents"].items()))
+        index_file.write('\n  },\n  "postings": {\n')
+        index_file.write(entries(sorted(index["postings"].items())))
+        index_file.write("\n  }\n}\n")
 
 
 def load_index(path=INDEX_PATH):

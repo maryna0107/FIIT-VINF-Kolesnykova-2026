@@ -1,0 +1,2036 @@
+
+
+<!DOCTYPE html>
+<html xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://ogp.me/ns#" xmlns="http://www.w3.org/1999/xhtml">
+
+
+
+
+
+<head>
+
+
+
+
+
+
+
+
+
+
+        <script> const ENABLE_FDC_LTP=true</script>
+    
+    <!--Set up User consent Script -->
+    <script src="/lib/user-consent-disco-4.3.0.js"></script>
+
+
+
+<link rel="preconnect" href="https://geniuskitchen.sndimg.com">
+<link rel="preconnect" href="https://img.sndimg.com">
+
+
+
+
+
+<script>
+
+    var gk__html = document.querySelector('html');
+    gk__html.classList.add('gdpr');
+
+    if (typeof SNI_COMMUNITY_SERVICES == 'undefined') { SNI_COMMUNITY_SERVICES = {}; }
+    SNI_COMMUNITY_SERVICES.SITE_NAME = "fooddotcom";
+    SNI_COMMUNITY_SERVICES.SITE_CODE = "fdc";
+
+    
+
+
+
+
+
+
+document.addEventListener('fdc:jquery-ready',function(){var p=window.proxy&&window.proxy.jQuery;(!p||p.object!==window.jQuery)&&window.AsyncProxy.initProxy('jQuery')});
+function addToSet(set,arr){arr.forEach(function(){set.add(this)})}function arrayToSet(arr){var s;try{s=new Set(arr),this.length>0&&0===s.size&&addToSet(s,arr)}catch(e){try{s=new Set,addToSet(s,arr)}catch(e){return!1}}return s}var debug=!1;Date.prototype.addDays||(Date.prototype.addDays=function(days){return this.setDate(this.getDate()+days),this}),Date.prototype.clearTime||(Date.prototype.clearTime=function(){return this.setHours(0,0,0,0),this}),Date.prototype.isSameDay||(Date.prototype.isSameDay=function(compareDate){return this.clearTime(),compareDate.clearTime(),this.getTime()==compareDate.getTime()}),String.prototype.format||(String.prototype.format=function(){var pattern=/\{\d+\}/g,args=1==arguments.length&&arguments[0]instanceof Array?arguments[0]:arguments;return this.replace(pattern,function(capture){return args[capture.match(/\d+/)]})}),String.prototype.padLeft||(String.prototype.padLeft=function(padChar,length){var str=this,len=str.length,pad=[];if(str.length<length)for(;pad.length+len<length;)pad.push(padChar);return pad.join("")+str}),String.prototype.contains||(String.prototype.contains=function(pattern,flag){var str=this;if(pattern&&pattern.splice){var matches=!1;return pattern.forEach(function(p,i,a){return null!==str.match(new RegExp(pattern,flag))?(matches=!0,!1):void 0}),matches}return 1==pattern.length&&".!@#$%^:&*()[]{}|/\\".indexOf(pattern)>-1&&(pattern="\\"+pattern+"?"),null!==this.match(new RegExp(pattern,flag))}),String.prototype.has||(String.prototype.has=String.prototype.contains),String.prototype.capitalize||(String.prototype.capitalize=function(){return this.toLowerCase().replace(/\b[a-z]/g,function(letter){return letter.toUpperCase()})}),String.prototype.strip||(String.prototype.strip=function(){return this.trim().replace(/[^\w\s]/g,"").replace(/\s/g,"-").replace(/-+/g,"-")}),String.prototype.toRegExp||(String.prototype.toRegExp=function(){var chars=this.split(""),specialChars=[".","+","{","}","[","]","?","$","^","*","\\","(",")"],pattern=chars.map(function(c){return specialChars.contains(c)?"\\"+c:c});return new RegExp(pattern.join(""),"gi")}),String.prototype.Trim||(String.prototype.Trim=function(pattern){if(this==pattern)return"";if(1==pattern.length&&".!?@#$%^:&*()[]{}|/\\".indexOf(pattern)>-1&&(pattern="\\"+pattern+"?"),pattern){if("object"==typeof pattern)return this.replace(pattern,"");var ptrn="^("+pattern+")?(.*)("+pattern+")?$",re=new RegExp(ptrn),match=this.match(re);return match?match[2]:this}return this.replace(/^\s+|\s+$/,"")}),String.prototype.crunch||(String.prototype.crunch=function(pattern){return this.replace(/\s/g,pattern||"")}),String.prototype.toTitleCase||(String.prototype.toTitleCase=function(){return this.replace(/\w\S*/g,function(txt){return txt.charAt(0).toUpperCase()+txt.substr(1).toLowerCase()})}),String.prototype.toLocaleNumberFormat||(Number.prototype.toLocaleNumberFormat=function(){return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}),String.prototype.toCamelCase||(String.prototype.toCamelCase=function(){return this.replace(/-([a-z])/g,function(g){return g[1].toUpperCase()})}),String.prototype.toURIComponent||(String.prototype.toURIComponent=function(){var str=this,arr=str.split(" "),arrEncoded=$.map(arr,function(word){return encodeURIComponent(word)});return arrEncoded.join("+")}),String.prototype.render||(String.prototype.render=function(data,urlEncodeValues){var key,val,re,str=this;if(data&&"object"==typeof data)for(key in data)val=urlEncodeValues?encodeURIComponent(data[key]):data[key],re=("{{"+key+"}}").toRegExp(),str=str.replace(re,val);return str}),String.isString||(String.isString=function(input){return"string"==typeof input}),String.prototype.hashHex||(String.prototype.hashHex=function(){for(var input=this,hval=2166136261,i=0;i<input.length;i++)hval^=255&input.charCodeAt(i),hval+=(hval<<1)+(hval<<4)+(hval<<7)+(hval<<8)+(hval<<24);return(hval>>>0).toString(16)}),Array.isArray||(Array.isArray=function(arg){return"[object Array]"===Object.prototype.toString.call(arg)}),Array.prototype.filter||(Array.prototype.filter=function(fun){"use strict";if(void 0===this||null===this)throw new TypeError;var t=Object(this),len=t.length>>>0;if("function"!=typeof fun)throw new TypeError;for(var res=[],thisArg=arguments.length>=2?arguments[1]:void 0,i=0;len>i;i++)if(i in t){var val=t[i];fun.call(thisArg,val,i,t)&&res.push(val)}return res}),!Array.prototype.has&&window.Set?(Array.prototype.has=function(item){var s=arrayToSet(this);return s?s.has(item):this.indexOf(item)>-1},Array.prototype.contains||(Array.prototype.contains=Array.prototype.has)):Array.prototype.contains||(Array.prototype.contains=function(predicate){if(null===this)throw new TypeError("Array.prototype.contains called on null or undefined");if(!Array.isArray(this))throw new TypeError("Object must be an array");if("object"==typeof predicate)throw new TypeError("predicate must be a function or a primitive type (string, number, or boolean)");var t=Object(this),res="function"==typeof predicate?t.filter(predicate):t.filter(function(item){return item==predicate});return res.length>0}),Array.prototype.findIndex||(Array.prototype.findIndex=function(predicate){if(null===this)throw new TypeError("Array.prototype.findIndex called on null or undefined");if("function"!=typeof predicate)throw new TypeError("predicate must be a function");for(var value,list=Object(this),length=list.length>>>0,thisArg=arguments[1],i=0;length>i;i++)if(value=list[i],predicate.call(thisArg,value,i,list))return i;return-1}),Array.prototype.add||(Array.prototype.add=function(arr){if(!arr)return this;var self=this,lastIdx=self.length,args=[lastIdx,0].concat(arr);return self.splice.apply(self,args),self}),Array.prototype.pull||(Array.prototype.pull=function(item){var self=this;return self.splice(0,0,item),self}),Array.toArray||(Array.toArray=function(args){return Array.prototype.slice.call(args,0)}),Function.prototype.debounce=function(threshold,execAsap){var timeout,func=this;return function(){function delayed(){execAsap||func.apply(obj,args),timeout=null}var obj=this,args=arguments;timeout?clearTimeout(timeout):execAsap&&func.apply(obj,args),timeout=setTimeout(delayed,threshold||100)}},debug_message=function(){window.log(arguments)},function(win){function logger(name){return function(){log.history=log.history||[];var it=log.history[name]=log.history[name]||[];it.push(arguments),debug&&(win.console&&win.console[name]?win.console[name].apply(console,Array.prototype.slice.call(arguments)):win.console&&win.console.log&&win.console.log.apply(console,Array.prototype.slice.call(arguments)))}}"undefined"==typeof log&&(win.log=function(){log.history=log.history||[],log.history.push(arguments),debug&&this.console&&this.console.log&&console.log.apply(console,Array.prototype.slice.call(arguments))},win.log.info=logger("info"),win.log.error=logger("error"),win.log.warn=logger("warn"))}(window),window.viewLog=function(){var i,history=log.history||[];if(history.length)for(i=0;i<history.length;i++)this.console&&this.console.log&&console.log(history[i]);else this.console&&this.console.log&&console.log("...no debug history...")},SNI=window.SNI||{},SNI.MetaData={},SNI.MetaData.Parameter=function(){var parameters={};this.addParameter=function(key,value){key=key.toUpperCase(),parameters[key]||(parameters[key]=[]),parameters[key].push(value)},this.getParameter=function(key,separator){return key=key.toUpperCase(),parameters[key]?parameters[key].join(separator):void 0},this.getKeys=function(){return parameters},this.setParameter=function(key,value){key=key.toUpperCase(),parameters[key]=[],parameters[key].push(value)},this.resetKeys=function(){parameters={}}},SNI.MetaData.Manager=function(){var m=new SNI.MetaData.Parameter;this.addParameter=m.addParameter,this.getParameter=m.getParameter,this.getKeys=m.getKeys,this.setParameter=m.setParameter,this.resetKeys=m.resetKeys,this.getParameterString=function(key){var s=this.getParameter(key," ");return null==s&&(s=""),s},this.getPageType=function(){return this.getParameterString("Type")},this.getPageTitle=function(){return this.getParameterString("Title")},this.getSite=function(){return this.getParameterString("Site")},this.getSctnId=function(){return this.getParameterString("SctnId")},this.getSctnName=function(){return this.getParameterString("SctnName")},this.getSponsorship=function(){return this.getParameterString("Sponsorship")},this.getAbstract=function(){return this.getParameterString("Abstract")},this.getKeywords=function(){return this.getParameterString("Keywords")},this.getClassification=function(){return this.getParameterString("Classification")},this.getSctnDspName=function(){return this.getParameterString("SctnDspName")},this.getCategoryDspName=function(){return this.getParameterString("CategoryDspName")},this.getShowAbbr=function(){return this.getParameterString("Show_Abbr")},this.getRole=function(){return this.getParameterString("Role")},this.getDetailId=function(){return this.getParameterString("DetailId")},this.getPageNumber=function(){return this.getParameterString("PageNumber")},this.getUniqueId=function(){return this.getParameterString("UniqueId")},this.getUserId=function(){return this.getParameterString("UserId")},this.getUserIdEmail=function(){return this.getParameterString("UserIdEmail")},this.getUserIdCreateDt=function(){return this.getParameterString("UserIdCreateDt")},this.getUserIdVersion=function(){return this.getParameterString("UserIdVersion")},this.getFilters=function(){return this.getParameterString("Filters")},this.getMultimediaFlag=function(){return this.getParameterString("MultimediaFlag")},this.getChefName=function(){return this.getParameterString("ChefName")},this.getMealPart=function(){return this.getParameterString("MealPart")},this.getCuisine=function(){return this.getParameterString("Cuisine")},this.getOccasion=function(){return this.getParameterString("Occasion"," ")},this.getMainIngredient=function(){return this.getParameterString("MainIngredient")},this.getTechnique=function(){return this.getParameterString("Technique"," ")},this.getDish=function(){return this.getParameterString("Dish"," ")},this.getMealType=function(){return this.getParameterString("MealType"," ")},this.getNutrition=function(){return this.getParameterString("Nutrition"," ")},this.getDifficulty=function(){return this.getParameterString("Difficulty"," ")},this.getPrepTime=function(){return this.getParameterString("PrepTime")},this.getSearchTerm=function(){var args=parseQueryString();for(var arg in args){var s=arg.toUpperCase();if("SEARCHSTRING"==s)return args[arg]}return""},this.setMultimediaFlag=function(flag){null!=flag?this.addParameter("MultimediaFlag",flag):this.addParameter("MultimediaFlag","")},this.parseQueryString=function(str){str=str?str:document.location.search;var query="?"==str.charAt(0)?str.substring(1):str,args={};if(query)for(var fields=query.split("&"),f=0;f<fields.length;f++){var field=fields[f].split("=");args[unescape(field[0].replace(/\+/g," "))]=unescape(field[1].replace(/\+/g," "))}return args}};var MetaDataManager=SNI.MetaData.Manager;"undefined"==typeof mdManager&&(mdManager=new MetaDataManager),window.AsyncProxy=function(name){function argsToArray(args){return Array.isArray(args)&&(String.isString(args[0])||null===args[0])?args:Array.toArray(args)}var async=this,isInitialized=!1,queue=[],extensions=[],wait=[];async.name=name,async.init=function(object){var chk,p=this,timeout=24,count=0;p.object=object,isInitialized=!!object,isInitialized?p.exec(object):chk=setInterval(function(){isInitialized||count>timeout?(clearInterval(chk),isInitialized?p.exec(window[p.name]):log("ERROR initializing AsyncProxy for "+this.name)):(p.object=window[p.name],isInitialized=!!p.object,count++)},250)},async.exec=function(object){this.object=object;var extension,item,callback,e=[].concat(extensions),q=[].concat(queue),w=[].concat(wait);for(extensions=null,queue=null,wait=null;extension=e.shift();)this.extend(extension);for(;item=q.shift();)this.forward(item);for(;callback=w.shift();)"function"==typeof callback&&callback()},async.push=async.forward=function(payload){if(!payload)return void log("proxy.{0}: no payload passed to push method.".format(this.name));if(isInitialized){payload=argsToArray(payload);var methodName=payload.shift(),object=this.getObjectOrMethod(methodName),property=object._property,method=object[property]||"function"==typeof object&&object||null;return!!method&&method.apply(object,payload)}queue&&queue.push(payload)},async.extend=function(payload){if(payload&&payload.shift)if(isInitialized){var methodName=payload.shift(),object=this.getObjectOrMethod(methodName,!0),childObject=payload.shift(),property=object._property;if(!Array.isArray(childObject)&&"object"==typeof childObject&&object[property]){object=object[property];var keys=Object.keys(childObject);keys.forEach(function(key){object[key]=childObject[key]})}else object[property]=childObject}else extensions&&extensions.push(payload)},async.wait=function(callback){return callback?isInitialized?callback():void(wait&&wait.push(callback)):void 0}},window.AsyncProxy.prototype.getObjectOrMethod=function(namespace){var property,object=this.object,methodName=namespace.split(".");if(methodName.length>0&&methodName[0].length>0)for(;methodName.length;)property&&("undefined"==typeof object[property]&&(object[property]={}),object=object[property]),property=methodName.shift();return object&&(object._property=property),object},window.AsyncProxy.asyncJq=function(src,callback){proxy.jQuery.push(["getScript",src,callback||function(){log("Done loading ASYNC: "+src)}])},window.AsyncProxy.asyncNext=function(response){if(asyncURLs&&asyncURLs.length){var url=asyncURLs.shift();AsyncProxy.asyncJq(url,AsyncProxy.asyncNext),log("Loading ASYNC: "+url)}},window.AsyncProxy.initProxy=function(name){if("$"==name)return!0;var prox=window.proxy[name];return prox&&window[name]&&(log("proxy: "+name),window.proxy[name].init(window[name])),!0},window.AsyncProxy.register=function(){window.proxy||(window.proxy={});var names=Array.toArray(arguments),callback=names.length>0&&"function"==typeof names[0]&&names.shift();names.forEach(function(name){window.proxy[name]=new AsyncProxy(name)}),callback&&callback()},function(){var proxyCallback=function(){FD={subscribe:function(){var args=Array.prototype.slice.call(arguments,0);proxy.FD.push(["subscribe"].concat(args))}},window.proxy.jQuery.push(["ajaxSetup",{cache:!0}])};window.AsyncProxy.register(proxyCallback,"jQuery","SNI","SniAds","FD","PinUtils","_satellite")}(),window.asyncURLs=[];
+
+    if (window.__fdcJQueryReadySignaled && window.jQuery) {
+        window.AsyncProxy.initProxy('jQuery');
+    }
+
+    // initialize the core components
+    var sessionInitInfo = {
+        MetaData: {
+            environment: 'production',
+            pageType: 'DEFAULT PAGE TYPE',
+        },
+
+        environment: 'production',
+        serverURL:'https://www.food.com',
+        imgServerURL:'https://geniuskitchen.sndimg.com',
+        resizableImgServerURL: 'https://img.sndimg.com/food/image/upload/{size_params}/v1',
+        secureServerURL:'https://api.food.com',
+        idspURL:'https://accounts.dds.discovery.com/accounts-proxy-prod/v1',
+        motifEndpointURL:'https://api.sni.foodnetwork.com/moderation-chitter-proxy/v1',
+        tvApiUrl: 'https://api.foodnetwork.com/tv-auth/v1',
+        shareServerURL: 'http://share.food.com',
+        gdpr: true,
+        apiServerURL: 'https://www.food.com',
+        RecipeBoxApiURL: 'https://www.food.com/saves',
+        RecipeBoxWrapperURL: 'https://www.food.com'+'/services/mobile/recipebox/wrap-rb',
+        groceryListURL: 'http://recipes.food.com/shopping-list',
+        newsletterURL: 'http://mynewsletters.scrippsnetworks.com/?mode=subscribe&nlbrand=gk&source=0000_FC_HEADER',
+        adServer: 'adsremote.scrippsnetworks.com',
+        reCaptcha: 'removed_likely_unused_add_to_param_store_if_needed',
+        defaultAvatarURL: 'https://img.sndimg.com/food/image/upload/w_45,h_45,q_100,c_thumb/v1/fdc/img/placeholder/avatar.jpg',
+        cookieDomain: '.food.com',
+        reviewSubmissionURL: 'https://www.food.com/services/mobile/recipe/review/submit',
+        IS: { FB: { id: '1301786389935271' } },
+
+        Video: {
+            domain: ''
+        },
+
+        saves: {
+            apiUrl: 'https://api.digitalstudios.discovery.com/fdc-web/v1',
+            apiKey: 'AwUEJIX8j17uBcBz9OT9qlwj48SxeBX6oINoHTd0'
+        },
+
+        SocialUploader: {
+            apiKey: 'A6x6UxJTDSEenRnl6jrIsz',
+            preSubmitUrl: "/rzfoodservices/web/photo-upload/{assetType}/presubmit",
+            submitUrl: "/rzfoodservices/web/photo-upload/{assetType}/submit",
+            triggerClass: 'add-pictures',
+            pickOptions: {
+                multiple: true
+            },
+            storeOptions: {
+                path: null,
+                transId: null
+            },
+            cloudinaryPathPrefix: '',
+            cloudinaryAvatarPathPrefix: '/food_avatar',
+            cloudinaryImgBasePath: 'img.sndimg.com/food',
+            cloudinaryUrl: 'https://img.sndimg.com/food/image/upload',
+            cloudinaryV1: '/v1/img',
+            cloudinaryFullBucket: '/v1/fdc'
+        },
+
+        useShortUrl: true,
+        initHeader: true
+
+    };
+    (sessionInitInfo.serverURL||'').replace('http:','https:');
+    (sessionInitInfo.apiServerURL||'').replace('http:','https:');
+    proxy.FD.push(['Session.init',sessionInitInfo]);
+    document.addEventListener('IDSP:is-ready', () => {
+        if (typeof globalThis.IDSP !== 'undefined') {
+            proxy.FD.push(['Session.init',sessionInitInfo, true]);
+        }
+    });
+</script>
+
+
+
+
+
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+
+
+
+        <meta name="description" content="Home of Food.com" />
+        <meta name="sailthru.tags" content="" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="p:domain_verify" content="2f63e78b5ce1412b906e6e406ba61bef" />
+        <meta property="fb:app_id" content="1301786389935271" />
+        <meta property="fb:pages" content="118337671518735" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="All Recipes By Title - letter N - p1 - Food.com" />
+        <meta property="og:url" content="https://www.food.com/browse/allrecipes?letter=N" />
+        <meta property="og:description" content="Home of Food.com" />
+        <meta property="og:image" content="https://geniuskitchen.sndimg.com/fdc-new/img/fdc-shareGraphic.png" />
+
+
+
+<title>All Recipes By Title - letter N - p1 - Food.com</title>
+
+<link rel="image_src" href="https://geniuskitchen.sndimg.com/fdc-new/img/fdc-shareGraphic.png" />
+<link rel="shortcut icon" type="image/x-icon" href="https://geniuskitchen.sndimg.com/gk/img/favicon.png"/>
+
+<link rel="touch-icon" sizes="120x120" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-precomposed.png?v=284" />
+<link rel="touch-icon" sizes="152x152" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-ipad-precomposed.png?v=284" />
+<link rel="touch-icon" sizes="167x167" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-ipad-retina-precomposed.png?v=284" />
+<link rel="touch-icon" sizes="180x180" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-iphone-retina-precomposed.png?v=284" />
+
+<link rel="apple-touch-icon" sizes="120x120" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-precomposed.png?v=284" />
+<link rel="apple-touch-icon" sizes="152x152" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-ipad-precomposed.png?v=284" />
+<link rel="apple-touch-icon" sizes="167x167" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-ipad-retina-precomposed.png?v=284" />
+<link rel="apple-touch-icon" sizes="180x180" href="https://geniuskitchen.sndimg.com/gk/img/apple-touch-icon-iphone-retina-precomposed.png?v=284" />
+
+
+<link rel="canonical" href="https://www.food.com/browse/allrecipes?letter=N"/>
+
+
+
+<link rel="next" href="https://www.food.com/browse/allrecipes?letter=N&page=2" />
+
+<link rel="publisher" href="https://plus.google.com/117908044835237955765" />
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="https://geniuskitchen.sndimg.com/gk/css/gk.min.css?v=284" />
+
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="https://geniuskitchen.sndimg.com/gk/css/pages/browse-all.min.css?v=284" />
+
+    <style type="text/css">
+
+    </style>
+<style>
+    body {
+        background-image: none;
+    }
+    .fd-logo .ie-logo {
+        display: none;
+    }
+</style>
+
+<!-- Include Page Data JS Configuration -->
+
+
+
+<script type="text/javascript">
+
+    // initialize the page configuration
+    (function() {
+
+        // set up SNI object
+        if ( typeof SNI == 'undefined' ) { SNI = {}; }
+        proxy.SNI.extend([ '', {
+            Config: {
+                name: 'FOODCOM',
+                domain: 'https://www.food.com',
+                imgDomain: 'https://geniuskitchen.sndimg.com',
+                aimDomain: 'http://aim.food.com',
+                shareDomain: 'http://share.food.com',
+                cookieDomain: '.food.com',
+                Video: {
+                    fallbackSiteSectionId: '953690', // Unique for each site and each environment
+                    networkId: '191701', // Shared across all Scripps properties
+                    nielsen: {
+                        apid: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX'
+                    },
+                    playerUrl: {
+                        base: 'http://www.player.video.snidigital.com/vpc/1/6',
+                        css: 'http://www.player.video.snidigital.com/vpc/1/6/css/sni-video.min.css',
+                        skin: 'http://www.player.video.snidigital.com/vpc/1/6/skins/sni-default/sni-default.json',
+                        layout: 'http://www.player.video.snidigital.com/vpc/1/6/skins/sni-default/layout-no-embed.xml'
+                    }
+                }
+            },
+            Community: {
+                xUrlPre: '',
+                aimDomain: 'http://aim.food.com',
+                ur3Domain: 'http://share.food.com',
+                ssoController: 'http://www.scrippscontroller.com/sso/checkcontrollercookie.html',
+
+                UR: {
+                    initialized: true,
+                    noAIM: true,
+
+                    // moved userInfo parameters to FD.Session.init()
+
+                    shareServerUrl: 'http://share.food.com',
+                    globalLoginURL: 'https://www.food.com/login',
+                    globalLogoutBaseUrl: 'https://www.food.com/logout-redirect',
+                    globalRegistrationURL: 'https://www.food.com/login',
+                    globalRegistrationLiteURL: 'https://www.food.com/login',
+                    globalPrivateProfileUrl: 'https://www.food.com/user',
+                    globalUserSettingsUrl: 'https://www.food.com/user',
+                    imageServerUrl: 'https://geniuskitchen.sndimg.com',
+                    previewUrl: 'null'
+                }
+            }
+        }]);
+
+    }());
+
+    // Google Analytics
+    var g_adkeyword="All Recipes By Title - letter N - p1 - Food.com";
+    var g_aduniqueid = '';
+    var g_recipesource= '';
+
+</script>
+
+
+<!-- Include Top JS Tags -->
+
+
+
+
+<script>
+    
+            mdManager = typeof mdManager !== 'undefined' ? mdManager : new MetaDataManager();
+        mdManager.addParameter("UniqueId", "");
+        mdManager.addParameter("Subdomain", "");
+        mdManager.addParameter("Url", "https://www.food.com/browse/allrecipes?letter=N");
+        mdManager.addParameter("Title", "");
+        mdManager.addParameter("Site", "FOODCOM");
+        mdManager.addParameter("Version", "beta");
+        mdManager.addParameter("Site Tier", "direct");
+
+    
+</script>
+
+
+
+
+
+
+
+
+
+</head>
+
+<body class="" data-page-type="">
+
+    
+    <div class="fd-site">
+        <div class="fd-site-wrapper">
+
+            
+
+
+
+
+            <script defer src="/_app/export/siteHeaderExported-deploy-84.js"></script>            <style id="svelte-1u3q4z5"> svg.spin {  animation: svelte-1u3q4z5-spin 2s infinite linear;}@keyframes svelte-1u3q4z5-spin {  0% {    transform: rotate(0deg);  }  100% {    transform: rotate(360deg);  }}/*   Legacy FDC Styles notice: Some of these variables, fonts are breakpoints are also duplicated in ui/_src/gk/less/core/bootstrap/type.less  This code base is the source of truth*/@media screen and (min-width: 744px) {}@media screen and (max-width: 743px) {}@media screen and (min-width: 1025px) {}@media screen and (max-width: 1024px), print {}:root {--n: 4;--margin: 16px;--gap: 16px;}@media screen and (min-width: 744px) {:root {--n: 6;--margin: 32px;--gap: 24px;}}@media screen and (min-width: 1025px) {:root {--n: 12;--margin: 32px;--gap: 32px;}}header.svelte-1u3q4z5,button.svelte-1u3q4z5 {font-family:var(--fonts-base);font-weight:400;font-size:16px;line-height:24px;--current-line-height: 24px;letter-spacing:0;}@media screen and (min-width: 744px) and (max-width: 1024px) {header.svelte-1u3q4z5,  button.svelte-1u3q4z5 {font-size:20px;line-height:32px;--current-line-height: 32px;}}a.svelte-1u3q4z5 {text-decoration:none;}#header-wrap.svelte-1u3q4z5 {position:relative;width:100%;background-color:black;z-index:1010;}@media print {#header-wrap.svelte-1u3q4z5 {background:none;display:contents;}}#header-wrap.view-nav.svelte-1u3q4z5 {position:sticky;top:0;}header.svelte-1u3q4z5 {height:82px;display:flex;flex-flow:row nowrap;align-items:center;justify-content:space-between;color:white;background-color:black;padding:0 var(--margin);max-width:calc(1280px);}@media print {header.svelte-1u3q4z5 {background:none;}}@media screen and (min-width: 1210px) {header.svelte-1u3q4z5 {margin:auto;}}header.svelte-1u3q4z5 .links-container:where(.svelte-1u3q4z5) {display:flex;align-items:center;}header.svelte-1u3q4z5 a:where(.svelte-1u3q4z5) {color:white;text-decoration:none !important;font-weight:inherit;}header.svelte-1u3q4z5 a:where(.svelte-1u3q4z5):hover,header.svelte-1u3q4z5 a:where(.svelte-1u3q4z5):focus,header.svelte-1u3q4z5 a:where(.svelte-1u3q4z5):active {background:transparent;color:white;}header.svelte-1u3q4z5 ul:where(.svelte-1u3q4z5) {display:contents;list-style:none;}@media print {header.svelte-1u3q4z5 {position:absolute;width:20vw;right:7vw;display:block;}}.logo.svelte-1u3q4z5 {height:min-content;z-index:1011;line-height:0;}@media print {.logo.svelte-1u3q4z5 {width:180px;color:black;}}.menu-icon.svelte-1u3q4z5 {z-index:1011;}@media screen and (max-width: 743px) {.menu-icon.svelte-1u3q4z5 {margin-right:12px;padding:5px;}.menu-icon.svelte-1u3q4z5 svg:not(.user-avatar-logged-out) {height:38px;width:38px;pointer-events:none;}}@media screen and (min-width: 744px) {.menu-icon.svelte-1u3q4z5 {margin-right:24px;}.menu-icon.svelte-1u3q4z5 svg:not(.user-avatar-logged-out) {height:29px;width:29px;pointer-events:none;}}@media screen and (min-width: 1210px) {.menu-icon.svelte-1u3q4z5 {display:none;}}@media screen and (max-width: 1209px) {.nav-list.svelte-1u3q4z5 {display:flex;flex-flow:column nowrap;padding-left:0;margin:0 37px 0 28px;}}@media screen and (min-width: 744px) {.nav-list.svelte-1u3q4z5 {margin-left:21px;}}@media screen and (max-width: 743px) {.nav-list.svelte-1u3q4z5 {margin-left:14px;}}@media screen and (min-width: 1210px) {.nav-list.svelte-1u3q4z5 {padding:0;margin:0;display:flex;}}.nav-list-item.svelte-1u3q4z5 {display:flex;}@media screen and (max-width: 1209px) {.nav-list-item.svelte-1u3q4z5 {padding:30px 0;display:flex;flex-flow:column nowrap;align-self:flex-start;width:100%;cursor:pointer;}.nav-list-item.svelte-1u3q4z5:not(:last-child) {border-bottom:1px solid rgba(255, 255, 255, 0.3);}}@media screen and (min-width: 1210px) {.nav-list-item.svelte-1u3q4z5 {height:82px;align-items:center;}}@media screen and (min-width: 1210px) {.nav-list-item.svelte-1u3q4z5:hover .nav-list-item__text:where(.svelte-1u3q4z5),  .nav-list-item.svelte-1u3q4z5:focus .nav-list-item__text:where(.svelte-1u3q4z5) {border-bottom:3px solid #77E2E1;cursor:pointer;}.nav-list-item.svelte-1u3q4z5:hover .dropdown:where(.svelte-1u3q4z5),  .nav-list-item.svelte-1u3q4z5:focus .dropdown:where(.svelte-1u3q4z5) {display:block;}}@media screen and (max-width: 1209px) {.nav-list-item.open.svelte-1u3q4z5 {border-bottom:none;padding-bottom:14px;}.nav-list-item.open.svelte-1u3q4z5 .nav-list-item__text:where(.svelte-1u3q4z5) {border-bottom:3px solid #77E2E1;}.nav-list-item.open.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {display:flex;}.nav-list-item.open.svelte-1u3q4z5 .caret:where(.svelte-1u3q4z5) svg {transform:none;}}.nav-list-item__text.svelte-1u3q4z5 {font-weight:900;font-family:var(--fonts-heading);text-transform:uppercase;}@media screen and (max-width: 1209px) {.nav-list-item__text.svelte-1u3q4z5 {align-self:flex-start;font-size:20px;font-weight:900;line-height:24px;letter-spacing:1px;}}@media screen and (min-width: 1210px) {.nav-list-item__text.svelte-1u3q4z5 {margin-left:24px;margin-top:8px;min-height:25px;overflow:hidden;white-space:nowrap;font-size:15px;line-height:16px;letter-spacing:1px;}}.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {display:none;font-weight:400;font-size:15px;line-height:35px;letter-spacing:1px;font-family:var(--fonts-base);background-color:black;text-align:left;width:max-content;z-index:1021;}@media screen and (max-width: 1209px) {.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {position:relative;flex-flow:column nowrap;align-self:flex-start;padding:0;margin:18px 0 0;}}@media (max-width: 1111px) {.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {padding-left:calc(24px / 2);}}@media screen and (min-width: 1210px) {.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {position:absolute;top:82px;padding:7px 32px 24px 24px;}}.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5):hover,.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5):focus {display:block;}@media screen and (max-width: 1209px) {.nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5):hover,  .nav-list-item.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5):focus {display:flex;}}.nav-list-item.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5) {color:white;font-size:16px;letter-spacing:0;}@media screen and (min-width: 1210px) {.nav-list-item.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5) {display:inherit;}}.nav-list-item.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5) a:where(.svelte-1u3q4z5) {line-height:24px;}.nav-list-item.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):hover a:where(.svelte-1u3q4z5),.nav-list-item.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):focus a:where(.svelte-1u3q4z5) {color:#77E2E1;}.nav-list-item.svelte-1u3q4z5 .dropdown__item--last:where(.svelte-1u3q4z5) {margin-top:21px;}.nav-list-item.svelte-1u3q4z5 .dropdown__item--last:where(.svelte-1u3q4z5) a:where(.svelte-1u3q4z5) {color:#77E2E1;font-weight:600;}@media screen and (max-width: 1209px) {.nav-list-item.svelte-1u3q4z5 .caret:where(.svelte-1u3q4z5) {position:absolute;right:50px;}.nav-list-item.svelte-1u3q4z5 .caret:where(.svelte-1u3q4z5) svg {transform:rotate(3.1416rad);}}@media screen and (min-width: 1210px) {.nav-list-item.svelte-1u3q4z5 .caret:where(.svelte-1u3q4z5) {display:none;}}.profile-wrap.svelte-1u3q4z5 {min-width:45px;}@media screen and (min-width: 1210px) {.profile-wrap.svelte-1u3q4z5 {position:relative;display:flex;align-items:center;height:100%;}}.profile-wrap.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {display:block;position:absolute;top:82px;left:0;text-align:right;width:100%;min-width:169px;font-size:16px;font-weight:400;line-height:35px;background-color:black;z-index:1021;padding:17px 13px;}.profile-wrap.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) button:where(.svelte-1u3q4z5) {display:inline-block;}@media screen and (min-width: 1210px) {.profile-wrap.svelte-1u3q4z5 .dropdown:where(.svelte-1u3q4z5) {text-align:left;right:-24px;left:unset;padding:7px 38px 36px 24px;}}.profile-wrap.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):hover a:where(.svelte-1u3q4z5),.profile-wrap.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):focus a:where(.svelte-1u3q4z5),.profile-wrap.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):hover button:where(.svelte-1u3q4z5),.profile-wrap.svelte-1u3q4z5 .dropdown__item:where(.svelte-1u3q4z5):focus button:where(.svelte-1u3q4z5) {color:#77E2E1;}#main-nav.svelte-1u3q4z5 {display:none;}@media screen and (max-width: 1209px) {.view-nav.svelte-1u3q4z5 #main-nav:where(.svelte-1u3q4z5) {z-index:1013;display:flex;margin-top:82px;flex-flow:column nowrap;position:absolute;top:0;left:0;height:calc(100vh - 82px);overflow-y:auto;overscroll-behavior:contain;width:100vw;max-width:676px;padding-bottom:100px;background-color:black;font-family:var(--fonts-heading);font-size:20px;line-height:29px;letter-spacing:0.01em;}}@media print {#main-nav.svelte-1u3q4z5 {display:none;}}@media screen and (min-width: 1210px) {#main-nav.svelte-1u3q4z5 {display:flex;flex-flow:row nowrap;flex-basis:auto;justify-content:space-evenly;align-items:center;text-align:center;font-size:15px;line-height:21px;letter-spacing:1px;}}button.svelte-1u3q4z5 {background:none;border:none;outline:none;margin:unset;padding:unset;cursor:pointer;font-weight:inherit;text-transform:inherit;color:inherit;font-size:inherit;letter-spacing:inherit;}#header-wrap.svelte-1u3q4z5 button:where(.svelte-1u3q4z5):hover,#header-wrap.svelte-1u3q4z5 button:where(.svelte-1u3q4z5):focus,#header-wrap.svelte-1u3q4z5 button:where(.svelte-1u3q4z5):active {background:transparent;}.buttons.svelte-1u3q4z5 {height:100%;display:flex;align-items:center;gap:17px;flex-grow:1;justify-content:flex-end;z-index:1011;}@media print {.buttons.svelte-1u3q4z5 {display:none;}}@media screen and (min-width: 1210px) {.buttons.svelte-1u3q4z5 {flex-grow:0;flex-shrink:0;margin-left:38px;}}.buttons.svelte-1u3q4z5 .button:where(.svelte-1u3q4z5):not(:has(.user-avatar-wrapper)) {all:unset;display:flex;align-items:center;color:#fff;cursor:pointer;}.buttons.svelte-1u3q4z5 .button:where(.svelte-1u3q4z5):not(:has(.user-avatar-wrapper)) svg:not(.user-avatar-logged-out) {height:21px;width:21px;pointer-events:none;}.buttons.svelte-1u3q4z5 .button:where(.svelte-1u3q4z5):not(:has(.user-avatar-wrapper)):hover,.buttons.svelte-1u3q4z5 .button:where(.svelte-1u3q4z5):not(:has(.user-avatar-wrapper)):focus {color:#77E2E1;}@media screen and (max-width: 743px) { body.has-FixedMenu {overflow-y:hidden;height:100vh;}}</style>            <style id="svelte-tjkil2"> .is-NoScroll {overflow:hidden;}dialog#ltp-dialog.svelte-tjkil2 {width:100%;max-width:100%;border:0;height:auto;max-height:none;background:none;padding:0;}dialog.svelte-tjkil2 .ltp-banner:where(.svelte-tjkil2) {bottom:0;position:absolute;width:100%;background:#fff;padding:16px;}dialog.svelte-tjkil2 .ltp-container:where(.svelte-tjkil2) {display:flex;flex-direction:column;gap:16px;}dialog.svelte-tjkil2 #ltp-header:where(.svelte-tjkil2) {font-family:var(--fonts-heading);text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:20px;line-height:24px;--current-line-height: 24px;margin:0;color:#2F2F2F;}@media screen and (min-width: 744px) {dialog.svelte-tjkil2 #ltp-header:where(.svelte-tjkil2) {font-size:26px;line-height:32px;--current-line-height: 32px;}}#ltp-terms.svelte-tjkil2 {font-family:Gotham, "Helvetica Neue", Helvetica, arial, sans-serif;font-weight:400;font-size:16px;line-height:24px;letter-spacing:0;color:#2F2F2F;-webkit-text-size-adjust:100%;}#ltp-terms.svelte-tjkil2 a:where(.svelte-tjkil2) {font-family:inherit;font-size:inherit;color:#1769C2;font-weight:600;text-decoration:none;}#ltp-submit.svelte-tjkil2 {display:flex;justify-content:center;}#ltp-submit-btn.svelte-tjkil2 {font-family:var(--fonts-heading);font-weight:700;font-size:16px;line-height:24px;--current-line-height: 24px;text-transform:uppercase;letter-spacing:1px;width:100%;height:48px;padding:16px 32px;border-radius:4px;background-color:#F5CE35;color:#2F2F2F;cursor:pointer;box-sizing:border-box;outline-style:none;line-height:20px;}@media screen and (min-width: 744px) and (max-width: 1024px) {#ltp-submit-btn.svelte-tjkil2 {font-size:20px;line-height:32px;--current-line-height: 32px;}}#ltp-submit-btn.svelte-tjkil2:hover,#ltp-submit-btn.svelte-tjkil2:active {background-color:#D0AC1D;}@media only screen and (min-device-width: 738px) {dialog.svelte-tjkil2 .ltp-banner:where(.svelte-tjkil2) {padding:24px 16px;}dialog.svelte-tjkil2 .ltp-container:where(.svelte-tjkil2) {display:grid;grid-template-columns:1fr 1fr 200px;gap:12px;width:auto;margin:0 auto;max-width:1280px;}#ltp-terms.svelte-tjkil2 {font-size:16px;grid-column:1 / 3;margin-bottom:0;}#ltp-header.svelte-tjkil2 {grid-column:1 / 5;}#ltp-submit.svelte-tjkil2 {align-content:end;justify-self:center;grid-column:3 / 5;grid-row:2;}#ltp-submit-btn.svelte-tjkil2 {width:auto;}}.btn.btn-full-width.svelte-tjkil2 {cursor:pointer;}dialog#ltp-dialog.svelte-tjkil2::backdrop {background:rgba(0, 0, 0, 0.5);}@media only screen and (min-device-width: 738px) and (orientation: landscape) {#ltp-terms.svelte-tjkil2 {font-size:16px;}}</style>            <div style="display: contents" id="site-header">                <!--[--><div id="header-wrap" class="svelte-1u3q4z5"><header class="svelte-1u3q4z5"><div class="links-container svelte-1u3q4z5"><button aria-label="open menu" class="menu-icon menu-icon--burger svelte-1u3q4z5"><!--[-1--><svg xmlns="http://www.w3.org/2000/svg" width="33" height="28" fill="none" viewBox="0 0 33 28"><!----><path stroke="currentColor" stroke-linecap="round" stroke-width="2.698" d="M2 1.86h29M2 14h29M2 26.14h29"/><!----></svg><!--]--></button> <a data-sveltekit-reload="" href="/?ref=nav" class="logo svelte-1u3q4z5" title="Home"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="45" fill="none" viewBox="0 0 150 45" aria-hidden="true"><!----><path fill="currentColor" stroke="currentColor" stroke-width=".437" d="M4.59 5.514c-4.024 0-3.864 4.082-3.28 6.123h4.155v29.744c1.4 3.149 7.581 2.333 10.497 1.53V28.478H26.46c4.024 0 3.863-4.52 3.28-6.78H15.962v-9.185h13.56c4.024 0 3.572-4.666 2.843-6.998z"/><path fill="currentColor" fill-rule="evenodd" d="M35.427 18.636c1.676-2.042 7.435-5.818 17.058-4.593 12.029 1.53 10.717 14.872 10.28 17.277l-.035.19c-.475 2.662-2.038 11.423-14.837 12.276-13.123.875-16.184-7.436-16.403-10.497s-.437-10.06 3.936-14.653m7.654 4.811c1.341-1.836 4.844-4.506 8.401-1.016.238.233.445.498.572.805.294.716.65 2.098.65 4.148v4.858c0 .406-.029.812-.15 1.2-.393 1.26-1.41 3.117-3.35 3.565-2.686.62-5.568.458-6.615-2.145a3.7 3.7 0 0 1-.223-.98c-.341-3.08-.61-8.78.715-10.435m25.685-4.741c1.676-2.04 7.435-5.817 17.058-4.592 12.029 1.53 10.717 14.871 10.28 17.277l-.035.19c-.475 2.662-2.038 11.423-14.837 12.276-13.123.875-16.184-7.436-16.403-10.498s-.437-10.06 3.936-14.653m7.654 4.812c1.341-1.836 4.844-4.506 8.401-1.016.238.233.445.498.572.805.294.716.65 2.098.65 4.147v4.86c0 .405-.03.81-.15 1.198-.393 1.26-1.41 3.118-3.35 3.565-2.686.62-5.568.46-6.615-2.145a3.7 3.7 0 0 1-.223-.98c-.341-3.08-.61-8.78.715-10.434M129.905 1.14c-2.114-.51-7.086-.919-10.06 1.53v11.373c-3.062-.437-10.148-.656-13.997 1.968-4.811 3.28-8.748 11.591-6.56 19.465 2.186 7.873 12.903 11.81 20.776 3.499v3.936c2.333.73 7.829 1.75 11.154 0 3.324-1.75 2.843-4.665 2.187-5.904h-3.281zm-10.279 19.812V34.83a.42.42 0 0 1-.162.337c-2.053 1.59-6.565 3.618-9.46-.129-3.718-4.811 0-13.34 3.28-14.434 1.109-.208 3.786-.495 6.002-.072.2.039.34.216.34.42" clip-rule="evenodd"/><path fill="currentColor" d="m119.845 2.67-.139-.168-.08.065v.103zm10.06-1.53.219-.002-.001-.17-.166-.041zm-10.06 12.903-.031.216.25.036v-.252zm-13.997 1.968-.123-.18zm-6.56 19.465-.212.058zm20.776 3.499h.219v-.549l-.378.398zm0 3.936h-.219v.161l.154.048zm11.154 0 .101.194zm2.187-5.904.193-.103-.062-.116h-.131zm-3.281 0h-.219l.002.218h.217zm-10.66-1.84-.133-.173zm-9.46-.129.173-.133zm3.28-14.434-.04-.215-.015.003-.014.004zm6.002-.072-.041.215zm.698-17.693c1.438-1.184 3.373-1.687 5.23-1.826 1.854-.138 3.603.089 4.64.34l.103-.426c-1.077-.26-2.872-.492-4.775-.35-1.902.142-3.94.66-5.476 1.925zm.08 11.204V2.67h-.438v11.373zm-14.093 2.149c1.878-1.28 4.566-1.877 7.189-2.095 2.617-.217 5.138-.054 6.654.162l.062-.433c-1.545-.22-4.099-.385-6.752-.165-2.648.22-5.427.825-7.399 2.17zm-6.473 19.225c-1.08-3.885-.649-7.883.65-11.318 1.299-3.439 3.462-6.297 5.823-7.907l-.246-.361c-2.45 1.67-4.661 4.608-5.986 8.113-1.326 3.508-1.77 7.602-.663 11.59zm20.407 3.407c-7.761 8.193-18.267 4.296-20.407-3.407l-.422.117c2.235 8.044 13.161 12.02 21.147 3.591zm.378 4.087v-3.936h-.438v3.936zm10.833-.193c-1.609.847-3.766 1.031-5.834.905-2.062-.127-4.001-.56-5.153-.92l-.13.417c1.181.37 3.156.81 5.257.94 2.095.128 4.348-.052 6.063-.955zm2.095-5.61c.31.585.58 1.573.378 2.618-.2 1.033-.866 2.146-2.473 2.992l.203.387c1.717-.903 2.473-2.124 2.699-3.296a4.57 4.57 0 0 0-.42-2.905zm-3.087.117h3.281v-.437h-3.281zm-.437-36.084.218 35.867.438-.003-.219-35.867zm-9.842 33.69V20.95h-.437v13.88zm-.247.509a.64.64 0 0 0 .247-.51h-.437c0 .068-.03.127-.077.164zm-9.767-.168c1.503 1.946 3.439 2.395 5.248 2.149 1.797-.245 3.473-1.171 4.519-1.981l-.267-.346c-1.007.78-2.613 1.662-4.31 1.893-1.684.23-3.453-.181-4.844-1.983zm3.384-14.776c-.882.294-1.763 1.074-2.527 2.119-.767 1.05-1.434 2.392-1.878 3.848-.885 2.904-.9 6.324 1.021 8.809l.346-.267c-1.798-2.327-1.813-5.578-.948-8.414.431-1.414 1.076-2.71 1.812-3.718.74-1.012 1.554-1.709 2.312-1.962zm6.112-.079c-2.253-.43-4.961-.138-6.083.072l.08.43c1.097-.206 3.743-.488 5.921-.072zm.518.635a.64.64 0 0 0-.518-.635l-.082.43a.206.206 0 0 1 .163.205z"/><path fill="#f4cf35" d="M146.051 33.78c-4.904-1.064-7.376 1.935-8.01 3.626-.657 1.75 0 4.592 1.093 5.467 1.094.875 7.217 3.28 10.06-1.53 2.089-3.535-.334-6.11-2.155-7.185a3.3 3.3 0 0 0-.988-.377"/><!----></svg><!----></a> <nav id="main-nav" class="svelte-1u3q4z5"><ul class="nav-list svelte-1u3q4z5"><li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Recipes</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/breakfast-brunch-recipes-6514?ref=nav" class="svelte-1u3q4z5">Breakfast &amp; Brunch Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/easy-lunch-recipes-7007?ref=nav" class="svelte-1u3q4z5">Lunch Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/top-appetizer-recipes-7009?ref=nav" class="svelte-1u3q4z5">Appetizers &amp; Snack Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/all-time-best-dinner-recipes-6009?ref=nav" class="svelte-1u3q4z5">Dinner Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/top-dessert-recipes-6930?ref=nav" class="svelte-1u3q4z5">Dessert Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/summer-cocktails-drinks-6268?ref=nav" class="svelte-1u3q4z5">Drink &amp; Cocktail Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/50-ultimate-side-dishes-6395?ref=nav" class="svelte-1u3q4z5">Side Dish Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/summer-grilling-6564?ref=nav" class="svelte-1u3q4z5">Grilling &amp; BBQ Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/25-microwave-meals-for-busy-moms-6088?ref=nav" class="svelte-1u3q4z5">Microwave Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/quick-and-easy-dinners-6510?ref=nav" class="svelte-1u3q4z5">Quick &amp; Easy Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/comfort-food-6505/slow-cooker-6508?ref=nav" class="svelte-1u3q4z5">Slow-Cooker Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-air-fryer-recipes-6847?ref=nav" class="svelte-1u3q4z5">Air Fryer Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-instant-pot-recipes-6928?ref=nav" class="svelte-1u3q4z5">Instant Pot Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/baking-dessert-recipes-6503?ref=nav" class="svelte-1u3q4z5">Baking Recipes</a></li> <li class="dropdown__item dropdown__item--last svelte-1u3q4z5"><a href="/recipe?ref=nav" class="svelte-1u3q4z5">See More</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Popular</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/recipe/all/popular?ref=nav" class="svelte-1u3q4z5">Trending Now</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/top-casseroles-6016?ref=nav" class="svelte-1u3q4z5">Casserole Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/winning-chili-recipes-6283?ref=nav" class="svelte-1u3q4z5">Chili Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-soup-recipes-6176?ref=nav" class="svelte-1u3q4z5">Soup Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/quick-easy-pasta-dishes-6078?ref=nav" class="svelte-1u3q4z5">Pasta Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-homemade-bread-6912?ref=nav" class="svelte-1u3q4z5">Bread Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/cookie-recipes-7152?ref=nav" class="svelte-1u3q4z5">Cookie Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/fun-salad-ideas-6301?ref=nav" class="svelte-1u3q4z5">Salad Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-tofu-recipes-7155?ref=nav" class="svelte-1u3q4z5">Tofu Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/copycat-recipes-6576?ref=nav" class="svelte-1u3q4z5">Copycat Recipes</a></li> <li class="dropdown__item dropdown__item--last svelte-1u3q4z5"><a href="/ideas/community-6816?ref=nav" class="svelte-1u3q4z5">See More</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Meat &amp; Seafood</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <span class="true svelte-1u3q4z5"></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/quick-easy-chicken-dinners-6013?ref=nav" class="svelte-1u3q4z5">Chicken Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-salmon-recipes-6370?ref=nav" class="svelte-1u3q4z5">Salmon Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-baked-pork-chops-6369?ref=nav" class="svelte-1u3q4z5">Pork Chop Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/quick-easy-ground-beef-dinners-6011?ref=nav" class="svelte-1u3q4z5">Ground Beef Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/top-shrimp-recipes-6566?ref=nav" class="svelte-1u3q4z5">Shrimp Recipes</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Healthy &amp; Diet</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/keto-recipes-6652?ref=nav" class="svelte-1u3q4z5">Keto Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/healthy-6501?ref=nav" class="svelte-1u3q4z5">Healthy Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/healthy-6501/vegetarian-vegan-diet-recipes-6493?ref=nav" class="svelte-1u3q4z5">Vegetarian Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-vegan-recipes-6213?ref=nav" class="svelte-1u3q4z5">Vegan Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/mediterranean-diet-recipes-6794?ref=nav" class="svelte-1u3q4z5">Mediterranean Diet Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/healthy-6501/weight-watchers-diet-recipes-6497?ref=nav" class="svelte-1u3q4z5">Weight Watchers Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/low-carb-recipes-6118?ref=nav" class="svelte-1u3q4z5">Low-Carb Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/healthy-6501/gluten-free-diet-recipes-6500?ref=nav" class="svelte-1u3q4z5">Gluten-Free Recipes</a></li> <li class="dropdown__item dropdown__item--last svelte-1u3q4z5"><a href="/ideas/healthy-6501?ref=nav" class="svelte-1u3q4z5">See More</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Holidays</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/everyday-party-recipes-6556/dinner-parties-6550?ref=nav" class="svelte-1u3q4z5">Dinner Party Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/game-day-6448?ref=nav" class="svelte-1u3q4z5">Game Day Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/valentines-day-6499?ref=nav" class="svelte-1u3q4z5">Valentine's Day Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/st-patricks-day-6511?ref=nav" class="svelte-1u3q4z5">St. Patrick's Day Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/easter-entertaining-6519?ref=nav" class="svelte-1u3q4z5">Easter Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/mexican-6528?ref=nav" class="svelte-1u3q4z5">Cinco de Mayo Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/mothers-day-recipes-6568?ref=nav" class="svelte-1u3q4z5">Mother's Day Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-memorial-day-recipes-6972?ref=nav" class="svelte-1u3q4z5">Memorial Day Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/juneteenth-food-ideas-7158?ref=nav" class="svelte-1u3q4z5">Juneteenth Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/top-4th-of-july-recipes-6675?ref=nav" class="svelte-1u3q4z5">4th of July Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/halloween-6456?ref=nav" class="svelte-1u3q4z5">Halloween Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/thanksgiving-6470?ref=nav" class="svelte-1u3q4z5">Thanksgiving Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/traditional-hanukkah-food-6159?ref=nav" class="svelte-1u3q4z5">Hanukkah Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/holiday-entertaining-6487?ref=nav" class="svelte-1u3q4z5">Christmas Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/new-years-dinner-ideas-7145?ref=nav" class="svelte-1u3q4z5">New Year's Recipes</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Cuisine</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/mexican-food-at-home-6830?ref=nav" class="svelte-1u3q4z5">Mexican Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/italian-food-recipes-at-home-6828?ref=nav" class="svelte-1u3q4z5">Italian Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/indian-food-recipes-at-home-6821?ref=nav" class="svelte-1u3q4z5">Indian Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/thai-food-recipes-at-home-6820?ref=nav" class="svelte-1u3q4z5">Thai Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/korean-food-recipes-at-home-7143?ref=nav" class="svelte-1u3q4z5">Korean Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/french-food-at-home-7129?ref=nav" class="svelte-1u3q4z5">French Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/best-latin-american-recipes-7133?ref=nav" class="svelte-1u3q4z5">Latin American Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/chinese-food-at-home-6807?ref=nav" class="svelte-1u3q4z5">Chinese Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/japanese-food-recipes-at-home-7140?ref=nav" class="svelte-1u3q4z5">Japanese Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/spanish-food-recipes-at-home-7122?ref=nav" class="svelte-1u3q4z5">Spanish Recipes</a></li></ul></li> <li class="nav-list-item svelte-1u3q4z5"><span class="nav-list-item__text svelte-1u3q4z5">Seasonal</span> <span class="caret svelte-1u3q4z5"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024" class="caret"><!----><path fill="currentColor" d="M19.552 781.839c-26.08-26.08-26.08-68.364 0-94.444L464.77 242.177c12.531-12.531 29.505-19.551 47.225-19.551s34.699 7.037 47.225 19.551l445.218 445.218c26.074 26.08 26.074 68.364 0 94.444-26.097 26.08-68.375 26.08-94.444 0L511.995 383.84 113.996 781.839c-26.08 26.08-68.364 26.08-94.444 0"/><!----></svg><!----></span> <ul class="dropdown svelte-1u3q4z5"><li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/seasonal-cooking-6549/spring-recipes-6546?ref=nav" class="svelte-1u3q4z5">Spring Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/seasonal-cooking-6549/summer-recipes-6547?ref=nav" class="svelte-1u3q4z5">Summer Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/seasonal-cooking-6549/fall-recipes-6548?ref=nav" class="svelte-1u3q4z5">Fall Recipes</a></li> <li class="dropdown__item svelte-1u3q4z5"><a href="/ideas/seasonal-cooking-6549/winter-recipes-6545?ref=nav" class="svelte-1u3q4z5">Winter Recipes</a></li> <li class="dropdown__item dropdown__item--last svelte-1u3q4z5"><a href="/ideas/seasonal-cooking-6549?ref=nav" class="svelte-1u3q4z5">See More</a></li></ul></li></ul></nav></div> <div class="buttons svelte-1u3q4z5"><a aria-label="search" class="button button--search svelte-1u3q4z5" href="/search?ref=nav"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><!----><defs><path id="search_svg__a" d="M10.078 0a9.078 9.078 0 0 1 6.148 15.758l6.318 6.318a.916.916 0 0 1 .007 1.29l-.094.082a.91.91 0 0 1-1.197-.088l-6.502-6.502A9.078 9.078 0 1 1 10.078 0m0 1.816a7.262 7.262 0 1 0 0 14.524 7.262 7.262 0 0 0 0-14.524"/></defs><g fill="none" fill-rule="evenodd"><mask id="search_svg__b" fill="#fff"><use xlink:href="#search_svg__a"/></mask><use xlink:href="#search_svg__a" fill="currentColor"/><g fill="currentColor" mask="url(#search_svg__b)"><path d="M0 0h24v24H0z"/></g></g><!----></svg><!----></a> <a aria-label="saves" class="button button--saves svelte-1u3q4z5" href="/saves?ref=nav"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" fill="none" viewBox="0 0 18 24"><!----><path fill="currentColor" fill-rule="evenodd" d="M.022 1C.022.46.46.022 1 .022h16c.54 0 .978.438.978.978v22a.978.978 0 0 1-1.488.834L9 19.257l-7.49 4.577A.978.978 0 0 1 .022 23zm1.956.978v19.279l6.512-3.98a.98.98 0 0 1 1.02 0l6.512 3.98V1.977z" clip-rule="evenodd"/><!----></svg><!----></a> <div class="profile-wrap svelte-1u3q4z5"><button aria-label="loading" class="svelte-1u3q4z5" id=""><div class="user-avatar-wrapper d21 svelte-r5kt61"><!--[0--><div class="user-avatar  svelte-r5kt61"><span class="user-letter svelte-r5kt61"></span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" class="user-avatar-logged-out" aria-hidden="true"><!----><path fill="currentColor" d="M32.384 63.956c-7.13 0-13.772-1.037-18.7-2.92-3.81-1.457-8.35-4.12-8.35-8.536 0-5.28 1.38-10.451 3.992-14.954 2.545-4.389 6.147-7.97 10.416-10.36l.318-.178-.226-.285c-2.293-2.901-3.556-6.566-3.556-10.32C16.278 7.357 23.503 0 32.384 0c8.88 0 16.106 7.364 16.106 16.416 0 3.744-1.263 7.404-3.556 10.304l-.226.286.318.178c4.269 2.389 7.87 5.972 10.416 10.36 2.612 4.504 3.993 9.676 3.993 14.956 0 4.416-4.541 7.079-8.351 8.535-4.928 1.884-11.569 2.921-18.7 2.921m-10.243-32.66c-7.374 4.127-11.955 12.222-11.955 21.128 0 1.352 2.024 2.98 5.283 4.247 4.31 1.675 10.475 2.637 16.915 2.637S44.99 58.346 49.3 56.67c3.26-1.267 5.284-2.895 5.284-4.247 0-8.905-4.582-17.001-11.956-21.128l-5.192-2.906 3.67-4.64c1.657-2.096 2.533-4.639 2.533-7.353 0-6.414-5.049-11.632-11.254-11.632S21.13 9.983 21.13 16.397c0 2.714.876 5.257 2.534 7.353l3.669 4.64z"/><!----></svg><!----></div><!--]--></div><!----></button> <!--[-1--><!--]--></div></div></header></div> <!--[-1--><!--]--><!----><!--]-->            </div>        
+
+            
+
+
+<!-- Message Banner -->
+
+
+<div class="fd-container-full container-fluid pushdown-message hidden analytic-box" data-module="shinnyBanner">
+    <div class="fd-container container-fluid">
+        <p>Stumped for dinner? Get our life-saving Dinner Daily newsletter. You (and your stomach) can thank us later!</p>
+        <button class="close close-pushdown-message"><i class="icon-fdc-close"></i></button>
+    </div>
+
+    <div class="fd-container container-fluid fd-email-signup">
+        <input class="fd-email-input" type="text" placeholder="your@email.com">
+        <button class="btn btn-emphasis fd-email-signup-submit">Sign up</button>
+    </div>
+
+    <span class="invalid-email-message"></span>
+</div>
+
+
+<!-- Page Heading -->
+
+
+
+
+            
+
+
+
+
+
+
+
+<article class="container">
+    <div class="sponsored">
+        <div id="dfp_logo"></div>
+    </div>
+    <div class="container-sm page-content">
+        <h1 class="title">All Recipes by Title</h1>
+
+         <div class="gk-tools clearfix">
+            <div class="letter-filters magic-buttons">
+            <label class="js-selected" for="magic-chkbox"></label>
+            <input id="magic-chkbox" type="checkbox" />
+            <ul></ul>
+            </div>
+        </div>
+
+        <div class="content-columns">
+            
+
+
+
+
+
+
+<div  class="content-col-list">
+    <ul>
+        
+        <li>
+            <a href="/recipe/never-weep-whipped-cream-74805" title=""Never Weep" Whipped Cream">
+                "Never Weep" Whipped Cream
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/no-bake-cookie-crumble-cheesecake-71635" title=""No Bake" Cookie Crumble Cheesecake">
+                "No Bake" Cookie Crumble Cheesecake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/no-guilt-snowy-day-chicken-pot-pie-110792" title=""No Guilt"  Snowy Day Chicken Pot Pie">
+                "No Guilt"  Snowy Day Chicken Pot Pie
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/no-labor-baked-beans-49992" title=""No Labor" Baked Beans">
+                "No Labor" Baked Beans
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/not-too-sweet-peanut-butter-cookies-40827" title=""not too sweet" peanut butter cookies">
+                "not too sweet" peanut butter cookies
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/now-and-later-vegetarian-empanadas-38276" title=""Now and Later" Vegetarian Empanadas">
+                "Now and Later" Vegetarian Empanadas
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nana-nut-waffle-topping-367515" title="'nana Nut Waffle Topping">
+                'nana Nut Waffle Topping
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/neezy-peazy-lunch-24760" title="'Neezy Peazy Lunch">
+                'Neezy Peazy Lunch
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nilla-crunch-cake-90741" title="'nilla Crunch Cake">
+                'nilla Crunch Cake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nilla-wafer-martini-261888" title="'nilla Wafer Martini">
+                'nilla Wafer Martini
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nooga-olive-mix-543737" title="'Nooga Olive Mix">
+                'Nooga Olive Mix
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nothing-goes-to-waist-chocolate-cake-298793" title="'nothing Goes to Waist' Chocolate Cake">
+                'nothing Goes to Waist' Chocolate Cake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/no-cook-summer-pasta-470837" title="*no Cook Summer Pasta">
+                *no Cook Summer Pasta
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-y-c-irish-soda-bread-15843" title="N .y. C. Irish Soda Bread">
+                N .y. C. Irish Soda Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-zs-best-salad-dressing-114699" title="N Z's Best Salad Dressing">
+                N Z's Best Salad Dressing
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-rsquo-dole-steak-and-collard-greens-456305" title="N&rsquo;dole (Steak and Collard Greens)">
+                N&rsquo;dole (Steak and Collard Greens)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-rnberger-lebkuchen-vegan-and-fat-free-450735" title="N&uuml;rnberger Lebkuchen - Vegan and Fat Free!">
+                N&uuml;rnberger Lebkuchen - Vegan and Fat Free!
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-orleans-gumbo-521109" title="N' Orleans Gumbo">
+                N' Orleans Gumbo
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-bbq-shrimp-a-k-a-cajun-tofu-314268" title="N'awlins BBQ &quot;shrimp&quot; A.k.a. Cajun Tofu">
+                N'awlins BBQ &quot;shrimp&quot; A.k.a. Cajun Tofu
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/new-orleans-bread-pudding-with-bourbon-sauce-154440" title="N'awlins Bourbon Glazed Bread Pudding">
+                N'awlins Bourbon Glazed Bread Pudding
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-butter-beans-with-andouille-186208" title="N'awlins Butter Beans With Andouille">
+                N'awlins Butter Beans With Andouille
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-cabbage-cakes-368581" title="N'awlins Cabbage Cakes">
+                N'awlins Cabbage Cakes
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-crawfish-a-la-king-373223" title="N'awlins Crawfish a La King">
+                N'awlins Crawfish a La King
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-inspired-black-beans-and-cajun-sausage-311384" title="N'awlins Inspired Black Beans and Cajun Sausage">
+                N'awlins Inspired Black Beans and Cajun Sausage
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-praline-kugel-102520" title="N'awlins Praline Kugel">
+                N'awlins Praline Kugel
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlins-style-rice-with-shrimp-and-sausage-422502" title="N'awlins-Style Rice With Shrimp and Sausage">
+                N'awlins-Style Rice With Shrimp and Sausage
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nawlinz-bread-pudding-312298" title="N'awlinz Bread Pudding">
+                N'awlinz Bread Pudding
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/ndizi-no-kastad-banana-custard-zanzibar-style-305105" title="N'dizi No Kastad (Banana Custard, Zanzibar Style)">
+                N'dizi No Kastad (Banana Custard, Zanzibar Style)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/ns-dry-rub-392396" title="N's Dry Rub">
+                N's Dry Rub
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-a-hurry-d-zurt-386141" title="N-A-Hurry D-Zurt">
+                N-A-Hurry D-Zurt
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-c-raw-apple-cake-9x13-pan-444223" title="N. C. Raw Apple Cake 9x13 Pan">
+                N. C. Raw Apple Cake 9x13 Pan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-y-pushcart-onion-sauce-262638" title="N. Y.  Pushcart Onion Sauce">
+                N. Y.  Pushcart Onion Sauce
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-y-c-corned-beef-and-cabbage-15846" title="N. Y. C. Corned Beef and Cabbage">
+                N. Y. C. Corned Beef and Cabbage
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-c-bean-casserole-196055" title="N.c. Bean Casserole">
+                N.c. Bean Casserole
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-e-crab-rolls-67113" title="N.E. crab rolls">
+                N.E. crab rolls
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-y-c-chicken-fried-rice-379020" title="N.y.c. Chicken Fried Rice">
+                N.y.c. Chicken Fried Rice
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/n-y-i-lasagna-475908" title="N.y.i. Lasagna">
+                N.y.i. Lasagna
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/na-485528" title="Na">
+                Na
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/na-me-inspired-roasted-squash-vegan-friendly-471871" title="Na*me-Inspired Roasted Squash (Vegan Friendly)">
+                Na*me-Inspired Roasted Squash (Vegan Friendly)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-329338" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-244356" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-203261" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-450679" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-16332" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-209112" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-536723" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-100327" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-89078" title="Naan">
+                Naan
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-no-knead-387678" title="Naan  (No-Knead)">
+                Naan  (No-Knead)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-cast-iron-griddle-520450" title="Naan (Cast Iron Griddle)">
+                Naan (Cast Iron Griddle)
+            </a>
+        </li>
+        
+    </ul>
+</div>
+<div  class="content-col-list">
+    <ul>
+        
+        <li>
+            <a href="/recipe/naan-diabetic-103724" title="Naan (Diabetic)">
+                Naan (Diabetic)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-indian-flat-bread-60449" title="Naan (Indian Flat Bread)">
+                Naan (Indian Flat Bread)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-indian-flatbread-456790" title="Naan (Indian Flatbread)">
+                Naan (Indian Flatbread)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-nick-malgieri-354439" title="Naan (Nick Malgieri)">
+                Naan (Nick Malgieri)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-no-yeast-158492" title="Naan (No Yeast)">
+                Naan (No Yeast)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-aka-indian-flat-bread-125624" title="Naan Aka Indian Flat Bread">
+                Naan Aka Indian Flat Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-437741" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-526221" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-397933" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-525057" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-66766" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-395145" title="Naan Bread">
+                Naan Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-croutons-485262" title="Naan Bread Croutons">
+                Naan Bread Croutons
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-pizza-259230" title="Naan Bread Pizza">
+                Naan Bread Pizza
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-pizza-with-chicken-360833" title="Naan Bread Pizza With Chicken">
+                Naan Bread Pizza With Chicken
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-recipe-494109" title="Naan Bread Recipe">
+                Naan Bread Recipe
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-with-garlic-and-coriander-cilantro-50083" title="Naan bread with garlic and coriander/cilantro">
+                Naan bread with garlic and coriander/cilantro
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-chicken-sandwich-398255" title="Naan Chicken Sandwich">
+                Naan Chicken Sandwich
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-flatbread-pizza-487323" title="Naan Flatbread Pizza">
+                Naan Flatbread Pizza
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-fusion-snack-345833" title="Naan Fusion Snack">
+                Naan Fusion Snack
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-paratha-418667" title="Naan Paratha....">
+                Naan Paratha....
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-pizza-485263" title="Naan Pizza">
+                Naan Pizza
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-pizza-426945" title="Naan Pizza">
+                Naan Pizza
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-style-flatbread-389447" title="Naan Style Flatbread">
+                Naan Style Flatbread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-berenji-299222" title="Naan-Berenji">
+                Naan-Berenji
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/naan-bread-121728" title="Naan-Bread">
+                Naan-Bread
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nabeyaki-udon-japanese-noodle-120607" title="Nabeyaki Udon (japanese Noodle)">
+                Nabeyaki Udon (japanese Noodle)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nabisco-nilla-wafers-revised-342387" title="Nabisco Nilla Wafers (Revised)">
+                Nabisco Nilla Wafers (Revised)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nabiscos-old-fashioned-gingersnaps-by-todd-wilbur-183860" title="Nabisco's Old Fashioned Gingersnaps by Todd Wilbur">
+                Nabisco's Old Fashioned Gingersnaps by Todd Wilbur
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacatamales-any-banana-leaf-wrapped-central-american-tamales-397321" title="Nacatamales (ANY Banana Leaf Wrapped Central American Tamales)">
+                Nacatamales (ANY Banana Leaf Wrapped Central American Tamales)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nach-waxmans-brisket-of-beef-491187" title="Nach Waxman's Brisket of Beef">
+                Nach Waxman's Brisket of Beef
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nach-waxmans-brisket-of-beef-477604" title="Nach Waxman's Brisket of Beef">
+                Nach Waxman's Brisket of Beef
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bake-49150" title="Nacho Bake">
+                Nacho Bake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bake-225754" title="Nacho Bake">
+                Nacho Bake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bake-47139" title="Nacho Bake">
+                Nacho Bake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bake-524803" title="Nacho Bake">
+                Nacho Bake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-baked-potatoes-325343" title="Nacho Baked Potatoes">
+                Nacho Baked Potatoes
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bean-dip-243000" title="Nacho Bean Dip">
+                Nacho Bean Dip
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bean-soup-531362" title="Nacho Bean Soup">
+                Nacho Bean Soup
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-beef-and-potato-casserole-344208" title="Nacho Beef and Potato Casserole">
+                Nacho Beef and Potato Casserole
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-beef-bake-382937" title="Nacho Beef Bake">
+                Nacho Beef Bake
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-beef-casserole-280660" title="Nacho Beef Casserole">
+                Nacho Beef Casserole
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-beef-skillet-157707" title="Nacho Beef Skillet">
+                Nacho Beef Skillet
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-beef-soup-low-carb-349417" title="Nacho Beef Soup (Low Carb)">
+                Nacho Beef Soup (Low Carb)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bites-499784" title="Nacho Bites">
+                Nacho Bites
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-bread-pizzas-160574" title="Nacho Bread Pizzas">
+                Nacho Bread Pizzas
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-burger-449295" title="Nacho Burger">
+                Nacho Burger
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-burritos-268807" title="Nacho Burritos">
+                Nacho Burritos
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-casserole-298822" title="Nacho Casserole">
+                Nacho Casserole
+            </a>
+        </li>
+        
+        <li>
+            <a href="/recipe/nacho-casserole-242723" title="Nacho Casserole">
+                Nacho Casserole
+            </a>
+        </li>
+        
+    </ul>
+</div>
+        </div>
+
+        <ul class="paginator js-paginator"></ul>
+
+    </div>
+    <aside>
+        
+
+
+<div class="dfp-bigbox">
+    <div class="dfp-ad-wrap">
+        <div class="dfp" data-dfp-type="dfp_bigbox"></div>
+        <span class="ad-label">Advertisement</span>
+    </div>
+</div>
+
+    </aside>
+</article>
+
+
+        </div>
+
+        <div class="fd-overlay"></div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- start footer -->
+
+
+
+<script>
+
+AsyncProxy.initProxy('SNI');
+
+</script>
+
+
+<script type="text/javascript" src="https://geniuskitchen.sndimg.com/gk/js/lib-bundle.min.js?v=284" ></script>
+
+
+<script type="text/javascript" src="https://geniuskitchen.sndimg.com/gk/js/jquery-plugins.min.js?v=284" ></script>
+
+
+<script type="text/javascript" src="https://code.adsales.snidigital.com/conf/ads-config.min.js" ></script>
+
+
+<script type="text/javascript" src="https://geniuskitchen.sndimg.com/gk/js/core.min.js?v=284" ></script>
+
+
+<script type="text/javascript">
+
+    // loads external libs
+    AsyncProxy.asyncNext(asyncURLs);
+
+</script>
+
+
+
+
+
+<div class="footer-search-tags">
+    <div class="container-sm-md">
+        <form method="get" action="https://www.food.com/search">
+            <div class="footer-search-block">
+                <div class="footer-search-label"><label for="footer-search-field">I WANT TO MAKE
+                </label></div>
+                <div class="footer-search-field">
+                    <div class="footer-search-field-input-wrapper">
+                        <input type="text" id="footer-search-field" placeholder="Search here or try our suggestions below"/>
+                    </div>
+                </div>
+            </div>
+            <ul class="footer-search-tags-block">
+
+                
+
+                        <li data-token="open-suggestions" class="view-more">View Suggestions</li>
+                        <li data-token="close-suggestions" class="close-suggestions">
+                            <i class="icon-fdc-close"></i>
+                        </li>
+
+                
+                            <li data-token="https://www.food.com/ideas/easy-air-fryer-recipes-6798"><i class="icon-fdc-sparkles"></i>air fryer recipes</li>
+                
+                            <li data-token="https://www.food.com/ideas/make-ahead-slow-cooker-meals-6421">slow-cooker faves</li>
+                
+                            <li data-token="https://www.food.com/ideas/top-copycat-restaurant-recipes-6021">top copycat recipes</li>
+                
+                            <li data-token="https://www.food.com/ideas/japanese-food-recipes-at-home-7140">Japanese food</li>
+                
+                            <li data-token="https://www.food.com/ideas/top-weeknight-dinners-6968">weeknight eats</li>
+                
+                            <li data-token="https://www.food.com/ideas/healthy-lunch-recipes-6491">healthy lunches</li>
+                
+                
+
+            </ul>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="site-footer-links">
+            <div class="v-site-footer-links-wrap">
+                <div class="site-footer-links-wrapper">
+                    <div class="site-footer-backToTop">
+                        <a href="#" target="_top" onclick="window.scrollTo(0,0); return false;">
+                            BACK TO TOP
+                        </a>
+                    </div>
+                    <div class="site-footer-social">
+                        <a class="facebook" title="Facebook" href="https://www.facebook.com/Food.com" target="_blank" data-clicktrack="true">
+                            <i class="icon-gk icon-gk-facebook"></i>
+                        </a>
+                        <a class="instagram" title="Instagram" href="https://www.instagram.com/fooddotcom" target="_blank" data-clicktrack="true">
+                            <i class="icon-gk icon-gk-instagram"></i>
+                        </a>
+                        <a class="pinterest" title="Pinterest" href="https://www.pinterest.com/fooddotcom" target="_blank" data-clicktrack="true">
+                            <i class="icon-gk icon-gk-pinterest"></i>
+                        </a>
+                        <a class="twitter" title="Twitter" href="https://twitter.com/fooddotcom" target="_blank" data-clicktrack="true">
+                            <i class="icon-gk icon-gk-twitter"></i>
+                        </a>
+                        <a class="youtube" title="Youtube" href="https://www.youtube.com/fooddotcom" target="_blank" data-clicktrack="true">
+                            <i class="icon-gk icon-gk-youtube"></i>
+                        </a>
+                    
+                    </div>
+                </div>
+                <ul class="footer-nav-links">
+                    
+                    <li>
+                        <a target="_self" href="https://www.food.com/topic">All Categories</a>
+                    </li>
+                    
+                    <li>
+                        <a target="_self" href="https://www.food.com/html-sitemap">Site Map</a>
+                    </li>
+                    
+                    <li>
+                        <a target="_self" href="https://www.food.com/how-to/about-us-31">About Us</a>
+                    </li>
+                    
+                    <li>
+                        <a target="_blank" href="https://food.zendesk.com/">Help</a>
+                    </li>
+                    
+
+                </ul>
+            </div>
+        </div>
+        <div class="site-footer-info">
+            <div class="site-footer-copyright">
+            
+                <p>&copy; 2026 Warner Bros. Discovery, Inc. or its subsidiaries and affiliates.</p>
+                <p>All rights reserved.</p>
+            </div>
+            <ul class="footer-nav-links">
+            
+                <li><a href="https://www.wbdprivacy.com/policycenter/b2c" target="_blank">Privacy Policy</a></li>
+                <li><a href="https://corporate.discovery.com/visitor-agreement/" target="_blank">Visitor Agreement</a></li>
+            </ul>
+            
+        </div>
+    </div>
+</footer>
+
+
+
+
+
+<script type="text/javascript">
+proxy.jQuery.wait(function () {
+    var scripts = [
+        { src: 'https:\/\/geniuskitchen.sndimg.com\/gk\/js\/pages\/browse-all.min.js?v=284', async: false },
+        { code: 'proxy.FD.extend([\'Config.magicButtons\', {baseUrl: \'https:\/\/www.food.com\/browse\/allrecipes?page=1&letter=\',pager:{templates: {page: \'<li class=\\\"{{=it.class}}\\\"><a href=\\\"https:\/\/www.food.com\/browse\/allrecipes?page={{=it.page}}&letter=N\\\"><span class=\\\"label\\\">{{=it.label}}<\/span><\/a><\/li>\',text: \'<li class=\\\"{{=it.class}}\\\"><span class=\\\"label\\\">{{=it.label}}<\/span><\/li>\'},total : \'75\', current: \'1\',selector: \'ul.js-paginator\', showNext: true, showPrev: true, beforePages: 5, afterPages: 2  },columns: 3,data: [{id:\'123\', label: \'123\'},{id:\'a\', label:\'a\'},{id:\'b\', label:\'b\'},{id:\'c\', label:\'c\'},{id:\'d\', label:\'d\'},{id:\'e\', label:\'e\'},{id:\'f\', label:\'f\'},{id:\'g\', label:\'g\'},{id:\'h\', label:\'h\'},{id:\'i\', label:\'i\'},{id:\'j\', label:\'j\'},{id:\'k\', label:\'k\'},{id:\'l\', label:\'l\'},{id:\'m\', label:\'m\'},{id:\'n\', label:\'n\', selected: true},{id:\'o\', label:\'o\'},{id:\'p\', label:\'p\'},{id:\'q\', label:\'q\'},{id:\'r\', label:\'r\'},{id:\'s\', label:\'s\'},{id:\'t\', label:\'t\'},{id:\'u\', label:\'u\'},{id:\'v\', label:\'v\'},{id:\'w\', label:\'w\'},{id:\'x\', label:\'x\'},{id:\'y\', label:\'y\'},{id:\'z\', label:\'z\'}]}]);' },
+    ];
+
+    function loadScript(config) {
+        return new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            if (config.code !== undefined) {
+                script.text = config.code;
+                document.body.appendChild(script);
+                resolve();
+                return;
+            }
+
+            script.src = config.src;
+            if (config.async) {
+                script.async = true;
+                document.body.appendChild(script);
+                resolve();
+                return;
+            }
+
+            script.onload = resolve;
+            script.onerror = function () {
+                reject(new Error('Failed to load page script: ' + config.src));
+            };
+            document.body.appendChild(script);
+        });
+    }
+
+    scripts.reduce(function (chain, config) {
+        return chain.then(function () {
+            return loadScript(config);
+        });
+    }, Promise.resolve()).catch(function (error) {
+        console.error(error.message);
+    });
+});
+</script>
+
+
+
+
+<!-- share modals >>> -->
+
+<div class="modal fade" id="share_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content share">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" data-clicktrack="true" rel="Share Modal"><span aria-hidden="true"><i class="icon-fdc-close"></i></span><span class="sr-only">Close</span></button>
+        <h6>Share this recipe:</h6>
+        <h4 class='modal-title'>{{title}}</h4>
+      </div>
+      <div class="modal-body">
+          <a class="list-group-item btn-round gk-share-link share-recipe pinterest" data-network="pinterest" href="#" data-recipe-id="" data-clicktrack="true" rel="Share Modal"><i class="icon-fdc-pinterest"></i><span class="sr-only">Pinterest</span></a>
+          <a class="list-group-item btn-round gk-share-link share-recipe facebook" data-network="facebook" href="#" data-recipe-id="" data-clicktrack="true" rel="Share Modal"><i class="icon-fdc-facebook"></i><span class="sr-only">Facebook</span></a>
+          <a class="list-group-item btn-round gk-share-link email-open email" data-popup-id="#email" data-recipe-id="" href="#" data-clicktrack="true" rel="Share Modal"><i class="icon-fdc-email"></i><span class="sr-only">Email</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal_no_results" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">No Results</h4>
+      </div>
+      <div class="modal-body">
+        Whoops! There are no results for your search<span class="your-search"></span>. Please modify your search and try again.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Search Again</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop"></div>
+<!-- <<< share modals -->
+
+
+
+
+<!-- Saves Promo Modal  -->
+<div class="modal fade saves-promo-modal" id="modal_saves_promo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Hey There!</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Looking for one of your favorite recipes? You'll notice that Recipe Box is now called <b><a href="/saves">SAVES</a></b> and your recipes are organized in <b><a href="/saves/index.html#/?section=collections">COLLECTIONS</a></b>.
+                </p>
+                <p>
+                    Plus, all of your private notes can now be found directly on the recipe page under the directions.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Ok, Got It!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- New DFP Ad Slots -->
+<div id='dfp_utility1'></div>
+<div id='dfp_utility2'></div>
+
+
+
+<!-- start menus -->
+
+<div class="fd-menus">
+    <!-- start STICKY SHARE MODULE -->
+    <section class="fd-menu" id="sticky-share-module">
+        <div class="fd-menu-inner">
+            <div class="fd-share-tools global-share">
+                <a class="pinterest gk-share-link" href="" data-network="pinterest" data-clicktrack="true"><i class="icon-gk-pinterest"></i></a>
+                <a class="facebook gk-share-link" href="" data-network="facebook" data-clicktrack="true"><i class="icon-gk-facebook"></i></a>
+                <a class="email gk-share-link" href="mailto:?subject=&body=" data-network="email" data-popup-id="#email" title="Share via Email" data-clicktrack="true"><i
+                        class="icon-gk-email" title="Email"></i></a>
+            </div>
+        </div>
+    </section>
+    <!-- end STICKY SHARE MODULE -->
+</div>
+
+<script type="text/html-template" class="autosuggest-template" id="autosuggestItem">
+    {{? !it.url }}
+    <li><span class="suggest-title">{{=it.title}}</span></li>
+    {{?}}
+    {{? it.url }}
+    <li class="autosuggest-asset {{=(it.hasLabel ? 'label' : '')}}" title="{{=it.title}}" data-record-type="{{=it.type}}" data-url="{{=it.url}}?ic1=suggestedAsset%7C{{=it.searchTerm}}">
+        <a href="{{=it.url}}?ic1=suggestedAsset%7C{{=it.searchTerm}}" tabindex="-1">
+            <span class="suggest-title">{{=it.title}}</span>
+            <div class="item-photo">
+                <div class="item-photo-wrap">
+                    <img src="{{=it.photoUrl || 'https://geniuskitchen.sndimg.com/fdc-new/img/fdc-shareGraphic.jpg'}}" alt="{{=it.title}}" data-crop-mode="fill" data-target=".item-photo"/>
+                </div>
+            </div>
+        </a>
+    </li>
+    {{?}}
+</script>
+
+<!-- end menus -->
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/html-template" class="tile-template" id="tile-asset">
+
+    <div class="gk-tile {{=it.type}} {{=it.cssClassNames}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="gk-tile-inner">
+        {{? it.topRibbonText }}
+            <div class="gk-tile-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+        {{? it.sponsor }}
+            <div class="sponsored" style="display: none;">
+                <span class="sr-only">Sponsored by {{=it.sponsor}}</span>
+                {{=it.sponsor}}
+            </div>
+        {{?}}
+            <div class="gk-img">
+                {{? it.photoUrl }}
+                    <div class="gk-img-wrap">
+                        <a href="{{=it.url}}">
+                            <img src="{{=it.photoUrl}}"/>
+                        </a>
+                    </div>
+                {{?}}
+            </div>
+            <div class="gk-tile-content">
+            {{? it.hasTag }}
+                <div class="gk-tile-tag">
+                {{? it.label }}
+                    <label>{{=it.label}}</label>
+                {{?}}
+        
+                </div>
+            {{?}}
+                <div class="gk-tile-details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                {{? it.publishDate }}
+                    <label>{{=it.publishDate}}</label>
+                {{?}}
+                {{? it.type == 'recipe' }}
+                    <div class="gk-tile-recipe-info">
+                        <div class="author">
+                        {{? it.userProfileUrl }}
+                            <span class="name">By <a href="{{=it.userProfileUrl}}">{{=it.displayName}}</a></span>
+                        {{??}}
+                            <span class="name">By {{=it.displayName}}</span>
+                        {{?}}
+                        </div>
+                        <div class="meta-data">
+                            <div class="fd-rating">
+                                <div class="five-star">
+                                    <span class="fd-rating-percent" style="width:{{=it.percentRating}};"></span>
+                                </div>
+                                <span title="{{=it.ratingCount}}">({{=it.ratingCountAbbr}})</span>
+                            </div>
+                            <div class="cook-time"><i class='icon-fdc-clock'></i> {{=it.totalTime}}</div>
+                        </div>
+                    </div>
+                {{?}}
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-recipe">
+
+    <div class="fd-tile fd-recipe {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                {{? it.photoUrl }}
+                    <div class="inner-wrapper">
+                        <a href="{{=it.url}}">
+                            <img src="{{=it.photoUrl}}"/>
+                        </a>
+                    </div>
+                {{?}}
+            </div>
+            <div class="tile-content">
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                    <div class="recipe-data">
+                        <div class="author">
+                        {{? it.userProfileUrl }}
+                            <span class="name">By <a href="{{=it.userProfileUrl}}">{{=it.displayName}}</a></span>
+                        {{??}}
+                            <span class="name">By {{=it.displayName}}</span>
+                        {{?}}
+                        </div>
+                        <div class="meta-data">
+                            <div class="fd-rating">
+                                <div class="five-star">
+                                    <span class="fd-rating-percent" style="width:{{=it.percentRating}};"></span>
+                                </div>
+                                <span title="{{=it.ratingCount}}">({{=it.ratingCountAbbr}})</span>
+                            </div>
+                            <div class="cook-time"><i class='icon-fdc-clock'></i> {{=it.totalTime}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-topic">
+
+    <div class="fd-tile fd-topic {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                {{? it.photoUrl }}
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                </div>
+                {{?}}
+            </div>
+
+            <div class="tile-content">
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+            <ul class="related-links">
+                <li><a href="{{=it.itemUrl}}">{{=it.itemText}}</a></li>
+            </ul>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-gkshow">
+
+    <div class="fd-tile fd-topic {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                {{? it.photoUrl }}
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                </div>
+                {{?}}
+            </div>
+
+            <div class="tile-content">
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+            <ul class="related-links">
+                <li><a href="{{=it.itemUrl}}">{{=it.itemText}}</a></li>
+            </ul>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-gkcollection">
+
+    <div class="fd-tile fd-video {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+            {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+            {{?}}
+            <div class="sponsored" style="display: none;">
+                <span class="sr-only">Sponsored by {{=it.sponsor}}</span>
+                {{=it.sponsor}}
+            </div>
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                </div>
+            </div>
+            <div class="tile-content {{? !it.showName }}no-show-name{{?}}">
+                <label><i class="icon-fdc-play"></i></label>
+                <div class="details">
+                {{? it.showName }}
+                    <label>{{=it.showName}}</label>
+                {{?}}
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                    <div class="author">
+                        <span class="name">By <a href="https://www.food.com/user/{{=it.userId}}">{{=it.displayName}}</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-list">
+
+    <div class="fd-tile fd-list {{=it.cssClassNames || ''}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="tile-content">
+                <div class="details">
+                    <h2 class="title"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+            <ul class="topics related-links">
+                <li><a href="{{=it.itemUrl}}">{{=it.itemText}}</a></li>
+            </ul>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-photo">
+
+    <div class="fd-tile fd-photo {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                </div>
+            </div>
+            <div class="tile-content">
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</span></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-review">
+
+    <article itemprop="review" itemscope itemtype="http://schema.org/Review">
+        <h5><a href="{{=it.url}}">{{=it.title}}</a></h5>
+        <div class="fd-rating">
+            <div class="five-star">
+                <span class="fd-rating-percent" style="width: {{=it.rating}}"></span>
+
+                <p style="display: none;" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                    <meta itemprop="worstRating" content="1"/>
+                    <span itemprop="ratingValue" style="display:none"></span>
+                    <span itemprop="bestRating" style="display:none">5</span>
+                </p>
+
+            </div>
+        </div>
+        <small class="date">{{=it.date}}</small>
+        <p itemprop="description">{{=it.review}}</p>
+    </article>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-slideshow">
+
+    <div class="fd-tile fd-gallery {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}">
+                </div>
+            </div>
+            <div class="tile-content">
+                {{? it.label }}
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                {{?}}
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-video">
+
+    <div class="fd-tile fd-video {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="sponsored" style="display: none;">
+                <span class="sr-only">Sponsored by {{=it.sponsor}}</span>
+                {{=it.sponsor}}
+            </div>
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    {{? it.isFeature === true }}
+                        <img data-src="{{=it.initialPhotoUrl}}" data-target=".fd-img-wrap" alt="{{=it.title}}">
+                    {{?}}
+                    {{? it.isFeature != true }}
+                        <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                    {{?}}
+                </div>
+            </div>
+            <div class="tile-content">
+                <label><i class="icon-fdc-play"></i></label>
+                <div class="details">
+                {{? it.showName }}
+                    <label>{{=it.showName}}</label>
+                {{?}}
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                    <div class="author">
+                        <span class="name">By <a href="https://www.food.com/user/{{=it.userId}}">{{=it.displayName}}</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+
+
+<script type="text/html-template" class="tile-template" id="tile-ingredient">
+
+    <div class="fd-tile fd-ingredient {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <img src="{{=it.photoUrl}}" alt="{{=it.title}}">
+                </div>
+            </div>
+            <div class="tile-content">
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-user">
+
+    <div class="fd-tile fd-user {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap"></div>
+            <div class="tile-content">
+                <div class="author">
+                    <a href="{{= it.url}}">
+                      <div class="user-avatar isActive">
+                        <span class="user-letter">{{= (it.displayName || '').toUpperCase().split('').find((c) => /^[A-Z]/.test(c)) || 'A' }}</span>
+                      </div>
+                    </a>
+                    <span class="name"><a href="{{= it.url}}" title="{{=FD.Page.htmlEncode(it.displayName, true)}}">{{= it.displayName}}</a></span>
+                </div>
+                <div class="gk-tile-actions">
+                    <button class="gk-fp-cta btn-default" data-url="#">Follow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template tmpl-metadata" id="tile-metadata">
+    <span class="asset-count ">{{=it.itemCount}} {{=it.itemType}}</span>
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-howto">
+
+    <div class="fd-tile fd-how-to {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <a href="{{=it.url}}"><img src="{{=it.photoUrl}}"></a>
+                </div>
+            </div>
+            <div class="tile-content">
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-article">
+
+    <div class="fd-tile fd-article {{=it.cssClassNames || ''}} {{=it.noPhoto}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <a href="{{=it.url}}"><img src="{{=it.photoUrl}}"></a>
+                </div>
+            </div>
+            <div class="tile-content">
+                <div class="tags">
+                    <span>{{=it.label}}</span>
+                </div>
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                {{? it.publishDate }}
+                    <label>{{=it.publishDate}}</label>
+                {{?}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-rb-recipe">
+
+    <div class="fd-tile fd-recipe {{=it.cssClassNames || ''}} {{=it.noPhoto}} {{=it.noUser}}" data-id="{{=it.type}}-{{=it.id}}" data-url="{{=it.url}}">
+        <div class="fd-inner-tile">
+        {{? it.topRibbonText }}
+            <div class="gk-card-ribbon">
+                <div class="rib-text">{{=it.topRibbonText}}</div>
+                <div class="rib-tail"></div>
+            </div>
+        {{?}}
+            <div class="fd-img-wrap">
+                <div class="inner-wrapper">
+                    <a href="{{=it.url}}"><img src="{{=it.photoUrl}}" alt="{{=it.title}}"/></a>
+                </div>
+            </div>
+            <div class="tile-content">
+                <div class="details">
+                    <h2 class="title" title="{{=FD.Page.htmlEncode(it.title, true)}}"><a href="{{=it.url}}">{{=it.titleTruncated}}</a></h2>
+                    <div class="author">
+                        <span class="name">By <a href="{{=it.userProfileUrl}}">{{=it.displayName}}</a></span>
+                    </div>
+                    <div class="authorNoLink"><span class="name">By {{=it.displayName}}</span></div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template module-gk-aa" id="tile-message">
+
+    <div class="tile-message clearfix {{=it.cssClassNames || ''}} {{=it.type || '' }}"{{? !!it.extraStyles }} style="{{=it.extraStyles}}"{{?}}>
+        <div class="details">
+        {{? !!it.title }}
+            <h2 class="title">{{=it.text}}</h2>
+        {{?}}
+        {{? !!it.description }}
+            <p class="description">{{=it.description}}</p>
+        {{?}}
+        {{? !!it.iconClass }}
+            <div class="cta">
+                <i class="{{=it.iconClass}}"></i>
+            </div>
+        {{?}}
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html-template" class="tile-template" id="tile-ad">
+    {{? !it }}{{ it = {} }}{{?}}
+    <div class="fd-tile fd-tile-double {{= it && it.cssClassNames || ''}} fd-tile-ad">
+        <div class="fd-inner-tile">
+            <div class="dfp-bigbox {{= it.className || ''}}">
+                <div class="dfp-ad-wrap">
+                    <div class="dfp" data-dfp-type="dfp_bigbox{{? it.noTower}}_alt{{?}}"></div>
+                    <span class="ad-label">Advertisement</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<!-- Search results heading template -->
+<script type="text/html-template" class="search-template" id="results-heading">
+    {{? !it }}{{ it = {} }}{{?}}
+    {{? it.noResults }}
+        <h3>Oops!</h3>
+        <h2 id="searchModuleTitle">No matches.</h2>
+        <p>How about digging into some of our most popular stuff instead?</p>
+    {{??}}
+        <h1 id="searchModuleTitle">{{= it.count}} Result{{? it.count.replace( /,/g , "" ) > 1}}s{{?}}</h1>
+    {{?}}
+</script>
+
+<!-- Search term template -->
+<script type="text/html-template" class="search-template" id="term">
+    <li><span>{{=it.title}}</span><i class="icon-fdc-close"></i></li>
+</script>
+
+<!-- Search token template -->
+<script type="text/html-template" class="search-template" id="token">
+    <li data-context="{{=it.data}}"><span>{{=it.title}}</span></li>
+</script>
+
+<!-- Search "did you mean" template -->
+<script type="text/html-template" class="search-template" id="dym">
+    <div class="dym"><div class="dym-wrap">{{=it.msg}}</div></div>
+</script>
+
+
+
+<script type="text/html-template" class="global-share-template" id="global-share-tools">
+    {{? !it }}{{ it = { pinterest: true, facebook: true, email: true } }}{{?}}
+    <!-- Food.com share tools -->
+    <div class="gk-share social-share">
+        <div class="gk-share-wrapper">
+            <div class="gk-share-inner">
+                <ul>
+                {{? it.pinterest }}
+                    <li class="pinterest">
+                        <a class="gk-share-link pinterest" data-network="pinterest" title="Share on Pinterest" {{? it.pinterest.shareDataFunc }}data-share-data-func="{{=it.pinterest.shareDataFunc}}"{{?}}><i class="icon-fdc-pinterest social-share"></i></a>
+                    </li>
+                {{?}}
+                {{? it.facebook }}
+                    <li class=" facebook">
+                        <a class="gk-share-link facebook" data-network="facebook" title="Share on Facebook" {{? it.facebook.shareDataFunc }}data-share-data-func="{{=it.facebook.shareDataFunc}}"{{?}}><i class="icon-fdc-facebook"></i></a>
+                    </li>
+                {{?}}
+                {{? it.twitter }}
+                    <li class=" twitter">
+                        <a class="gk-share-link twitter" data-network="twitter" title="Share on Twitter" {{? it.twitter.shareDataFunc }}data-share-data-func="{{=it.twitter.shareDataFunc}}"{{?}}><i class="icon-fdc-twitter"></i></a>
+                    </li>
+                {{?}}
+                 {{? it.instagram }}
+                    <li class=" instagram">
+                        <a class="gk-share-link instagram" data-network="instagram" title="Share on Instagram" {{? it.instagram.shareDataFunc }}data-share-data-func="{{=it.instagram.shareDataFunc}}"{{?}}><i class="icon-fdc-instagram"></i></a>
+                    </li>
+                {{?}}
+                {{? it.email }}
+                    <li>
+                        <a class="gk-share-link email" data-network="email" title="Share via Email" {{? it.email.shareDataFunc }}data-share-data-func="{{=it.email.shareDataFunc}}"{{?}}><i class="icon-fdc-email"></i></a>
+                    </li>
+                {{?}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Food.com share tools -->
+</script>
+
+<script type="text/html-template" id="tile-reciperelatedvideo">
+    <div class="gk-card">
+        <a href="{{=it.url}}">
+            <div class="gk-card-img">
+                <div class="inner-wrapper">
+                    <img data-src="{{=it.photo}}"
+                         data-target=".gk-card-img"
+                         alt="">
+                </div>
+            </div>
+            <div class="gk-card-text">
+                <span><i class="icon-fdc-play"></i></span>
+                <div class="text-wrap">
+                    <h5>{{=it.title}}</h5>
+                    <div class="duration">({{=it.duration}})</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</script>
+
+
+
+
+<script type="text/html-template" class="module-gk-aa" id="gk-bigbox">
+{{? !it }}{{ it = {} }}{{?}}
+<div class="dfp-bigbox {{= it.className || ''}}">
+    <div class="dfp-ad-wrap">
+        <div class="dfp" data-dfp-type="dfp_bigbox{{? it.noTower}}_alt{{?}}"></div>
+        <span class="ad-label">Advertisement</span>
+    </div>
+</div>
+</script>
+
+
+
+
+
+<script type="text/html-template" class="tmpl-promo-card" id="gk-promo-card-tmpl">
+    
+<section class="gk-promo-card">
+    <div class="gk-promo-card-header">
+        
+<svg id="device-icons-wrapper" class="gk-device-icons" xmlns="http://www.w3.org/2000/svg" width="207.5996" height="54.808" viewBox="0 0 207.5996 54.808">
+    <g id="outlines" style="opacity: 1">
+        <path d="M206.6,57.75h-8.1a2.24,2.24,0,0,1-1.6309-.6211l-.0928-.1133A2.7521,2.7521,0,0,1,196.25,55.5V37.2a2.2449,2.2449,0,0,1,.62-1.6309l.1152-.0947A2.7687,2.7687,0,0,1,198.5,34.95h8.1a2.0922,2.0922,0,0,1,1.7246.7334A2.7634,2.7634,0,0,1,208.85,37.2V55.5a2.242,2.242,0,0,1-.6191,1.63l-.1143.0938A2.7524,2.7524,0,0,1,206.6,57.75Z" transform="translate(-1.25 -3.25)"/>
+        <path d="M186.7,57.75H164.9A1.8524,1.8524,0,0,1,163.05,55.9V26.8A1.8524,1.8524,0,0,1,164.9,24.95h21.8a1.8522,1.8522,0,0,1,1.85,1.85V55.9A1.8522,1.8522,0,0,1,186.7,57.75Z" transform="translate(-1.25 -3.25)"/>
+        <path d="M150.95,54.45H92.55V18.9a1.9321,1.9321,0,0,1,1.75-1.95h54.9a1.7972,1.7972,0,0,1,1.75,1.95Z" transform="translate(-1.25 -3.25)"/>
+        <path d="M82,49.95H3.4A1.9952,1.9952,0,0,1,1.25,48.1V5.1A1.9951,1.9951,0,0,1,3.4,3.25H82A1.9951,1.9951,0,0,1,84.15,5.1v43A1.9952,1.9952,0,0,1,82,49.95Z" transform="translate(-1.25 -3.25)"/>
+    </g>
+    <g id="device-icons">
+        <g id="television">
+            <path id="television-bezel" d="M5.1,48.14H80.4v-42H5.1Zm-1.7,2.1A1.2657,1.2657,0,0,1,2,49.14v-44a1.2657,1.2657,0,0,1,1.4-1.1H82a1.2657,1.2657,0,0,1,1.4,1.1v44a1.2657,1.2657,0,0,1-1.4,1.1Zm44.9.8v4h5.5a.7887.7887,0,0,1,.8.8v1.3a.86.86,0,0,1-.8.8h-23a.7887.7887,0,0,1-.8-.8v-1.3a.86.86,0,0,1,.8-.8h5.5v-4Z" transform="translate(-1.25 -3.25)" style="fill: #fefefe"/>
+            <polygon id="television-screen" points="3.75 44.79 79.05 44.79 79.05 2.79 3.75 2.79 3.75 44.79" style="fill: #010202"/>
+        </g>
+        <g id="laptop">
+            <path id="laptop-bezel" d="M86,55.14h28.6c.5,0,.6,0,.7.2.1.1.2.2.3.2h12.2c.1,0,.3-.1.3-.2.1-.1.2-.2.7-.2h28.6a2.9021,2.9021,0,0,1-2.9,2.9H89A3.1344,3.1344,0,0,1,86,55.14Zm7.3-.4V18.94a1.1991,1.1991,0,0,1,1-1.2h54.9c.6,0,1,.5,1,1.2v35.8Z" transform="translate(-1.25 -3.25)" style="fill: #fefefe"/>
+            <polygon id="laptop-screen" points="93.65 49.69 147.35 49.69 147.35 17.29 93.65 17.29 93.65 49.69" style="fill: #010202"/>
+        </g>
+        <g id="tablet">
+            <path id="tablet-bezel" d="M165.6257,55.258h20.4v-26.8h-20.4Zm10.9,1.4a.7.7,0,1,1-.7-.7.6835.6835,0,0,1,.7.7Zm11.2.3v-30.1a1.11,1.11,0,0,0-1.1-1.1h-21.7a1.11,1.11,0,0,0-1.1,1.1v30.1a1.11,1.11,0,0,0,1.1,1.1h21.8a1.2722,1.2722,0,0,0,1-1.1Z" transform="translate(-1.25 -3.25)" style="fill: #fefefe"/>
+            <polygon id="tablet-screen" points="164.376 52.008 184.776 52.008 184.776 25.208 164.376 25.208 164.376 52.008" style="fill: #010202"/>
+        </g>
+        <g id="phone">
+            <path id="phone-bezel" d="M197.6182,54.7636v-16.4h9.9v16.8h-9.9Zm3.8-17.5c-.2,0-.3-.1-.3-.2v-.1c0-.1.1-.2.3-.2h2.5c.2,0,.3.1.3.2v.1c0,.1-.1.2-.3.2Zm1.1,20a.7.7,0,1,1,.7-.7c.1.4-.3.7-.7.7Zm5.6-.8v-19.3a2.0969,2.0969,0,0,0-.4-1.1,1.5039,1.5039,0,0,0-1.1-.4h-8.1a2.0969,2.0969,0,0,0-1.1.4,1.5039,1.5039,0,0,0-.4,1.1v19.3a2.0969,2.0969,0,0,0,.4,1.1,1.5039,1.5039,0,0,0,1.1.4h8.1a2.097,2.097,0,0,0,1.1-.4,1.5039,1.5039,0,0,0,.4-1.1Z" transform="translate(-1.25 -3.25)" style="fill: #fefefe"/>
+            <polygon id="phone-screen" points="206.268 51.514 206.268 35.514 206.268 35.114 196.368 35.114 196.368 35.514 196.368 51.514 196.368 51.914 206.268 51.914 206.268 51.514" style="fill: #010202"/>
+        </g>
+    </g>
+</svg>
+
+    </div>
+    <div class="gk-promo-card-content">
+        <i class="icon-gk-sparkles top-left"></i>
+        <h3>get the Food.com app.</h3>
+        <p>Watch on your iPhone, iPad,  Apple TV, Android, Roku, or Fire TV.</p>
+        <a class="btn gk-promo-card-cta" href="/app" target="_blank">Learn More</a>
+        <i class="icon-gk-sparkles bottom-right"></i>
+    </div>
+</section>
+</script>
+
+<!-- end footer -->
+
+    </div>
+
+</body>
+</html>
