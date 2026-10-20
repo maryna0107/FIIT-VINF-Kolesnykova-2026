@@ -20,12 +20,14 @@ Results can be filtered by the extracted preparation time and calories
 Usage:
     python3 -m indexer.search "easy chicken" --idf bm25
     python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
+    python3 -m indexer.search "salt pork garlic" --details
 """
 
 import argparse
 import math
 
-from indexer.indexer import load_index
+from indexer.indexer import load_index, load_recipes
+from indexer.show import format_recipe
 from indexer.tokenizer import tokenize
 
 
@@ -92,11 +94,17 @@ def main():
                         help="only recipes with total time up to N minutes")
     parser.add_argument("--max-calories", type=float,
                         help="only recipes with up to N kcal per serving")
+    parser.add_argument("--details", action="store_true",
+                        help="show the extracted data of every result")
     args = parser.parse_args()
 
     index = load_index()
     results = search(index, args.query, args.idf, args.limit,
                      args.max_minutes, args.max_calories)
+    recipes = (
+        {recipe["id"]: recipe for recipe in load_recipes()}
+        if args.details else {}
+    )
 
     filtering = args.max_minutes is not None or args.max_calories is not None
     for rank, (score, doc_id) in enumerate(results, start=1):
@@ -105,8 +113,15 @@ def main():
         if filtering:
             details = (f"  [{document['total_minutes']} min, "
                        f"{document['calories']} kcal]")
-        print(f"{rank:2}. {score:8.3f}  {document['name']}{details}  "
-              f"({document['url']})")
+        print(f"{rank:2}. {score:8.3f}  [ID {doc_id}]  {document['name']}"
+              f"{details}  ({document['url']})")
+        if args.details:
+            # The first line repeats the name, which is already printed above.
+            print(format_recipe(recipes[doc_id], full=False).split("\n", 1)[1])
+            print()
+
+    if results and not args.details:
+        print("\nFull recipe: python3 -m indexer.show <ID>")
 
 
 if __name__ == "__main__":

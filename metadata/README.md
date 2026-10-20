@@ -88,7 +88,7 @@ Použité hodnoty:
 
 Timeout určuje, ako dlho crawler čaká na nadviazanie spojenia alebo na odpoveď servera. Pauza je zámerné čakanie po spracovaní požiadavky, ktoré znižuje zaťaženie servera a zabraňuje príliš rýchlemu odosielaniu požiadaviek.
 
-Ak dôjde k výpadku siete, požiadavka môže zlyhať okamžite alebo po uplynutí timeoutu. Pri statusoch 429, 5xx a sieťovej chybe crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Stránky s 404 sa pri ďalšom spustení preskočia. Pri discovery fáze sa aktuálna kategória preskočí, pri download fáze sa sieťová chyba zapíše do metadata so statusom `-1` a pokračuje sa ďalšou URL.
+Ak dôjde k výpadku siete, požiadavka môže zlyhať okamžite alebo po uplynutí timeoutu. Pri chybe servera (5xx) a sieťovej chybe crawler požiadavku zopakuje najviac 2× s pauzou 10 sekúnd. Stránky s 404 sa pri ďalšom spustení preskočia. Pri discovery fáze sa aktuálna kategória preskočí, pri download fáze sa sieťová chyba zapíše do metadata so statusom `-1` a pokračuje sa ďalšou URL.
 
 ### Súčasný stav crawlera a ukážka dát
 
@@ -120,7 +120,7 @@ Použité knižnice:
 - `pathlib` – práca so súbormi a adresármi
 - `time` – interval medzi HTTP požiadavkami
 - `json` – extrahované recepty a index
-- `unittest` – testy extraktora
+- `unittest` – testy regexov (20 listing a 20 recipe stránok v `tests/fixtures/`)
 - `tiktoken` – počet tokenov v štatistike
 
 ---
@@ -851,6 +851,9 @@ python3 -m crawler.downloader      # stiahnutie všetkých URL (DOWNLOAD_LIMIT =
 python3 -m extractor.main          # regex extrakcia -> data/recipes.jsonl
 python3 -m indexer.indexer         # invertovaný index (TF) -> data/index/index.json
 python3 -m indexer.search "beef stew" --idf bm25
+python3 -m indexer.search "salt pork garlic" --details   # výsledky s uloženými údajmi
+python3 -m indexer.show 209913                           # celý uložený recept podľa ID
+python3 -m indexer.search "dinner" --max-minutes 30 --max-calories 500
 python3 -m indexer.compare         # porovnanie IDF -> metadata/idf_comparison.md
 python3 -m stats.stats             # štatistika -> metadata/stats.md
 python3 -m unittest discover tests -v

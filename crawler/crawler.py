@@ -13,6 +13,9 @@ from crawler.http_client import RequestException, get
 
 OUTPUT_PATH = RECIPE_URLS_PATH
 
+# Links to recipe pages look like /recipe/4-hour-beef-stew-15541.
+RECIPE_LINK_PATTERN = re.compile(r'href=["\'](/recipe/[^"\']+-\d+)["\']')
+
 
 def load_existing_recipe_links():
     """Load previously saved URLs so later discovery runs remain append-only."""
@@ -99,8 +102,7 @@ def discover_recipes():
                     break
 
                 # Extract recipe URLs.
-                recipe_links = re.findall(
-                    r'href=["\'](/recipe/[^"\']+-\d+)["\']',
+                recipe_links = RECIPE_LINK_PATTERN.findall(
                     response.text
                 )
 

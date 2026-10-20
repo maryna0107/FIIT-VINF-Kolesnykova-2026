@@ -17,7 +17,7 @@ REQUEST_TIMEOUT = 10
 # request frequency and is the crawler's politeness/rate-limit mechanism.
 REQUEST_DELAY = 1
 
-# Temporary server problems (429 Too Many Requests, 5xx, network errors) are
+# Temporary server problems (5xx server errors, network errors) are
 # retried a limited number of times with a longer pause, so a short outage
 # does not lose the page but the server is not hammered either.
 MAX_RETRIES = 2

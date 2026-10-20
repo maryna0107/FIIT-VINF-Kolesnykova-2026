@@ -72,9 +72,6 @@ SIMPLE_ESCAPES = {
 }
 TAG_PATTERN = re.compile(r'<[^>]+>')
 
-# When the author wrote no description, Food.com fills in a template that
-# only repeats the title. It carries no information and would add the same
-# words ("make", "share", "recipe", "food", "com") to a third of the index.
 TEMPLATE_DESCRIPTION_PATTERN = re.compile(
     r'^Make and share this .* recipe from Food\.com\.?$'
 )
