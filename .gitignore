@@ -11,3 +11,6 @@ env/
 /data/
 /archive/
 *.zip
+
+# Local report drafts (wiki texts, diagrams, presentation) – not for git
+/report/
