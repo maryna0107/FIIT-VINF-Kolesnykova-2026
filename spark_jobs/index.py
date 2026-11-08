@@ -1,19 +1,3 @@
-"""Own inverted index (TF) built with Apache Spark.
-
-Spark version of indexer/indexer.py, the classic MapReduce word count:
-
-    map:     recipe              -> ((term, doc_id), 1) for every token
-    reduce:  ((term, doc_id), 1) -> ((term, doc_id), TF)
-    group:   (term, (doc_id, TF)) -> term -> {doc_id: TF, ...}
-
-Input:  data/spark/recipes/ (output of spark_jobs.extract)
-Output: data/spark/index.json, in the same format as data/index/index.json,
-        so indexer.search can use it without any change.
-
-Usage:
-    python3 -m spark_jobs.index
-"""
-
 from collections import Counter
 
 from indexer.indexer import recipe_text, save_index

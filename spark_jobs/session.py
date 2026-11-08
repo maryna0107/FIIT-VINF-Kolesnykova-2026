@@ -1,22 +1,10 @@
-"""Shared Spark setup for all Spark jobs.
+# je spoločné nastavenie Sparku pre všetky joby. Robí tri veci:
 
-Locally (python3 -m spark_jobs.<job>) the jobs run on a local Spark
-"cluster": master local[*] starts one worker thread per CPU core.
+# 1. Spustenie. Keď job spustím lokálne, nastaví local[*], teda všetky jadrá môjho počítača, a 4 GB pamäte. Keď ho spustí spark-submit na klastri, nič z toho nenastaví a nechá to na klaster, inak by všetko bežalo len na jednom stroji.
 
-On a cluster the same code is started with spark-submit, which decides the
-master itself, for example the UISAV cluster:
+# 2. Partície po 32 MB. Predvolených 128 MB by dalo len ~7 partícií, takže by časť jadier stála. Takto ich je ~27 pre HTML a 22 pre dump, 2–3 na jadro.
 
-    spark-submit --master mesos://147.213.75.180:5050 \
-        --conf spark.executor.uri=hdfs://147.213.75.180:8020/user/hadmin/spark-3.4.0-bin-hadoop3.tgz \
-        --py-files code.zip spark_jobs/wiki_parse.py
-
-Then nothing local is forced here (master, Python, memory), otherwise the
-job would ignore the cluster and run only on one computer.
-
-Data location: data/ of the project by default, or the directory in the
-environment variable VINF_DATA, for example VINF_DATA=hdfs:///user/me/data.
-The code works with Spark 3.4 (UISAV cluster) and newer.
-"""
+# 3. Cesta k dátam. Predvolene je to priečinok data/, na klastri sa cez premennú VINF_DATA nastaví HDFS. Kód sa nemení, mení sa len cesta.
 
 import os
 import sys
@@ -43,26 +31,22 @@ def submitted_by_spark_submit():
     return "PYSPARK_GATEWAY_PORT" in os.environ
 
 
-def create_spark(app_name):
+def create_spark(app_name): # rozdeli data na particii, max 128mb/jadro. pri 32 mb = 27 particii +- 2-3 na jadro
     builder = (
         SparkSession.builder
         .appName(app_name)
-        # Files are read in partitions of at most 32 MB, so the 837 MB of
-        # HTML is split into ~30 tasks and every core gets work.
-        .config("spark.files.maxPartitionBytes", "32m")
-        # The same for DataFrame readers: the bz2 Wikipedia dump is split
-        # into 32 MB parts (bz2 is splittable), so all cores read it.
-        .config("spark.sql.files.maxPartitionBytes", "32m")
+       
+        .config("spark.files.maxPartitionBytes", "32m") # data stiahnute
+ 
+        .config("spark.sql.files.maxPartitionBytes", "32m") # wikipedia 
         .config("spark.ui.showConsoleProgress", "false")
     )
 
-    if not submitted_by_spark_submit():
-        # Spark starts separate Python worker processes. They must use the
-        # same Python and must be able to import the project's own modules
-        # (extractor, indexer). On a cluster --py-files does this instead.
+    if not submitted_by_spark_submit(): # ak bezi na mojom pocitaci 
+        
         os.environ["PYSPARK_PYTHON"] = sys.executable
         os.environ["PYTHONPATH"] = os.pathsep.join(
-            filter(None, [str(PROJECT_ROOT), os.environ.get("PYTHONPATH")])
+            filter(None, [str(PROJECT_ROOT), os.environ.get("PYTHONPATH")]) # prida priecinok projektu do zoznamu kde python hlada moduly
         )
         builder = builder.master("local[*]").config("spark.driver.memory", "4g")
 

@@ -1,12 +1,3 @@
-"""Unit tests of the Wikipedia regexes and join keys (spark_jobs.wiki_regex).
-
-The Java regexes used in Spark SQL use only syntax that Python's re
-understands the same way, so they are tested here with re, without Spark.
-
-Run from the project root:
-    python3 -m unittest discover tests -v
-"""
-
 import re
 import unittest
 

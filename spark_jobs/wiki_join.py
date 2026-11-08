@@ -1,32 +1,3 @@
-"""Job 2/2: join of the extracted recipes with Wikipedia.
-
-Every recipe gives join keys (spark_jobs.wiki_regex.recipe_keys):
-
-    ingredient  "all-purpose flour", "fresh parsley" -> "parsley"
-    dish        n-grams of the name: "Rabbit Stifado" -> "stifado"
-    cuisine     keyword "Indian"                     -> "indian cuisine"
-
-The keys are joined with Wikipedia titles in two steps:
-
-    1. key = title of a food article or of a redirect
-       ("chickpeas" is a redirect to "Chickpea")
-    2. target of step 1 = food article -> abstract, infobox, categories
-
-For every ingredient and for the dish, only the best key is kept (the
-longest n-gram, the exact form before the singular form, ...).
-
-Input:  data/spark/recipes/ (spark_jobs.extract),
-        data/spark/wiki/    (spark_jobs.wiki_parse)
-Output (data/spark/):
-    wiki_links/      one row per recipe -> wiki article link
-    wiki_matched/    unique joined wiki articles with their attributes
-    recipes_wiki/    recipes with their wiki data (input for the Lucene index)
-    wiki_join_stats.json, wiki_join_plan.txt
-
-Usage:
-    python3 -m spark_jobs.wiki_join
-"""
-
 import io
 import json
 from contextlib import redirect_stdout
@@ -51,7 +22,6 @@ KEY_SCHEMA = StructType([
     StructField("priority", IntegerType()),
 ])
 
-# Infobox fields copied to the recipes (the most useful for search).
 WIKI_ATTRIBUTES = [
     "country", "region", "course", "type", "main_ingredient", "served",
     "kj", "protein", "fat", "carbs",
@@ -78,7 +48,6 @@ def main():
     food = spark.read.parquet(f"{WIKI_DIR}/food")
     redirects = spark.read.parquet(f"{WIKI_DIR}/redirects")
 
-    # Every way a wiki article can be named: its own title or a redirect.
     titles = (
         food.select(F.col("title_norm").alias("key"),
                     F.col("title_norm").alias("target_norm"),

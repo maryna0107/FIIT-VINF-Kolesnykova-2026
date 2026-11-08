@@ -1,16 +1,5 @@
-"""Regex extraction of all downloaded HTML pages with Apache Spark.
+# extraktor ktory spark spusti na vsetkych html naraz
 
-Spark version of extractor/main.py. The extraction itself is the same
-regex extractor (extractor/extractor.py); Spark only splits the pages
-into partitions and runs the extractor on all CPU cores in parallel:
-
-    data/html/*.html  ->  (file, recipe)  ->  without duplicates  ->  DataFrame
-
-Output: data/spark/recipes/ (JSON lines, one file per partition).
-
-Usage:
-    python3 -m spark_jobs.extract
-"""
 
 from pyspark.sql.types import (
     ArrayType, DoubleType, IntegerType, StringType, StructField, StructType,
@@ -57,7 +46,6 @@ def extract_file(path_and_content):
 def main():
     spark = create_spark("recipes-extract")
 
-    # Each element is one HTML file: (path, raw bytes).
     pages = spark.sparkContext.binaryFiles(HTML_PATTERN)
     extracted = pages.map(extract_file).cache()
 

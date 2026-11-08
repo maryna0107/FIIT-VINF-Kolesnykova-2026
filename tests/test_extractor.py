@@ -1,19 +1,3 @@
-"""Unit tests of the REGEX extractors.
-
-Every test class tests one regular expression (or one group of regular
-expressions that work together). Each regex is run on 20 real pages:
-
-    tests/fixtures/listing/  20 Food.com listing pages (123, A-R)
-                             -> regex that extracts recipe URLs (crawler)
-    tests/fixtures/recipes/  20 Food.com recipe pages
-                             -> regexes that extract recipe data (extractor)
-
-The pages are stored with the tests, so the tests need no network.
-
-Run from the project root:
-    python3 -m unittest discover tests -v
-"""
-
 import re
 import unittest
 from pathlib import Path

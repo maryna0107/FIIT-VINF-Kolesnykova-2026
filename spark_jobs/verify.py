@@ -1,11 +1,4 @@
-"""Check that the Spark jobs give the same result as the part 1 code.
-
-Compares data/spark/recipes/ with data/recipes.jsonl and
-data/spark/index.json with data/index/index.json.
-
-Usage (after extractor.main, indexer.indexer and both Spark jobs):
-    python3 -m spark_jobs.verify
-"""
+# Check that the Spark jobs give the same result as the part 1 code.
 
 import json
 from pathlib import Path

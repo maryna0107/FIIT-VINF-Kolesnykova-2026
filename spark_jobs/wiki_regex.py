@@ -1,29 +1,6 @@
-"""Regular expressions for Wikipedia dump pages (wikitext).
-
-Everything in the wiki part of the project is extracted with regexes, the
-same way as the recipes in extractor/extractor.py. No XML or wikitext
-parser is used.
-
-Two groups of regexes are here:
-
-* Java regexes (strings) used inside Spark SQL (regexp_extract, rlike).
-  They run in the JVM on the whole dump, so the ~100 GB of XML never has
-  to be copied into Python processes.
-* Python regexes used only for the small number of food articles that
-  survive the first filter: infobox fields, the first paragraph and
-  categories.
-
-The module also builds the join keys from recipes (ingredients, dish
-name, cuisine). Keys and wiki titles are normalized by the same function,
-otherwise they would never be equal.
-"""
-
 import html
 import re
 
-# ---------------------------------------------------------------------------
-# Java regexes for Spark SQL (one <page>...</page> record of the dump)
-# ---------------------------------------------------------------------------
 
 TITLE_JAVA = r"<title>(.*?)</title>"
 NS_JAVA = r"<ns>(\d+)</ns>"
@@ -31,17 +8,13 @@ REDIRECT_JAVA = r'<redirect title="([^"]*)"'
 TEXT_JAVA = r"(?s)<text[^>]*>(.*?)</text>"
 CATEGORY_JAVA = r"\[\[Category:([^\]|]+)"
 
-# Infoboxes of food articles. "Infobox prepared food", "Infobox dish" and
-# "Infobox bread" are redirects to "Infobox food" on Wikipedia, but older
-# articles still use those names.
+
 FOOD_INFOBOX_TYPES = (
     "food|prepared food|dish|bread|sauce|beverage|drink|cocktail|cheese"
     "|nutritional value"
 )
 FOOD_INFOBOX_JAVA = rf"(?i)\{{\{{\s*infobox[ _]+(?:{FOOD_INFOBOX_TYPES})\s*[|\n}}]"
 
-# A category name that contains one of these words marks a food article,
-# for example "Indian breads", "Spices", "Root vegetables", "Cocktails".
 FOOD_CATEGORY_WORDS = (
     "foods?|dish(?:es)?|cuisines?|cooking|culinary|ingredients?|spices?"
     "|herbs?|vegetables?|fruits?|cheeses?|breads?|cakes?|cookies|biscuits"
@@ -52,9 +25,7 @@ FOOD_CATEGORY_WORDS = (
 )
 FOOD_CATEGORY_JAVA = rf"(?i)\b(?:{FOOD_CATEGORY_WORDS})\b"
 
-# ...but not categories of people, companies or places that only mention
-# food: "Food Network chefs", "Food and drink companies established in
-# 1862", "NUTS 2 statistical regions" (NUTS is not nuts), "Wine regions".
+
 NOT_FOOD_CATEGORY_JAVA = (
     r"(?i)\b(?:people|chefs|cooks|writers|critics|founders|businesspeople"
     r"|executives|activists|companies|organi[sz]ations|establishments"
@@ -126,9 +97,6 @@ INFOBOX_FIELDS = {
 ABSTRACT_MAX_CHARS = 600
 
 
-# ---------------------------------------------------------------------------
-# Wikitext cleaning
-# ---------------------------------------------------------------------------
 
 def _replace_link(match):
     content = match.group(1)

@@ -1,16 +1,10 @@
-"""Show what was joined from Wikipedia to one recipe.
-
-Reads the output of spark_jobs.wiki_join (data/spark/recipes_wiki/), no
-Spark is needed.
-
-Usage:
-    python3 -m spark_jobs.wiki_show 100327          # recipe ID
-    python3 -m spark_jobs.wiki_show --examples 5    # 5 recipes with most links
-"""
-
 import argparse
 import json
 from pathlib import Path
+
+from pyspark.sql.types import ArrayType
+
+from spark_jobs.extract import RECIPE_SCHEMA
 
 RECIPES_WIKI_PATH = Path("data/spark/recipes_wiki")
 
@@ -19,7 +13,13 @@ def load_recipes():
     for part in sorted(RECIPES_WIKI_PATH.glob("part-*.json")):
         with part.open(encoding="utf-8") as file:
             for line in file:
-                yield json.loads(line)
+                recipe = json.loads(line)
+                # Spark leaves out empty (null) fields in JSON, the recipe
+                # printing of part 1 expects every field.
+                for field in RECIPE_SCHEMA.fields:
+                    empty = [] if isinstance(field.dataType, ArrayType) else None
+                    recipe.setdefault(field.name, empty)
+                yield recipe
 
 
 def link_count(recipe):
@@ -36,27 +36,36 @@ def wiki_line(page):
     return text + (f"\n      {attributes}" if attributes else "")
 
 
-def show(recipe):
-    print(f"\n{recipe['name']}  (ID {recipe['id']}, {recipe['url']})")
+def format_wiki(recipe):
+    """What was joined from Wikipedia to the recipe, as text."""
+
+    lines = []
     dish = recipe.get("wiki_dish")
-    print("  Dish:")
+    lines.append("  Dish:")
     if dish:
-        print(f"    {wiki_line(dish)}")
+        lines.append(f"    {wiki_line(dish)}")
         if dish.get("abstract"):
-            print(f"      \"{dish['abstract'][:300]}\"")
+            lines.append(f"      \"{dish['abstract'][:300]}\"")
     else:
-        print("    -")
+        lines.append("    -")
     for label, field in [("Cuisines", "wiki_cuisines"), ("Ingredients", "wiki_ingredients")]:
         pages = recipe.get(field) or []
-        print(f"  {label} ({len(pages)}):")
+        lines.append(f"  {label} ({len(pages)}):")
         for page in pages:
-            print(f"    - {wiki_line(page)}")
+            lines.append(f"    - {wiki_line(page)}")
+    return "\n".join(lines)
+
+
+def show(recipe):
+    print(f"\n{recipe['name']}  (ID {recipe['id']}, {recipe['url']})")
+    print(format_wiki(recipe))
     entities = recipe.get("ingredient_entities") or []
     print(f"  Recipe ingredients ({len(entities)}): {', '.join(entities)}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(
+        description="Show what was joined from Wikipedia to a recipe")
     parser.add_argument("recipe_id", nargs="?")
     parser.add_argument("--examples", type=int, default=0)
     args = parser.parse_args()
