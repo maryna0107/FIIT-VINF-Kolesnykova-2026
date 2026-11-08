@@ -905,3 +905,44 @@ C.M.P. Dessert  (ID 34639)
 
 [IDF: bm25] > q
 ```
+
+## 10. Spark a Wikipédia (Konzultácia 3)
+
+Všetko spracovanie beží v Apache Spark (PySpark, `master local[*]`). Wikipédia sa spracúva iba regulárnymi výrazmi.
+
+| Modul | Čo robí |
+|---|---|
+| `spark_jobs/extract.py` | HTML → recepty (rovnaký regex extraktor ako v 1. časti, paralelne v Spark-u) |
+| `spark_jobs/index.py` | vlastný TF index ako MapReduce (map → reduceByKey → groupByKey) |
+| `spark_jobs/verify.py` | porovná Spark výstupy s výstupmi 1. časti |
+| `spark_jobs/wiki_regex.py` | všetky regexy pre Wikipédiu + kľúče joinu z receptov |
+| `spark_jobs/wiki_parse.py` | job 1/2: dump (bz2, záznam = `<page>`) → presmerovania + články o jedle (Parquet) |
+| `spark_jobs/wiki_join.py` | job 2/2: join receptov (ingrediencie, názov, kuchyňa) s wiki článkami cez tituly aj presmerovania |
+| `spark_jobs/wiki_show.py` | vypíše, čo sa z Wikipédie pripojilo ku receptu |
+
+```bash
+# dump (celý alebo časti pages-articlesN) patrí do data/wiki/
+curl -C - -o data/wiki/enwiki-latest-pages-articles.xml.bz2 \
+  https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2
+
+python3 -m spark_jobs.extract
+python3 -m spark_jobs.index
+python3 -m spark_jobs.verify
+python3 -m spark_jobs.wiki_parse                 # alebo: wiki_parse cesta/k/dump*.bz2
+python3 -m spark_jobs.wiki_join
+python3 -m spark_jobs.wiki_show --examples 5
+```
+
+Výstupy (`data/spark/`): `recipes/`, `index.json`, `wiki/redirects/`, `wiki/food/`, `wiki/stats.json`, `wiki_links/`, `wiki_matched/`, `recipes_wiki/` (vstup pre Lucene index), `wiki_join_stats.json`, `wiki_join_plan.txt`.
+
+### Spustenie na klastri (spark-submit)
+
+Pri spustení cez `spark-submit` kód nenastavuje master ani Python – rozhodne `--master`. Dáta sú v priečinku z premennej `VINF_DATA` (predvolene `data/`). Kód je písaný pre Spark 3.4+ (klaster UISAV).
+
+```bash
+zip -r code.zip extractor indexer spark_jobs
+export VINF_DATA=hdfs://147.213.75.180:8020/user/<pouzivatel>/data
+spark-submit --master mesos://147.213.75.180:5050 \
+  --conf spark.executor.uri=hdfs://147.213.75.180:8020/user/hadmin/spark-3.4.0-bin-hadoop3.tgz \
+  --py-files code.zip spark_jobs/wiki_parse.py
+```
