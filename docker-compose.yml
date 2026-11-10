@@ -1,0 +1,14 @@
+# Použitie:
+#   docker compose build
+#   docker compose run --rm spark wiki_parse "/app/data/wiki_full/*.bz2"
+#   docker compose run --rm spark wiki_join
+services:
+  spark:
+    build: .
+    image: vinf-recipes-spark
+    volumes:
+      - ./data:/app/data
+    environment:
+      DRIVER_MEMORY: ${DRIVER_MEMORY:-5g}
+    stdin_open: true
+    tty: true

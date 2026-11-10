@@ -21,7 +21,7 @@ INDEX_PATH = Path("data/index/index.json")
 
 
 def recipe_text(recipe):
-    """All searchable text of one recipe."""
+    # All searchable text of one recipe.
 
     parts = [
         recipe.get("name") or "",

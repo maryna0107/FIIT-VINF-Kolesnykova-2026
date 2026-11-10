@@ -1,0 +1,12 @@
+# Do obrazu ide len kód. Dáta (desiatky GB) sa pripájajú ako zväzok.
+data/
+archive/
+report/
+logs/
+.git/
+.venv/
+venv/
+env/
+**/__pycache__/
+*.bz2
+*.zip

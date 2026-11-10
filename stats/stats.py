@@ -1,11 +1,3 @@
-"""Statistics of the crawled and extracted data.
-
-Writes metadata/stats.md, ready to be copied to the wiki.
-
-Usage:
-    python3 -m stats.stats
-"""
-
 import csv
 import json
 from collections import Counter
@@ -22,7 +14,6 @@ HTML_DIRECTORY = Path("data/html")
 RECIPES_PATH = Path("data/recipes.jsonl")
 OUTPUT_PATH = Path("metadata/stats.md")
 
-# Tokenizer used by current OpenAI models.
 ENCODING = tiktoken.get_encoding("o200k_base")
 
 
@@ -40,7 +31,7 @@ def main():
         discovered = list(csv.DictReader(urls_file, delimiter="\t"))
     categories = Counter(row["category"] for row in discovered)
 
-    # The latest attempt per URL decides its final status.
+
     last_status = {}
     with open(DOWNLOADS_PATH, encoding="utf-8") as downloads_file:
         for row in csv.DictReader(downloads_file, delimiter="\t"):
@@ -71,7 +62,7 @@ def main():
         f"| Objavené URL receptov | {len(discovered)} |",
     ]
     if len(set(categories.values())) == 1:
-        # Balanced crawl: one summary row instead of 27 identical rows.
+
         lines.append(
             f"| – z každej z {len(categories)} kategórií "
             f"(`{'`, `'.join(sorted(categories))}`) | "
