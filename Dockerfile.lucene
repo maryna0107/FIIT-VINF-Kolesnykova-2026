@@ -1,0 +1,16 @@
+# Lucene index a vyhľadávanie (konzultácia 4).
+# PyLucene = Lucene (Java) s Python mostom JCC. Kompilácia je zložitá, preto
+# hotový obraz. Spark tu netreba, číta sa už hotový výstup Sparku (JSON).
+FROM coady/pylucene:10.0.0
+
+WORKDIR /app
+
+COPY indexer/ indexer/
+COPY lucene_search/ lucene_search/
+COPY spark_jobs/__init__.py spark_jobs/wiki_show.py spark_jobs/
+
+ENV PYTHONPATH=/app
+
+# Bez argumentov sa spustí interaktívne vyhľadávanie.
+ENTRYPOINT []
+CMD ["python", "-m", "indexer.interactive"]

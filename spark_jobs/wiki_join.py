@@ -45,32 +45,33 @@ def main():
         recipes.rdd.flatMap(lambda row: recipe_keys(row.asDict())), KEY_SCHEMA
     ).cache()
 
-    food = spark.read.parquet(f"{WIKI_DIR}/food")
+    food = spark.read.parquet(f"{WIKI_DIR}/food") \
+                .withColumnRenamed("title", "wiki_title")
     redirects = spark.read.parquet(f"{WIKI_DIR}/redirects")
 
-    titles = (
-        food.select(F.col("title_norm").alias("key"),
-                    F.col("title_norm").alias("target_norm"),
+    # Step 1: every name under which a page can be found (key -> title_norm).
+    #   own title: "pancake"  -> "pancake"
+    #   redirect:  "pancakes" -> "pancake"
+    names = (
+        food.select(F.col("title_norm").alias("key"), "title_norm",
                     F.lit(False).alias("via_redirect"))
-        .unionByName(
-            redirects.select(F.col("title_norm").alias("key"), "target_norm",
-                             F.lit(True).alias("via_redirect")))
+        .unionByName(redirects.select(
+            F.col("title_norm").alias("key"),
+            F.col("target_norm").alias("title_norm"),
+            F.lit(True).alias("via_redirect")))
     )
 
-    # Join 1: recipe keys x wiki titles. The keys are small (tens of
-    # thousands of rows), so they are broadcast to every partition of the
-    # big title table (millions of redirects) - no shuffle of the titles.
-    candidates = F.broadcast(keys).join(titles, on="key")
+    # Join 1: recipe key -> page name. The keys are small (tens of thousands
+    # of rows), so they are broadcast to every partition of the big name
+    # table (millions of redirects) - the names are not shuffled.
+    candidates = F.broadcast(keys).join(names, "key")
 
-    # Join 2: the target must be a food article. This also resolves the
-    # redirects and drops non-food meanings ("Salt" the treaty, ...).
-    joined = candidates.join(
-        food.withColumnRenamed("title", "wiki_title"),
-        candidates.target_norm == food.title_norm,
-    )
+    # Join 2: the page must be a food article. Redirects to other pages
+    # and non-food meanings ("Salt" the treaty, ...) are dropped.
+    joined = candidates.join(food, "title_norm")
 
-    # Best key per recipe and source: the dish is the longest n-gram,
-    # an ingredient its exact form before modifiers were removed.
+    # Step 3: best key per recipe and source: the dish is the longest
+    # n-gram, an ingredient its exact form before modifiers were removed.
     best = Window.partitionBy("recipe_id", "match_type", "source") \
                  .orderBy("priority", "via_redirect")
     links = (
@@ -105,18 +106,20 @@ def main():
     )
     matched.write.mode("overwrite").json(f"{OUTPUT_DIR}/wiki_matched")
 
-    # Recipes with their wiki data, the input for the new (Lucene) index.
-    per_recipe = links.groupBy("recipe_id").agg(
-        F.first(F.when(F.col("match_type") == "dish", wiki_struct()),
-                ignorenulls=True).alias("wiki_dish"),
-        F.collect_list(F.when(F.col("match_type") == "ingredient", wiki_struct()))
-         .alias("wiki_ingredients"),
-        F.collect_list(F.when(F.col("match_type") == "cuisine", wiki_struct()))
-         .alias("wiki_cuisines"),
+    # Recipes with their wiki data, the input for the Lucene index.
+    # One small table per link type (id -> wiki pages), joined to the recipes.
+    # "left" keeps recipes without any wiki page.
+    def pages_per_recipe(match_type, column, collect):
+        return (links.filter(F.col("match_type") == match_type)
+                .groupBy(F.col("recipe_id").alias("id"))
+                .agg(collect(wiki_struct()).alias(column)))
+
+    enriched = (
+        recipes
+        .join(pages_per_recipe("dish", "wiki_dish", F.first), "id", "left")
+        .join(pages_per_recipe("ingredient", "wiki_ingredients", F.collect_list), "id", "left")
+        .join(pages_per_recipe("cuisine", "wiki_cuisines", F.collect_list), "id", "left")
     )
-    enriched = recipes.join(
-        per_recipe, recipes.id == per_recipe.recipe_id, "left"
-    ).drop("recipe_id")
     enriched.orderBy("file").write.mode("overwrite").json(
         f"{OUTPUT_DIR}/recipes_wiki")
 

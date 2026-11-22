@@ -2,11 +2,16 @@ import argparse
 import json
 from pathlib import Path
 
-from pyspark.sql.types import ArrayType
-
-from spark_jobs.extract import RECIPE_SCHEMA
-
 RECIPES_WIKI_PATH = Path("data/spark/recipes_wiki")
+
+# Fields of RECIPE_SCHEMA in spark_jobs/extract.py. Written out here, so the
+# search (Lucene container, without Spark) can read the recipes too.
+LIST_FIELDS = ["keywords", "ingredients", "ingredient_entities", "instructions"]
+VALUE_FIELDS = [
+    "id", "url", "name", "author", "description", "category", "prep_minutes",
+    "cook_minutes", "total_minutes", "servings", "date_published", "rating",
+    "review_count", "calories", "file",
+]
 
 
 def load_recipes():
@@ -16,9 +21,10 @@ def load_recipes():
                 recipe = json.loads(line)
                 # Spark leaves out empty (null) fields in JSON, the recipe
                 # printing of part 1 expects every field.
-                for field in RECIPE_SCHEMA.fields:
-                    empty = [] if isinstance(field.dataType, ArrayType) else None
-                    recipe.setdefault(field.name, empty)
+                for name in LIST_FIELDS:
+                    recipe.setdefault(name, [])
+                for name in VALUE_FIELDS:
+                    recipe.setdefault(name, None)
                 yield recipe
 
 

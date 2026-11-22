@@ -1,7 +1,14 @@
 # Použitie:
 #   docker compose build
+#
+# Spark (konzultácia 3):
 #   docker compose run --rm spark wiki_parse "/app/data/wiki_full/*.bz2"
 #   docker compose run --rm spark wiki_join
+#
+# Lucene (konzultácia 4):
+#   docker compose run --rm lucene python -m lucene_search.build
+#   docker compose run --rm lucene                       # interaktívne vyhľadávanie
+#   docker compose run --rm lucene python -m lucene_search.compare
 services:
   spark:
     build: .
@@ -10,5 +17,16 @@ services:
       - ./data:/app/data
     environment:
       DRIVER_MEMORY: ${DRIVER_MEMORY:-5g}
+    stdin_open: true
+    tty: true
+
+  lucene:
+    build:
+      context: .
+      dockerfile: Dockerfile.lucene
+    image: vinf-recipes-lucene
+    volumes:
+      - ./data:/app/data
+      - ./metadata:/app/metadata
     stdin_open: true
     tty: true
