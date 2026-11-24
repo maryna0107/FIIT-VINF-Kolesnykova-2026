@@ -1,41 +1,7 @@
-"""Lucene index of the recipes joined with Wikipedia (consultation 4).
-
-Input:  data/spark/recipes_wiki/   output of spark_jobs.wiki_join
-Output: data/lucene/               the Lucene index
-
-One recipe = one Lucene document with these fields:
-
-field         type                 from                           why
-------------  -------------------  -----------------------------  ------------------------------
-id            StringField, stored  recipe ID                      exact lookup, show the recipe
-name          TextField, stored    recipe name                    most important text, boost 3
-ingredient    TextField            ingredient entities            "chicken AND garlic",
-                                   + their Wikipedia titles       synonyms via wiki redirects
-category      TextField, stored    Food.com category              "category:dessert"
-keywords      TextField            Food.com keywords              "Vegan", "Easy", "Indian"
-description   TextField            recipe description             free text
-instructions  TextField            preparation steps              free text, low boost
-wiki_dish     TextField            Wikipedia article of the dish  "flatbread" finds Naan
-                                   (title + abstract)
-cuisine       TextField            Wikipedia cuisines + country   "cuisine:mexican"
-                                   and region of the dish
-minutes       IntPoint + stored    total time                     range: minutes:[* TO 30]
-calories      DoublePoint + stored kcal per serving               range: calories:[* TO 500]
-rating        DoublePoint + stored average rating                 range: rating:[4.5 TO *]
-
-TextField  = analyzed (split into words, stemmed), for full-text search.
-StringField = one exact value, not analyzed.
-Point      = number in a structure for fast range search (not words).
-stored     = the value is saved too, so the search result can show it.
-
-Usage (in Docker):
-    docker compose run --rm lucene python -m lucene_search.build
-"""
-
 import time
 
 # lucene first: it makes the Java packages (java.*, org.apache.*) importable.
-import lucene  # noqa: F401
+import lucene  
 from java.nio.file import Paths
 from org.apache.lucene.document import (
     DoublePoint, Document, Field, IntPoint, StoredField, StringField, TextField,
