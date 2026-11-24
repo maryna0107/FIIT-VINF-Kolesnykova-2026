@@ -1,27 +1,3 @@
-"""Search in the Lucene index (consultation 4).
-
-Query types (Lucene QueryParser syntax):
-
-  chicken garlic                 OR, ranked by BM25 (more matching words = higher)
-  chicken AND garlic             Boolean AND, also: +chicken +garlic
-  cake NOT nuts                  Boolean NOT, also: cake -nuts
-  (cake OR pie) AND apple        parentheses
-  "olive oil"                    phrase: the words next to each other
-  spagetti~                      fuzzy: up to 2 typos ("spaghetti")
-  choco*                         wildcard: chocolate, chocolatey, ...
-  ingredient:garlic              one field only
-  name:soup^2 cream              boost: a word in a field counts more
-  minutes:[* TO 30]              range over a number (* = no limit)
-  calories:[200 TO 500] rating:[4.5 TO *]
-
-A word without a field is searched in all text fields of SEARCH_FIELDS, with
-their boosts. Ranges are not words, so they are taken out of the query text
-and added as a filter: they only remove recipes, they do not change the score.
-
-Usage (in Docker):
-    docker compose run --rm lucene python -m lucene_search.search "chicken AND garlic"
-"""
-
 import argparse
 import re
 
@@ -76,7 +52,7 @@ def text_parser():
 
 
 def negative_clauses(query):
-    """Clauses of a query that only excludes ("NOT nuts"), else None."""
+    """Clauses of a query that only excludes ("NOT nuts")"""
 
     if not BooleanQuery.instance_(query):
         return None

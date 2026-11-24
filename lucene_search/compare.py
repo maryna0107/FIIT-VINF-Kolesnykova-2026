@@ -1,14 +1,3 @@
-"""Compare the same queries on the old index and on the Lucene index.
-
-Writes metadata/old_vs_lucene.md, ready to be copied to the wiki.
-
-old:    own TF x classic IDF (data/spark/index.json), no Wikipedia data
-lucene: BM25, EnglishAnalyzer (stemming), fields with boosts + Wikipedia
-
-Usage (in Docker):
-    docker compose run --rm lucene python -m lucene_search.compare
-"""
-
 from pathlib import Path
 
 from indexer.indexer import load_index
